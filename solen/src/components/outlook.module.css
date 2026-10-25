@@ -810,3 +810,133 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+/* Liste repliable et ruban : utiles seulement sur petit écran. */
+.ribbonExtra {
+  display: contents;
+}
+.listToggle {
+  display: none;
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Petit écran (sous 900 px) : une seule colonne qui défile verticalement.
+   Le mail d'abord, le volet Solen dessous, la liste des mails repliée en haut. */
+@media (max-width: 899.98px) {
+  .root {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    /* Laisse la place à la mention de démonstration fixée en bas de l'écran. */
+    padding-bottom: 48px;
+  }
+  .topBar {
+    gap: 6px;
+  }
+  .productName {
+    width: auto;
+  }
+  .search {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .search > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .topIcons {
+    gap: 8px;
+  }
+  .appRail,
+  .folderPane,
+  .ribbonTabs,
+  .ribbonExtra {
+    display: none;
+  }
+  .main {
+    padding: 8px;
+  }
+  .panes {
+    flex-direction: column;
+  }
+  .messageList {
+    width: 100%;
+    max-height: 60vh;
+  }
+  .messageListCollapsed {
+    max-height: none;
+    overflow: visible;
+  }
+  .messageListCollapsed .listBody {
+    display: none;
+  }
+  .listToggle {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #fff;
+    color: #242424;
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+  .listToggle b {
+    color: #0f6cbd;
+  }
+  .listToggle:focus-visible {
+    outline: 2px solid #0f6cbd;
+    outline-offset: -2px;
+  }
+  .listToggleHint {
+    margin-left: auto;
+    color: #616161;
+    font-weight: 400;
+    font-size: 13px;
+  }
+  .readingPane {
+    overflow: visible;
+    padding: 0;
+  }
+  .subject {
+    font-size: 18px;
+    margin: 4px 4px 10px;
+  }
+  .messageCard {
+    padding: 14px;
+  }
+  .messageHeader {
+    flex-wrap: wrap;
+  }
+  /* Les actions passent sous l'expéditeur pour laisser son adresse lisible. */
+  .messageActions {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-start;
+  }
+  .attachments {
+    flex-wrap: wrap;
+  }
+  .messageBody,
+  .address,
+  .lookalikeAddress {
+    overflow-wrap: anywhere;
+  }
+  .addinPane {
+    width: 100%;
+    overflow: visible;
+  }
+  .addinBody {
+    overflow: visible;
+  }
+}

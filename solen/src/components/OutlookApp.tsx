@@ -105,6 +105,8 @@ export const OutlookApp = () => {
   // Visite guidée : affichée au premier chargement seulement, puis rouverte avec le bouton « ? ».
   const [tourOpen, setTourOpen] = useState(() => !tourAlreadySeen());
   const [tourStep, setTourStep] = useState<number | null>(null);
+  // Sous 900 px, la liste des mails se replie pour laisser la place au mail et au volet Solen.
+  const [listOpen, setListOpen] = useState(false);
 
   const mail = MAILS.find((m) => m.id === selectedId)!;
 
@@ -183,6 +185,7 @@ export const OutlookApp = () => {
   const select = (id: string) => {
     setSelectedId(id);
     setRead((prev) => new Set(prev).add(id));
+    setListOpen(false);
     // Ouvrir un autre mail que celui de l'étape en cours termine la visite.
     if (tourStep !== null && TOUR_STEPS[tourStep].mailId !== id) setTourStep(null);
   };
@@ -266,29 +269,31 @@ export const OutlookApp = () => {
               <Button appearance="primary" size="small">
                 Nouveau courrier
               </Button>
-              <span className={styles.ribbonSep} />
-              <Button appearance="subtle" size="small" icon={<Delete20Regular />}>
-                Supprimer
-              </Button>
-              <Button appearance="subtle" size="small" icon={<Archive20Regular />}>
-                Archiver
-              </Button>
-              <Button appearance="subtle" size="small" icon={<ShieldError20Regular />}>
-                Signaler
-              </Button>
-              <span className={styles.ribbonSep} />
-              <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />}>
-                Répondre
-              </Button>
-              <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />}>
-                Répondre à tous
-              </Button>
-              <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />}>
-                Transférer
-              </Button>
-              <Button appearance="subtle" size="small" icon={<Flag20Regular />}>
-                Indicateur
-              </Button>
+              <span className={styles.ribbonExtra}>
+                <span className={styles.ribbonSep} />
+                <Button appearance="subtle" size="small" icon={<Delete20Regular />}>
+                  Supprimer
+                </Button>
+                <Button appearance="subtle" size="small" icon={<Archive20Regular />}>
+                  Archiver
+                </Button>
+                <Button appearance="subtle" size="small" icon={<ShieldError20Regular />}>
+                  Signaler
+                </Button>
+                <span className={styles.ribbonSep} />
+                <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />}>
+                  Répondre
+                </Button>
+                <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />}>
+                  Répondre à tous
+                </Button>
+                <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />}>
+                  Transférer
+                </Button>
+                <Button appearance="subtle" size="small" icon={<Flag20Regular />}>
+                  Indicateur
+                </Button>
+              </span>
               {installed && (
                 <>
                   <span className={styles.ribbonSep} />
@@ -351,43 +356,54 @@ export const OutlookApp = () => {
                 </a>
               </nav>
 
-              <section className={styles.messageList} aria-label="Boîte de réception">
-                <div className={styles.listHeader}>
-                  <div className={styles.listTabs}>
-                    <span className={styles.listTabActive}>Prioritaire</span>
-                    <span>Autres</span>
+              <section
+                className={`${styles.messageList} ${listOpen ? "" : styles.messageListCollapsed}`}
+                aria-label="Boîte de réception"
+              >
+                {/* Visible seulement sous 900 px (voir outlook.module.css). */}
+                <button type="button" className={styles.listToggle} aria-expanded={listOpen} onClick={() => setListOpen((v) => !v)}>
+                  <MailInbox20Regular /> Boîte de réception {unreadCount > 0 && <b>{unreadCount}</b>}
+                  <span className={styles.listToggleHint}>{listOpen ? "Replier" : "Voir les mails"}</span>
+                  <ChevronDown16Regular className={listOpen ? styles.chevronOpen : undefined} />
+                </button>
+                <div className={styles.listBody}>
+                  <div className={styles.listHeader}>
+                    <div className={styles.listTabs}>
+                      <span className={styles.listTabActive}>Prioritaire</span>
+                      <span>Autres</span>
+                    </div>
+                    <Filter20Regular />
                   </div>
-                  <Filter20Regular />
+                  {groups.map((g) => (
+                    <div key={g.label}>
+                      <div className={styles.groupLabel}>{g.label}</div>
+                      {g.mails.map((m) => {
+                        const unread = m.unread && !read.has(m.id);
+                        return (
+                          <button
+                            key={m.id}
+                            type="button"
+                            className={`${styles.listItem} ${m.id === selectedId ? styles.listItemSelected : ""} ${unread ? styles.listItemUnread : ""}`}
+                            onClick={() => select(m.id)}
+                          >
+                            <Avatar name={m.from.displayName} size={32} color="colorful" />
+                            <span className={styles.itemBody}>
+                              <span className={styles.itemTop}>
+                                <span className={styles.itemFrom}>{m.from.displayName}</span>
+                                <span className={styles.itemDate}>{listDate(m)}</span>
+                              </span>
+                              <span className={styles.itemSubject}>
+                                {m.attachments.length > 0 && <Attach16Regular />}
+                                <span className={styles.ellipsis}>{m.subject}</span>
+                              </span>
+                              <span className={styles.itemPreview}>{preview(m)}</span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
-                {groups.map((g) => (
-                  <div key={g.label}>
-                    <div className={styles.groupLabel}>{g.label}</div>
-                    {g.mails.map((m) => {
-                      const unread = m.unread && !read.has(m.id);
-                      return (
-                        <button
-                          key={m.id}
-                          type="button"
-                          className={`${styles.listItem} ${m.id === selectedId ? styles.listItemSelected : ""} ${unread ? styles.listItemUnread : ""}`}
-                          onClick={() => select(m.id)}
-                        >
-                          <Avatar name={m.from.displayName} size={32} color="colorful" />
-                          <span className={styles.itemBody}>
-                            <span className={styles.itemTop}>
-                              <span className={styles.itemFrom}>{m.from.displayName}</span>
-                              <span className={styles.itemDate}>{listDate(m)}</span>
-                            </span>
-                            <span className={styles.itemSubject}>
-                              {m.attachments.length > 0 && <Attach16Regular />}
-                              <span className={styles.ellipsis}>{m.subject}</span>
-                            </span>
-                            <span className={styles.itemPreview}>{preview(m)}</span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ))}
               </section>
 
               <article className={styles.readingPane} aria-label="Volet de lecture">
