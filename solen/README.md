@@ -77,15 +77,18 @@ La démo s'ouvre sur http://localhost:3000.
 
 ## Utiliser la démo
 
-À chaque chargement de la page, une visite guidée animée en 8 étapes éclaire tour à tour le faux changement de RIB et son bandeau, le volet Solen, la section d'appel, le vrai mail urgent du DAF (aucune alerte), la fraude au président et les profils fournisseurs. Elle ouvre elle-même les bons mails. Les flèches du clavier la font avancer ou reculer, Échap la quitte, et le bouton « ? » en haut à droite la relance.
+À chaque chargement de la page, une visite guidée animée en 8 étapes éclaire tour à tour le faux changement de RIB et son bandeau, le volet Solen, la section d'appel, le vrai mail urgent du DAF (aucune alerte), la fraude au président et les profils fournisseurs. Elle ouvre elle-même les bons mails. Les flèches du clavier la font avancer ou reculer, Échap la quitte, et la touche `V` ou le bouton « ? » en haut à droite la relancent.
 
 | Raccourci | Effet |
 | --- | --- |
-| `P` | Épingle ou désépingle le volet Solen. Volet fermé, Solen n'analyse rien. |
-| `Alt+Maj+G` (ou `S`) | Avant / après : retire ou réinstalle Solen. Aussi accessible par le bouton « Avant / après Solen ». |
-| `1` à `6` | Ouvre les mails dans l'ordre de la démo. |
+| `S` | Ouvre ou ferme le volet Solen. Volet fermé, Solen n'analyse rien. |
+| `A` | Avant / après : retire ou réinstalle Solen. Aussi accessible par le bouton « Avant / après Solen ». |
+| `V` | Relance la visite guidée, comme le bouton « ? ». |
+| `1` à `6` | Ouvre les mails dans l'ordre de la démo (pavé numérique sur un clavier AZERTY). |
 | `F` | Ouvre la page des profils fournisseurs. |
 | `R` | Remet à zéro les points de vigilance. |
+
+Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
 
 Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés (IBAN masqués) et une demande de changement d'IBAN en attente, à valider à deux.
 

@@ -94,13 +94,13 @@ export const TOUR_STEPS: TourStep[] = [
         <p>Ouvrez n&apos;importe quel mail et regardez ce que Solen en pense.</p>
         <ul className={styles.keys}>
           <li>
-            <kbd>P</kbd> épingle ou désépingle le volet Solen
+            <kbd>S</kbd> ouvre ou ferme le volet Solen
           </li>
           <li>
-            <kbd>Alt</kbd>+<kbd>Maj</kbd>+<kbd>G</kbd> avant / après Solen
+            <kbd>A</kbd> avant / après Solen
           </li>
           <li>
-            Le bouton <kbd>?</kbd> en haut à droite relance la visite
+            <kbd>V</kbd> relance la visite, comme le bouton <kbd>?</kbd> en haut à droite
           </li>
         </ul>
       </>
@@ -218,9 +218,12 @@ export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
     const tick = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      // La mention « Maquette de démonstration » reste au premier plan : la bulle ne doit jamais passer dessous.
-      const note = document.querySelector(".demo-disclaimer")?.getBoundingClientRect();
-      const reserve = note && note.height > 0 ? Math.round(vh - note.top) : 0;
+      // La mention de démonstration et l'aide des raccourcis restent au premier plan : la bulle ne passe jamais dessous.
+      const tops = [...document.querySelectorAll(".demo-disclaimer, [data-shortcuts-help]")]
+        .map((el) => el.getBoundingClientRect())
+        .filter((r) => r.height > 0)
+        .map((r) => r.top);
+      const reserve = tops.length ? Math.max(0, Math.round(vh - Math.min(...tops))) : 0;
       setViewport((v) => (v.w === vw && v.h === vh && v.reserve === reserve ? v : { w: vw, h: vh, reserve }));
       const el = findTarget(step);
       if (el) {

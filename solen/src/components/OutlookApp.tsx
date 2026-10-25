@@ -99,7 +99,7 @@ export const OutlookApp = () => {
       return true;
     }
   });
-  // Désépinglé au chargement : aucune analyse (ni appel à Mistral) tant qu'on n'appuie pas sur P ou sur le bouton Solen.
+  // Désépinglé au chargement : aucune analyse (ni appel à Mistral) tant qu'on n'appuie pas sur S ou sur le bouton Solen.
   const [paneOpen, setPaneOpen] = useState(false);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<Record<string, AnalysisResult>>({});
@@ -107,7 +107,7 @@ export const OutlookApp = () => {
   const [vigilance, setVigilance] = useState<VigilanceState>(loadVigilance);
   const [toast, setToast] = useState<BadgeId | null>(null);
   // Visite guidée : reproposée à chaque chargement ou actualisation de la page, rien n'est mémorisé.
-  // Le bouton « ? » la relance à tout moment.
+  // La touche V et le bouton « ? » la relancent à tout moment.
   const [tourOpen, setTourOpen] = useState(true);
   // Pendant la visite, les raccourcis de la démo sont coupés : la visite a ses propres touches.
   const tourOpenRef = useRef(tourOpen);
@@ -119,7 +119,7 @@ export const OutlookApp = () => {
 
   const mail = MAILS.find((m) => m.id === selectedId)!;
 
-  // Démo « avant / après » : retire ou réinstalle Solen. Bouton visible, touche S ou Alt+Maj+G.
+  // Démo « avant / après » : retire ou réinstalle Solen. Bouton visible ou touche A.
   const toggleInstalled = useCallback(() => {
     setInstalled((v) => {
       try {
@@ -132,28 +132,32 @@ export const OutlookApp = () => {
   }, []);
 
   useEffect(() => {
-    // Raccourcis de démo. L'app n'a aucun champ de saisie, une seule touche suffit.
+    // Raccourcis d'une seule touche, sans modificateur : Alt+Maj change la langue du clavier sous Windows.
+    // On lit event.key (le caractère tapé) et non event.code (la position QWERTY), sinon les lettres
+    // sont fausses sur un clavier AZERTY.
     const onKey = (e: KeyboardEvent) => {
-      if (tourOpenRef.current || (e.target as HTMLElement).closest?.("input, textarea")) return;
-      if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyG") {
-        e.preventDefault();
-        toggleInstalled();
-        return;
-      }
-      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (tourOpenRef.current || e.ctrlKey || e.altKey || e.metaKey || e.repeat) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.isContentEditable || target?.closest?.("input, textarea, select, [contenteditable]")) return;
       const key = e.key.toLowerCase();
-      if (key === "s") toggleInstalled();
-      if (key === "r") {
+      if (key === "s") {
+        // S : ouvre ou ferme le volet. Fermé, Solen n'analyse plus rien (utile avant la démo).
+        setPaneOpen((v) => !v);
+      } else if (key === "a") {
+        toggleInstalled();
+      } else if (key === "v") {
+        setTourOpen(true);
+      } else if (key === "r") {
         setVigilance(EMPTY_VIGILANCE);
         saveVigilance(EMPTY_VIGILANCE);
-      }
-      if (key === "f") router.push("/fournisseurs");
-      // P : épingle ou désépingle le volet. Désépinglé, Solen n'analyse plus rien (utile avant la démo).
-      if (key === "p") setPaneOpen((v) => !v);
-      const demoMail = DEMO_ORDER[Number(key) - 1];
-      if (demoMail) {
-        setSelectedId(demoMail);
-        setRead((prev) => new Set(prev).add(demoMail));
+      } else if (key === "f") {
+        router.push("/fournisseurs");
+      } else {
+        const demoMail = DEMO_ORDER[Number(key) - 1];
+        if (demoMail) {
+          setSelectedId(demoMail);
+          setRead((prev) => new Set(prev).add(demoMail));
+        }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -253,7 +257,7 @@ export const OutlookApp = () => {
             </Link>
             <Alert20Regular />
             <Settings20Regular />
-            <Tooltip content="Visite guidée de la démo" relationship="label">
+            <Tooltip content="Relancer la visite guidée (raccourci V)" relationship="label">
               <button type="button" className={styles.topIconButton} onClick={() => setTourOpen(true)}>
                 <QuestionCircle20Regular />
               </button>
@@ -311,7 +315,7 @@ export const OutlookApp = () => {
               {installed && (
                 <>
                   <span className={styles.ribbonSep} />
-                  <Tooltip content="Épingler le volet Solen (raccourci P)" relationship="description">
+                  <Tooltip content="Ouvrir le volet Solen (raccourci S)" relationship="description">
                     <Button
                       appearance="subtle"
                       size="small"
@@ -325,7 +329,7 @@ export const OutlookApp = () => {
               )}
               <Button appearance="subtle" size="small" icon={<MoreHorizontal20Regular />} aria-label="Plus d'options" />
               <Tooltip
-                content={installed ? "Retirer Solen pour voir la boîte mail sans protection (Alt+Maj+G)" : "Réinstaller Solen (Alt+Maj+G)"}
+                content={installed ? "Retirer Solen pour voir la boîte mail sans protection (raccourci A)" : "Réinstaller Solen (raccourci A)"}
                 relationship="description"
               >
                 <Button
@@ -495,6 +499,10 @@ export const OutlookApp = () => {
           </div>
         </div>
       </div>
+      {/* Aide discrète, toujours visible : les raccourcis tiennent en une ligne. */}
+      <p className={styles.shortcutsHelp} data-shortcuts-help>
+        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite
+      </p>
       {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>
   );

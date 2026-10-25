@@ -79,7 +79,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
           <Link href="/fournisseurs" className={styles.paneSuppliersLink}>
             <BuildingMultiple16Regular /> Profils fournisseurs
           </Link>
-          <Tooltip content="Volet épinglé : cliquez ou appuyez sur P pour le désépingler" relationship="description">
+          <Tooltip content="Volet épinglé : cliquez ou appuyez sur S pour le fermer" relationship="description">
             <Button appearance="subtle" size="small" icon={<Pin20Filled />} aria-label="Désépingler le volet" onClick={onClose} />
           </Tooltip>
           <Tooltip content="Fermer" relationship="label">
