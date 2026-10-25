@@ -38,7 +38,7 @@ import {
 import { MAILBOX_OWNER } from "@/data/company";
 import { MAILS, type Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
-import { markTourSeen, TOUR_STEPS, TourBar, TourDialog, tourAlreadySeen } from "./GuidedTour";
+import { TOUR_STEPS, TourBar, TourDialog } from "./GuidedTour";
 import { SolenPane } from "./SolenPane";
 import { applyReflex, BADGES, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
 import { analyze } from "./mailClient";
@@ -102,8 +102,9 @@ export const OutlookApp = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [vigilance, setVigilance] = useState<VigilanceState>(loadVigilance);
   const [toast, setToast] = useState<BadgeId | null>(null);
-  // Visite guidée : affichée au premier chargement seulement, puis rouverte avec le bouton « ? ».
-  const [tourOpen, setTourOpen] = useState(() => !tourAlreadySeen());
+  // Visite guidée : reproposée à chaque chargement ou actualisation de la page, rien n'est mémorisé.
+  // Le bouton « ? » la relance à tout moment.
+  const [tourOpen, setTourOpen] = useState(true);
   const [tourStep, setTourStep] = useState<number | null>(null);
   // Sous 900 px, la liste des mails se replie pour laisser la place au mail et au volet Solen.
   const [listOpen, setListOpen] = useState(false);
@@ -190,10 +191,7 @@ export const OutlookApp = () => {
     if (tourStep !== null && TOUR_STEPS[tourStep].mailId !== id) setTourStep(null);
   };
 
-  const closeTourDialog = () => {
-    setTourOpen(false);
-    markTourSeen();
-  };
+  const closeTourDialog = () => setTourOpen(false);
 
   // Chaque étape ouvre son mail, Solen installé et volet épinglé : le visiteur voit l'analyse sans connaître les raccourcis.
   const goToTourStep = (index: number) => {

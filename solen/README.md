@@ -77,7 +77,7 @@ La démo s'ouvre sur http://localhost:3000.
 
 ## Utiliser la démo
 
-Au premier chargement, une visite guidée propose quatre mails : le faux changement de RIB, le vrai mail urgent du DAF (aucune alerte), le faux support informatique et la fraude au président depuis Gmail. Le bouton « ? » en haut à droite la rouvre.
+À chaque chargement de la page, une visite guidée propose quatre mails : le faux changement de RIB, le vrai mail urgent du DAF (aucune alerte), le faux support informatique et la fraude au président depuis Gmail. Le bouton « ? » en haut à droite la rouvre.
 
 | Raccourci | Effet |
 | --- | --- |

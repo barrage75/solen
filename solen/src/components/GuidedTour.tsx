@@ -36,22 +36,6 @@ export const TOUR_STEPS = [
   },
 ] as const;
 
-export const TOUR_SEEN_KEY = "solen-visite-vue";
-
-export const tourAlreadySeen = () => {
-  try {
-    return localStorage.getItem(TOUR_SEEN_KEY) === "1";
-  } catch {
-    return false;
-  }
-};
-
-export const markTourSeen = () => {
-  try {
-    localStorage.setItem(TOUR_SEEN_KEY, "1");
-  } catch {}
-};
-
 type DialogProps = {
   open: boolean;
   onClose: () => void;
