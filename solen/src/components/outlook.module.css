@@ -888,6 +888,9 @@
 .suppliersLink:hover {
   background: rgba(255, 255, 255, 0.16);
 }
+.attacksLink {
+  gap: 4px;
+}
 .suppliersLink:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
@@ -924,6 +927,10 @@
 @media (max-width: 599.98px) {
   .search,
   .topIcons > svg {
+    display: none;
+  }
+  /* Le bouton des attaques garde son icône et son nom accessible, sans le texte. */
+  .attacksLink span {
     display: none;
   }
   .topIcons {

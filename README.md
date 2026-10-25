@@ -1,6 +1,6 @@
 # Solen
 
-[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](solen/src/redteam/cases.ts) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](https://solen-demo.vercel.app/attaques) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
 
 [![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
@@ -16,7 +16,7 @@ Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What
 
 - **Le code décide, l'IA explique.** Authentification de l'expéditeur (SPF, DKIM, DMARC), domaines sosies, usurpation d'un dirigeant, contrôle de l'IBAN et du montant : ce sont des règles TypeScript. Le verdict de l'IA peut seulement relever l'alerte, jamais la baisser.
 - **L'IA ne voit jamais un IBAN.** Les IBAN et numéros de compte sont remplacés par des jetons avant tout envoi à Mistral.
-- **28 attaques rejouées à chaque test.** IBAN cachés, lettres cyrilliques dans un domaine, consigne en blanc sur blanc dans un PDF, faux en-têtes d'authentification, PDF corrompus, conversations détournées. Les tests remplacent l'IA par une IA piégée qui répond toujours « fiable », et vérifient que le code bloque quand même chaque attaque.
+- **28 attaques rejouées à chaque test.** IBAN cachés, lettres cyrilliques dans un domaine, consigne en blanc sur blanc dans un PDF, faux en-têtes d'authentification, PDF corrompus, conversations détournées. Les tests remplacent l'IA par une IA piégée qui répond toujours « fiable », et vérifient que le code bloque quand même chaque attaque. Vous pouvez les voir rejouées en direct sur la page [28 attaques](https://solen-demo.vercel.app/attaques).
 
 ## Essayer la démo
 

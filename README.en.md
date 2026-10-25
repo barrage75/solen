@@ -1,6 +1,6 @@
 # Solen
 
-[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attacks tested](https://img.shields.io/badge/attacks%20tested-28%2F28-2ea44f)](solen/src/redteam/cases.ts) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attacks tested](https://img.shields.io/badge/attacks%20tested-28%2F28-2ea44f)](https://solen-demo.vercel.app/attaques) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
 
 [![Try the live demo](https://img.shields.io/badge/%E2%96%B6%20Try%20the%20demo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
@@ -16,7 +16,7 @@ Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October
 
 - **Code decides, AI explains.** Sender authentication (SPF, DKIM, DMARC), lookalike domains, executive impersonation, IBAN and amount checks are plain TypeScript rules. The AI verdict can only raise the alert level, never lower it.
 - **The AI never sees an IBAN.** IBANs and account numbers are replaced with tokens before anything is sent to Mistral.
-- **28 attacks replayed on every test run.** Hidden IBANs, Cyrillic letters in domains, white-on-white prompt injection in a PDF, forged authentication headers, corrupted PDFs, hijacked reply threads. The red-team suite swaps the AI for a trapped one that always answers "safe", and checks that the code still blocks every attack.
+- **28 attacks replayed on every test run.** Hidden IBANs, Cyrillic letters in domains, white-on-white prompt injection in a PDF, forged authentication headers, corrupted PDFs, hijacked reply threads. The red-team suite swaps the AI for a trapped one that always answers "safe", and checks that the code still blocks every attack. Watch them replayed live on the [28 attacks page](https://solen-demo.vercel.app/attaques).
 
 ## Try the demo
 

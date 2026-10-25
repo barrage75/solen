@@ -1,6 +1,6 @@
 # Solen
 
-[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](src/redteam/cases.ts) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](https://solen-demo.vercel.app/attaques) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
 
 [![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
@@ -38,6 +38,8 @@ Cinq exemples marquants :
 - **Conversation détournée « RE: »** : une réponse dans un vrai échange, depuis la vraie boîte piratée du fournisseur, avec un nouvel IBAN.
 
 **La règle** : chaque attaque est arrêtée par le code même si l'IA est trompée. Le test `src/redteam/redteam.test.ts` remplace l'IA par une IA piégée qui répond toujours « fiable », et vérifie que le verdict reste au moins aussi sévère que prévu, et que c'est bien la règle attendue qui a tranché.
+
+**En direct** : la page `/attaques` de la démo rejoue les 28 cas sur le serveur à chaque visite, avec la même IA piégée que les tests, et affiche pour chacun le verdict attendu, le verdict obtenu, la règle qui a tranché et le mail piégé. En ligne : https://solen-demo.vercel.app/attaques. Le bouton « 28 attaques » de l'en-tête et la touche `T` y mènent.
 
 ## Stack technique
 
@@ -100,6 +102,7 @@ La démo s'ouvre sur http://localhost:3000.
 | `V` | Relance la visite guidée, comme le bouton « ? ». |
 | `1` à `6` | Ouvre les mails dans l'ordre de la démo (pavé numérique sur un clavier AZERTY). |
 | `F` | Ouvre la page des profils fournisseurs. |
+| `T` | Ouvre la page des 28 attaques rejouées en direct. |
 | `R` | Remet à zéro les points de vigilance. |
 
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
