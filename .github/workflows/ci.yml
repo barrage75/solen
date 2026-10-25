@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint, tests et build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solen
+    env:
+      # Analyses de secours écrites à l'avance : la CI n'appelle jamais Mistral.
+      SOLEN_AI: secours
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: solen/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - name: Tests, dont les 28 attaques
+        run: npm test
+      - run: npm run build
+      # Après le build : Next.js génère les types des routes dont tsc a besoin.
+      - run: npm run typecheck

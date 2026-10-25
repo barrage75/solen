@@ -1,5 +1,7 @@
 # Solen
 
+[![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](solen/src/redteam/cases.ts) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
+
 Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Solen signale un faux changement de RIB dans la boîte mail de démonstration](solen/docs/capture-solen.png)
