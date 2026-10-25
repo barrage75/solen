@@ -67,7 +67,52 @@ describe("Verdict final", () => {
     });
     // Expéditeur inconnu : on fait valider par le DAF, au numéro de l'annuaire.
     expect(result.callback).toMatchObject({ who: "Marc Lefèvre (DAF)", phone: "01 84 25 10 12" });
-    expect(result.callback?.questions).toHaveLength(3);
+    expect(result.callback.questions).toHaveLength(3);
+  });
+
+  it("propose aussi le contre-appel quand le verdict est « fiable » : fournisseur du profil", () => {
+    const daf = MAILS.find((m) => m.id === "daf")!;
+    const payload: MailPayload = {
+      internetMessageId: daf.internetMessageId,
+      subject: daf.subject,
+      fromName: daf.from.displayName,
+      fromEmail: daf.from.emailAddress,
+      headers: daf.internetHeaders,
+      // Un numéro écrit dans le mail n'est jamais repris.
+      body: `${daf.body}
+
+Joignable au 06 12 34 56 78`,
+      attachments: [],
+    };
+    const result = buildResult(rulesFor(payload), { source: "non-appelée" });
+    expect(result.verdict).toBe("fiable");
+    expect(result.callback).toMatchObject({ who: "Lumio Data", phone: "01 84 60 12 45" });
+    expect(result.callback.questions).toHaveLength(3);
+  });
+
+  it("propose le numéro de l'annuaire pour un collègue interne, même si tout est fiable", () => {
+    const result = buildResult(
+      runRules({
+        fromName: "Jean-Pierre Durand",
+        fromEmail: "jp.durand@arkos-systems.fr",
+        headers: "Authentication-Results: mx; spf=pass; dkim=pass; dmarc=pass",
+        text: "Réunion demain à 10 h : merci de préparer le point de trésorerie. Rappelle-moi au 06 98 76 54 32.",
+      }),
+      { source: "non-appelée" },
+    );
+    expect(result.verdict).toBe("fiable");
+    expect(result.callback).toMatchObject({ who: "Jean-Pierre Durand (PDG)", phone: "01 84 25 10 01" });
+  });
+
+  it("propose le DAF quand l'expéditeur fiable n'est ni un fournisseur ni un collègue", () => {
+    const news = MAILS.find((m) => m.id === "news")!;
+    const result = buildResult(
+      runRules({ fromName: news.from.displayName, fromEmail: news.from.emailAddress, headers: news.internetHeaders, text: news.body }),
+      { source: "non-appelée" },
+    );
+    expect(result.verdict).toBe("fiable");
+    expect(result.callback).toMatchObject({ who: "Marc Lefèvre (DAF)", phone: "01 84 25 10 12" });
+    expect(result.callback.questions.length).toBeGreaterThan(0);
   });
 
   it("utilise l'analyse de secours si Mistral tombe pendant la démo", async () => {

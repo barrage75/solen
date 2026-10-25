@@ -940,3 +940,17 @@
     overflow: visible;
   }
 }
+
+/* Section « Un doute ? » : discrète quand Solen ne voit rien, mais toujours là. */
+.doubt {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+.doubt p {
+  margin: 0;
+}
+.doubtNumber {
+  font-size: 13px;
+}

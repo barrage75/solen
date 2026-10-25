@@ -27,7 +27,8 @@ export type AnalysisResult = {
   reasons: Reason[];
   amount?: number;
   supplierName?: string;
-  callback?: { who: string; phone: string; questions: string[] };
+  // Toujours présent : l'utilisateur peut vérifier par téléphone, quel que soit le verdict.
+  callback: { who: string; phone: string; questions: string[] };
   ai: "mistral" | "secours" | "non-appelée" | "échec";
 };
 
@@ -81,6 +82,36 @@ const INFOBAR: Record<Verdict, string> = {
   fiable: "Solen : aucune anomalie détectée.",
 };
 
+// Le contre-appel est proposé pour tous les verdicts : l'IA peut juger fiable un mail frauduleux.
+// Le numéro vient toujours du profil fournisseur ou de l'annuaire interne, jamais du mail.
+const callbackFor = (rules: RuleResult, aiQuestions: string[]): NonNullable<AnalysisResult["callback"]> => {
+  // L'IA ne propose pas toujours de questions : on garde des questions par défaut, sûres dans tous les cas.
+  const pick = (defaults: string[]) => (aiQuestions.length ? aiQuestions : defaults);
+  if (rules.supplier) {
+    return {
+      who: rules.supplier.name,
+      phone: rules.supplier.phone,
+      questions: pick(["Avez-vous envoyé ce mail ?", "Avez-vous changé de coordonnées bancaires ?", "Pouvez-vous me confirmer les 4 derniers chiffres de votre IBAN ?"]),
+    };
+  }
+  // On rappelle la vraie personne via l'annuaire interne ; à défaut, le DAF valide la demande.
+  const imitatesCompany = rules.sender.kind === "lookalike" && rules.sender.imitates === COMPANY.domain;
+  const p =
+    rules.sender.kind === "internal" && rules.sender.person
+      ? rules.sender.person
+      : rules.sender.kind === "impersonation"
+        ? rules.sender.person
+        : imitatesCompany
+          ? IT_SUPPORT
+          : DIRECTORY.find((d) => d.role === "DAF")!;
+  const questions = imitatesCompany
+    ? ["Avez-vous envoyé un mail sur la double authentification ?", "L'adresse " + rules.fromEmail + " est-elle à vous ?", "Que dois-je faire si j'ai cliqué sur le lien ?"]
+    : rules.amount !== undefined
+      ? [`Avez-vous demandé ce virement de ${rules.amount.toLocaleString("fr-FR")} € ?`, "Ce mail vient-il bien de vous ?", "Qui d'autre doit valider cette opération ?"]
+      : ["Ce mail vient-il bien de vous ?", "Est-ce une demande habituelle ?", "Que dois-je faire si j'ai cliqué sur un lien ou ouvert une pièce jointe ?"];
+  return { who: `${p.name} (${p.role})`, phone: p.phone, questions: pick(questions) };
+};
+
 export const buildResult = (rules: RuleResult, ai: { analysis?: AiAnalysis; source: AnalysisResult["ai"] }): AnalysisResult => {
   // Solen : l'IA peut aggraver le verdict des règles, jamais l'adoucir.
   // Si l'IA devait analyser une demande d'argent et a échoué, on alerte au lieu de laisser passer.
@@ -117,32 +148,7 @@ export const buildResult = (rules: RuleResult, ai: { analysis?: AiAnalysis; sour
       ? `Solen : IBAN différent du profil fournisseur.${stake} Ne payez pas avant un contre-appel au numéro enregistré.`
       : INFOBAR[verdict].replace(/^(Solen : [^.]+\.)/, `$1${stake}`);
 
-  let callback: AnalysisResult["callback"];
-  if (verdict !== "fiable") {
-    // L'IA ne propose pas toujours de questions : on garde des questions par défaut, sûres dans tous les cas.
-    const aiQuestions = ai.analysis?.questionsContreAppel ?? [];
-    if (rules.supplier) {
-      const questions = aiQuestions.length
-        ? aiQuestions
-        : ["Avez-vous envoyé ce mail ?", "Avez-vous changé de coordonnées bancaires ?", "Pouvez-vous me confirmer les 4 derniers chiffres de votre IBAN ?"];
-      callback = { who: rules.supplier.name, phone: rules.supplier.phone, questions };
-    } else {
-      // On rappelle la vraie personne via l'annuaire interne, jamais via le mail ; à défaut, le DAF valide la demande.
-      const imitatesCompany = rules.sender.kind === "lookalike" && rules.sender.imitates === COMPANY.domain;
-      const p =
-        rules.sender.kind === "impersonation"
-          ? rules.sender.person
-          : imitatesCompany
-            ? IT_SUPPORT
-            : DIRECTORY.find((d) => d.role === "DAF")!;
-      const questions = aiQuestions.length
-        ? aiQuestions
-        : imitatesCompany
-          ? ["Avez-vous envoyé un mail sur la double authentification ?", "L'adresse " + rules.fromEmail + " est-elle à vous ?", "Que dois-je faire si j'ai cliqué sur le lien ?"]
-          : [`Avez-vous demandé ce virement${rules.amount ? ` de ${rules.amount.toLocaleString("fr-FR")}\u00a0€` : ""} ?`, "Ce mail vient-il bien de vous ?", "Qui d'autre doit valider cette opération ?"];
-      callback = { who: `${p.name} (${p.role})`, phone: p.phone, questions };
-    }
-  }
+  const callback = callbackFor(rules, ai.analysis?.questionsContreAppel ?? []);
 
   const senderLabel =
     rules.sender.kind === "internal"

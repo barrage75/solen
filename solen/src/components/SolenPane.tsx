@@ -8,6 +8,7 @@ import {
   CheckmarkCircle20Filled,
   Dismiss20Regular,
   ErrorCircle20Filled,
+  Flag20Regular,
   Info16Regular,
   PersonAlert20Regular,
   Pin20Filled,
@@ -251,23 +252,15 @@ const Verdict = ({
         </section>
       )}
 
-      {result.callback && (
-        <section className={styles.paneSection}>
+      {/* Section d'appel toujours présente : l'IA peut juger fiable un mail frauduleux. */}
+      {alert ? (
+        <section className={styles.paneSection} data-tour="callback">
           <h3>Que faire</h3>
           <p>
             {result.amount !== undefined ? "Ne payez pas." : "Ne cliquez pas."} Appelez <strong>{result.callback.who}</strong> au{" "}
             <strong className={styles.phone}>{result.callback.phone}</strong> (numéro connu, pas celui du mail).
           </p>
-          {result.callback.questions.length > 0 && (
-            <details className={styles.questionsBox}>
-              <summary>Questions à poser ({result.callback.questions.length})</summary>
-              <ol className={styles.questions}>
-                {result.callback.questions.map((q) => (
-                  <li key={q}>{q}</li>
-                ))}
-              </ol>
-            </details>
-          )}
+          <CallbackQuestions questions={result.callback.questions} />
           <div className={styles.paneActions}>
             <Button appearance="primary" icon={<Call20Regular />} onClick={() => onReflex("contre-appel")} disabled={isDone("contre-appel")}>
               {isDone("contre-appel") ? "Contre-appel noté" : "Appeler"}
@@ -278,13 +271,22 @@ const Verdict = ({
           </div>
           {isDone("daf") && <p className={styles.muted}>Résumé envoyé à Marc Lefèvre.</p>}
         </section>
-      )}
-
-      {!alert && (
-        <section className={styles.paneSection}>
-          <Button size="small" onClick={() => onReflex("signalement")} disabled={isDone("signalement")}>
-            {isDone("signalement") ? "Signalement transmis" : "Ce mail me semble suspect"}
-          </Button>
+      ) : (
+        <section className={`${styles.paneSection} ${styles.doubt}`} data-tour="callback">
+          <h3>Un doute ?</h3>
+          <p className={styles.muted}>Solen n&apos;a rien détecté, mais vous pouvez toujours vérifier.</p>
+          <p className={styles.doubtNumber}>
+            Numéro enregistré : <strong>{result.callback.who}</strong>, <span className={styles.phone}>{result.callback.phone}</span>
+          </p>
+          <CallbackQuestions questions={result.callback.questions} />
+          <div className={styles.paneActions}>
+            <Button size="small" icon={<Call20Regular />} onClick={() => onReflex("contre-appel")} disabled={isDone("contre-appel")}>
+              {isDone("contre-appel") ? "Contre-appel noté" : "Appeler"}
+            </Button>
+            <Button size="small" icon={<Flag20Regular />} onClick={() => onReflex("signalement")} disabled={isDone("signalement")}>
+              {isDone("signalement") ? "Signalement transmis" : "Signaler ce mail"}
+            </Button>
+          </div>
           {isDone("signalement") && (
             <p className={styles.muted}>Merci : votre signalement sera vérifié et aidera Solen à progresser.</p>
           )}
@@ -300,3 +302,15 @@ const Verdict = ({
     </div>
   );
 };
+
+const CallbackQuestions = ({ questions }: { questions: string[] }) =>
+  questions.length > 0 ? (
+    <details className={styles.questionsBox}>
+      <summary>Questions à poser ({questions.length})</summary>
+      <ol className={styles.questions}>
+        {questions.map((q) => (
+          <li key={q}>{q}</li>
+        ))}
+      </ol>
+    </details>
+  ) : null;
