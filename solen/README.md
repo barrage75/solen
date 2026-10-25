@@ -104,6 +104,7 @@ La démo s'ouvre sur http://localhost:3000.
 | `F` | Ouvre la page des profils fournisseurs. |
 | `T` | Ouvre la page des 28 attaques rejouées en direct. |
 | `E` | Ouvre la page pour tester son propre mail. |
+| `I` | Ouvre la page de l'impact en chiffres. |
 | `R` | Remet à zéro les points de vigilance. |
 
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
@@ -117,6 +118,16 @@ La page `/essayer` permet d'écrire ou de coller un mail, d'y joindre un PDF, et
 - **Exemple non modifié** : il garde son identifiant et reçoit la même analyse que dans la boîte mail.
 - **Mail écrit ou modifié** : il reçoit un identifiant neuf, donc une analyse en direct.
 - **Sans clé Mistral**, comme sur la démo publique, seul le code analyse les mails inventés. Le résultat le dit, et toute demande de paiement est signalée par prudence.
+
+### L'impact en chiffres
+
+La page `/impact` est faite pour le jury. Tous les chiffres de la démo y sont recalculés à chaque visite par le vrai code (`src/impact/compute.ts`), donc la page ne peut pas afficher un résultat que le code ne produit plus :
+
+- le montant des virements frauduleux bloqués dans la boîte de démo ;
+- les fraudes signalées et les fausses alertes, avec le code seul face à une IA trompée, puis avec l'IA ;
+- les attaques piégées arrêtées, reprises de la page `/attaques`.
+
+Le contexte du marché cite ses sources, vérifiées sur les documents d'origine : le rapport 2025 du FBI sur la cybercriminalité et l'étude fraude 2026 d'Allianz Trade et Odoxa. La page précise que ces chiffres valident la logique sur des cas choisis, et ne mesurent pas un taux de détection réel. En ligne : https://solen-demo.vercel.app/impact. Le bouton « Impact » de l'en-tête et la touche `I` y mènent.
 
 ## Tests
 

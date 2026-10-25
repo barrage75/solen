@@ -109,6 +109,9 @@ export const TOUR_STEPS: TourStep[] = [
           <li>
             <kbd>E</kbd> teste votre propre mail
           </li>
+          <li>
+            <kbd>I</kbd> montre l&apos;impact de Solen en chiffres
+          </li>
         </ul>
       </>
     ),

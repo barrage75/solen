@@ -24,6 +24,8 @@ En ligne, sans rien installer : **https://solen-demo.vercel.app**. Une visite gu
 
 Vous pouvez aussi **tester votre propre mail** sur la page [Tester un mail](https://solen-demo.vercel.app/essayer) : vous jouez l'attaquant, avec des exemples prêts à modifier, et Solen l'analyse avec le même volet que dans la boîte mail.
 
+La page [Impact](https://solen-demo.vercel.app/impact) résume les résultats en chiffres, calculés en direct par le code : montants bloqués dans la démo, fraudes signalées même avec une IA trompée, et contexte du marché avec ses sources (FBI, Allianz Trade).
+
 En local, l'application Next.js se trouve dans le dossier [`solen/`](solen/).
 
 ```bash

@@ -17,6 +17,7 @@ import {
   Calendar24Regular,
   CheckboxChecked24Regular,
   ChevronDown16Regular,
+  DataBarVertical20Regular,
   Delete20Regular,
   DocumentPdf24Filled,
   Drafts20Regular,
@@ -158,6 +159,8 @@ export const OutlookApp = () => {
         router.push("/attaques");
       } else if (key === "e") {
         router.push("/essayer");
+      } else if (key === "i") {
+        router.push("/impact");
       } else {
         const demoMail = DEMO_ORDER[Number(key) - 1];
         if (demoMail) {
@@ -258,14 +261,17 @@ export const OutlookApp = () => {
           </div>
           <div className={styles.topIcons}>
             {/* Même onglet : la page fournisseurs a son bouton de retour, et l'état de la boîte mail est conservé. */}
-            <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers">
-              <BuildingMultiple20Regular /> Profils fournisseurs
+            <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers" aria-label="Profils fournisseurs">
+              <BuildingMultiple20Regular /> <span className={styles.suppliersText}>Profils fournisseurs</span>
             </Link>
             <Link href="/attaques" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="28 attaques rejouées en direct">
               <ShieldCheckmark20Regular /> <span>28 attaques</span>
             </Link>
             <Link href="/essayer" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="Tester votre propre mail">
               <MailEdit20Regular /> <span>Tester un mail</span>
+            </Link>
+            <Link href="/impact" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="Impact de Solen en chiffres">
+              <DataBarVertical20Regular /> <span>Impact</span>
             </Link>
             <Alert20Regular />
             <Settings20Regular />
@@ -513,7 +519,7 @@ export const OutlookApp = () => {
       </div>
       {/* Aide discrète, toujours visible : les raccourcis tiennent en une ligne. */}
       <p className={styles.shortcutsHelp} data-shortcuts-help>
-        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>T</kbd> attaques · <kbd>E</kbd> essai
+        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>T</kbd> attaques · <kbd>E</kbd> essai · <kbd>I</kbd> impact
       </p>
       {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>

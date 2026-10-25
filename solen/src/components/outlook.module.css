@@ -948,9 +948,10 @@
   }
 }
 
-/* Très petit téléphone : le nom du produit laisse la place aux boutons. */
-@media (max-width: 419.98px) {
-  .productName {
+/* Très petit téléphone : le nom du produit et le texte des profils laissent la place aux boutons. */
+@media (max-width: 479.98px) {
+  .productName,
+  .suppliersText {
     display: none;
   }
 }
