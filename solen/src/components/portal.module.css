@@ -114,3 +114,90 @@
   font-size: 12px;
   color: #616161;
 }
+
+/* Changements en attente : validation humaine à deux (principe des quatre yeux). */
+.pendingBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 4px solid #bc4b09;
+  background: #fff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+.pendingBox h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.pendingCard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px 16px;
+}
+.pendingMain {
+  min-width: 0;
+}
+.ibanChange {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ibanNew {
+  color: #bc4b09;
+  font-weight: 600;
+}
+.statusRejected {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fdf3f4;
+  color: #b10e1c;
+}
+.pendingActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0b3d2c;
+}
+.rule svg {
+  flex: none;
+}
+.logTitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #616161;
+}
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+.log li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.log li > span:first-child {
+  flex: none;
+  color: #616161;
+}
