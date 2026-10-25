@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attaques testées](https://img.shields.io/badge/attaques%20test%C3%A9es-28%2F28-2ea44f)](src/redteam/cases.ts) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
 
+[![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
+
 Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Solen signale un faux changement de RIB dans la boîte mail de démonstration](docs/capture-solen.png)
@@ -47,7 +49,7 @@ Cinq exemples marquants :
 | Pièces jointes | unpdf pour lire les PDF, pdf-lib pour générer ceux de la démo |
 | Tests | Vitest : contrôles, verdicts, API et 28 attaques |
 | Intégration continue | GitHub Actions : lint, tests, build et types à chaque push |
-| Hébergement | Netlify |
+| Hébergement | Vercel (démo publique), Netlify possible |
 
 ## Lancer le projet
 
@@ -125,16 +127,18 @@ npx vitest run --config vitest.live.config.ts
 
 La variable `SOLEN_URL` permet de viser un autre serveur, et `CASES=id1,id2` de ne rejouer que certains cas.
 
-## En ligne (Netlify)
+## En ligne
 
-- Le site est construit depuis le dossier `solen` (« Base directory » dans les réglages Netlify).
+La démo publique tourne sur Vercel : https://solen-demo.vercel.app. Le fichier `netlify.toml` permet aussi de la déployer sur Netlify.
+
+- Le site est construit depuis le dossier `solen` (« Root Directory » sur Vercel, « Base directory » sur Netlify).
 - Définir `SOLEN_AI=secours` : les mails de démo utilisent alors les analyses écrites à l'avance et ne consomment aucun crédit Mistral.
-- Pour une garantie totale, ne pas définir `MISTRAL_API_KEY` sur Netlify. L'API d'analyse est publique : un mail inventé et envoyé directement à l'API, hors démo, appellerait sinon Mistral.
+- Pour une garantie totale, ne pas définir `MISTRAL_API_KEY` chez l'hébergeur. L'API d'analyse est publique : un mail inventé et envoyé directement à l'API, hors démo, appellerait sinon Mistral.
 
 ## Limites et suite
 
 - **Profils fournisseurs simulés** : en vrai, ils seraient synchronisés avec le logiciel comptable et la banque, jamais modifiés par un mail.
-- **Limite de requêtes gardée en mémoire** : elle n'est pas fiable sur Netlify, où chaque fonction a sa propre mémoire. Il faudra la remplacer par un stockage partagé.
+- **Limite de requêtes gardée en mémoire** : elle n'est pas fiable chez un hébergeur sans serveur (Vercel, Netlify), où chaque fonction a sa propre mémoire. Il faudra la remplacer par un stockage partagé.
 - **Vraie intégration Outlook et Gmail à faire** : la démo reprend la forme des données d'un module Outlook (Office.js), il reste à brancher les vraies boîtes mail.
 
 ## Contexte
