@@ -18,6 +18,12 @@ npm run dev            # http://localhost:3000
 
 Sans clé Mistral, les analyses de secours prennent le relais pour les mails de démo. Une visite guidée animée se lance à l'ouverture.
 
+## La diapo
+
+[![Couverture de la diapo Solen : « On bloque l'arnaque par mail à la source. »](diapo/apercu.png)](diapo/Solen-diapo-hackathon.pdf)
+
+Le diaporama présenté au jury, en 4 diapositives : [ouvrir le PDF](diapo/Solen-diapo-hackathon.pdf).
+
 ## En savoir plus
 
 Le [README du projet](solen/README.md) détaille :
