@@ -64,4 +64,4 @@ Le [README du projet](solen/README.md) détaille :
 - les 28 attaques contre lesquelles Solen est testé ;
 - l'installation sous Windows, Mac et Linux, avec ou sans clé Mistral ;
 - les raccourcis, les tests et la mise en ligne ;
-- les limites actuelles et la suite.
+- les limites actuelles et la suite. 
