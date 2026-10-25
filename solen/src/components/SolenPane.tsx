@@ -70,7 +70,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
   const checked = result ? shownSteps : Math.min(shownSteps, steps.length - 1);
 
   return (
-    <aside className={styles.addinPane} aria-label="Solen">
+    <aside className={styles.addinPane} aria-label="Solen" data-tour="pane" data-mail={mail.id}>
       <header className={styles.addinHeader}>
         <span className={styles.addinTitle}>
           <Shield20Filled className={styles.brandIcon} /> Solen
@@ -179,7 +179,7 @@ const Verdict = ({
   const alert = result.verdict !== "fiable";
   return (
     <div className={styles.verdictWrap}>
-      <section className={`${styles.verdictCard} ${ui.className}`}>
+      <section className={`${styles.verdictCard} ${ui.className}`} data-tour="verdict">
         <ui.Icon />
         <div>
           <strong>{ui.title}</strong>

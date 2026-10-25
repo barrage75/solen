@@ -77,7 +77,7 @@ La démo s'ouvre sur http://localhost:3000.
 
 ## Utiliser la démo
 
-À chaque chargement de la page, une visite guidée propose quatre mails : le faux changement de RIB, le vrai mail urgent du DAF (aucune alerte), le faux support informatique et la fraude au président depuis Gmail. Le bouton « ? » en haut à droite la rouvre.
+À chaque chargement de la page, une visite guidée animée en 8 étapes éclaire tour à tour le faux changement de RIB et son bandeau, le volet Solen, la section d'appel, le vrai mail urgent du DAF (aucune alerte), la fraude au président et les profils fournisseurs. Elle ouvre elle-même les bons mails. Les flèches du clavier la font avancer ou reculer, Échap la quitte, et le bouton « ? » en haut à droite la relance.
 
 | Raccourci | Effet |
 | --- | --- |
@@ -87,7 +87,7 @@ La démo s'ouvre sur http://localhost:3000.
 | `F` | Ouvre la page des profils fournisseurs. |
 | `R` | Remet à zéro les points de vigilance. |
 
-La page `/fournisseurs` montre les profils appris des paiements passés (IBAN masqués) et une demande de changement d'IBAN en attente, à valider à deux.
+Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés (IBAN masqués) et une demande de changement d'IBAN en attente, à valider à deux.
 
 ## Tests
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, Button, FluentProvider, Tooltip, webLightTheme } from "@fluentui/react-components";
@@ -41,7 +41,7 @@ import {
 import { MAILBOX_OWNER } from "@/data/company";
 import { MAILS, type Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
-import { TOUR_STEPS, TourBar, TourDialog } from "./GuidedTour";
+import { SpotlightTour, TOUR_STEPS, type TourStep } from "./GuidedTour";
 import { SolenPane } from "./SolenPane";
 import { applyReflex, BADGES, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
 import { analyze } from "./mailClient";
@@ -109,7 +109,11 @@ export const OutlookApp = () => {
   // Visite guidée : reproposée à chaque chargement ou actualisation de la page, rien n'est mémorisé.
   // Le bouton « ? » la relance à tout moment.
   const [tourOpen, setTourOpen] = useState(true);
-  const [tourStep, setTourStep] = useState<number | null>(null);
+  // Pendant la visite, les raccourcis de la démo sont coupés : la visite a ses propres touches.
+  const tourOpenRef = useRef(tourOpen);
+  useEffect(() => {
+    tourOpenRef.current = tourOpen;
+  }, [tourOpen]);
   // Sous 900 px, la liste des mails se replie pour laisser la place au mail et au volet Solen.
   const [listOpen, setListOpen] = useState(false);
 
@@ -130,7 +134,7 @@ export const OutlookApp = () => {
   useEffect(() => {
     // Raccourcis de démo. L'app n'a aucun champ de saisie, une seule touche suffit.
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest?.("input, textarea")) return;
+      if (tourOpenRef.current || (e.target as HTMLElement).closest?.("input, textarea")) return;
       if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyG") {
         e.preventDefault();
         toggleInstalled();
@@ -191,25 +195,28 @@ export const OutlookApp = () => {
     setSelectedId(id);
     setRead((prev) => new Set(prev).add(id));
     setListOpen(false);
-    // Ouvrir un autre mail que celui de l'étape en cours termine la visite.
-    if (tourStep !== null && TOUR_STEPS[tourStep].mailId !== id) setTourStep(null);
   };
 
-  const closeTourDialog = () => setTourOpen(false);
-
-  // Chaque étape ouvre son mail, Solen installé et volet épinglé : le visiteur voit l'analyse sans connaître les raccourcis.
-  const goToTourStep = (index: number) => {
-    const id = TOUR_STEPS[index].mailId;
-    closeTourDialog();
-    setTourStep(index);
-    if (!id) return;
-    setSelectedId(id);
-    setRead((prev) => new Set(prev).add(id));
-    setInstalled(true);
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {}
-    setPaneOpen(true);
+  // La visite ouvre elle-même le bon mail et épingle le volet : le visiteur voit l'analyse sans connaître les raccourcis.
+  const enterTourStep = (step: TourStep) => {
+    if (step.mail) {
+      const id = step.mail;
+      select(id);
+      // Un bandeau ignoré plus tôt doit réapparaître pour que la visite puisse le montrer.
+      setDismissed((prev) => {
+        if (!prev.has(id)) return prev;
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+    if (step.pane) {
+      setInstalled(true);
+      try {
+        localStorage.setItem(STORAGE_KEY, "1");
+      } catch {}
+      setPaneOpen(true);
+    }
   };
 
   const groups = useMemo(
@@ -333,7 +340,6 @@ export const OutlookApp = () => {
               </Tooltip>
             </div>
 
-            {tourStep !== null && <TourBar index={tourStep} onStep={goToTourStep} onQuit={() => setTourStep(null)} />}
 
             <div className={styles.panes}>
               <nav className={styles.folderPane} aria-label="Dossiers">
@@ -413,9 +419,9 @@ export const OutlookApp = () => {
                 </div>
               </section>
 
-              <article className={styles.readingPane} aria-label="Volet de lecture">
+              <article className={styles.readingPane} aria-label="Volet de lecture" data-mail={mail.id}>
                 <h1 className={styles.subject}>{mail.subject}</h1>
-                <div className={styles.messageCard}>
+                <div className={styles.messageCard} data-tour="mail">
                   <div className={styles.messageHeader}>
                     <Avatar name={mail.from.displayName} size={40} color="colorful" />
                     <div className={styles.messageMeta}>
@@ -444,6 +450,7 @@ export const OutlookApp = () => {
                   {showInfobar && (
                     <div
                       className={`${styles.infobar} ${result.verdict === "fiable" ? styles.infobarInfo : styles.infobarError}`}
+                      data-tour="infobar"
                       role="status"
                     >
                       {result.verdict === "fiable" ? <Info20Regular /> : <ErrorCircle20Filled />}
@@ -488,7 +495,7 @@ export const OutlookApp = () => {
           </div>
         </div>
       </div>
-      <TourDialog open={tourOpen} onClose={closeTourDialog} onStep={goToTourStep} />
+      {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>
   );
 };

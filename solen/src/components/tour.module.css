@@ -1,0 +1,271 @@
+/* Visite guidée animée : voile sombre, projecteur sur la zone expliquée, bulle avec flèche. */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Capte les clics : la boîte mail reste visible mais inactive pendant la visite. */
+.blocker {
+  position: absolute;
+  inset: 0;
+}
+
+/* Le projecteur : une boîte dont l'ombre géante assombrit tout le reste de l'écran. */
+.spot {
+  position: fixed;
+  border-radius: 10px;
+  box-shadow: 0 0 0 200vmax rgba(17, 24, 39, 0.62);
+  pointer-events: none;
+  transition:
+    top 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: tourDim 0.35s ease-out both;
+}
+.spotLit {
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.9),
+    0 0 0 200vmax rgba(17, 24, 39, 0.62);
+}
+@keyframes tourDim {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.popover {
+  position: fixed;
+  width: min(340px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  padding: 16px 18px 14px;
+  border-radius: 10px;
+  background: #fff;
+  color: #242424;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.28),
+    0 0 2px rgba(0, 0, 0, 0.2);
+  outline: none;
+  animation: tourIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.popoverCentered {
+  width: min(460px, calc(100vw - 24px));
+}
+.popover[data-side="right"] {
+  animation-name: tourInFromLeft;
+}
+.popover[data-side="left"] {
+  animation-name: tourInFromRight;
+}
+.popover[data-side="top"] {
+  animation-name: tourInFromBelow;
+}
+@keyframes tourIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tourInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tourInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes tourInFromBelow {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Petite flèche qui pointe vers la zone éclairée. */
+.arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+.popover[data-side="right"] .arrow {
+  left: -6px;
+  margin-top: -6px;
+}
+.popover[data-side="left"] .arrow {
+  right: -6px;
+  margin-top: -6px;
+}
+.popover[data-side="bottom"] .arrow {
+  top: -6px;
+  margin-left: -6px;
+}
+.popover[data-side="top"] .arrow {
+  bottom: -6px;
+  margin-left: -6px;
+}
+/* Le contenu défile au besoin, mais la flèche doit rester visible : la bulle ne coupe que verticalement. */
+.popover[data-side="right"],
+.popover[data-side="left"],
+.popover[data-side="bottom"],
+.popover[data-side="top"] {
+  overflow: visible;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #616161;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.dots {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dots li {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d1d1d1;
+  transition:
+    width 0.25s ease,
+    background-color 0.25s ease;
+}
+.dots .dotDone {
+  background: #8cc7ac;
+}
+.dots .dotActive {
+  width: 20px;
+  border-radius: 4px;
+  background: #0b5b3f;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.brand {
+  flex: none;
+  color: #0b5b3f;
+}
+.body {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.body p {
+  margin: 0 0 8px;
+}
+.privacy {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #f1faf6;
+  color: #0b3d2c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.privacy svg {
+  flex: none;
+  margin-top: 2px;
+}
+.keys {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.keys kbd {
+  display: inline-block;
+  min-width: 22px;
+  padding: 1px 6px;
+  border: 1px solid #d1d1d1;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: #fafafa;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+.waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: #616161;
+  font-size: 13px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+}
+.nav {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spot,
+  .popover,
+  .dots li {
+    transition: none;
+    animation: none;
+  }
+}
