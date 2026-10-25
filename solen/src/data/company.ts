@@ -33,6 +33,13 @@ export const DIRECTORY: Person[] = [
     phone: "01 84 25 10 12",
     aliases: ["marc lefèvre", "marc lefevre", "m. lefèvre"],
   },
+  {
+    name: "Sophie Martin",
+    role: "Responsable commerciale",
+    email: "s.martin@arkos-systems.fr",
+    phone: "01 84 25 10 24",
+    aliases: ["sophie martin", "s. martin"],
+  },
 ];
 
 // Contacte le support informatique quand une adresse imite le domaine de l'entreprise.

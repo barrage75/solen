@@ -4,11 +4,34 @@
 
 [![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
-Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
+Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, fraude à la paie, cartes cadeaux, faux conseiller bancaire, faux colis, faux remboursement d'impôt, fausses factures, pièces jointes piégées, hameçonnage, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Solen signale un faux changement de RIB dans la boîte mail de démonstration](docs/capture-solen.png)
 
 Maquette de démonstration : toutes les données sont fictives et la démo n'a aucun lien avec Microsoft.
+
+## La boîte de démo
+
+La boîte de réception contient 16 mails : 12 arnaques de types différents et 4 vrais mails qui ne doivent déclencher aucune alerte. Chaque arnaque est signalée par le code seul, même quand l'IA est trompée (test `src/redteam/demoInbox.test.ts`).
+
+| Mail | Type | Ce qui trahit l'arnaque |
+| --- | --- | --- |
+| Nuvio Cloud, changement de coordonnées bancaires | Faux changement de RIB | IBAN différent de celui du profil fournisseur |
+| Müller Technik, Rechnung 2026-0388 | Faux RIB en allemand | IBAN différent, lu dans la facture PDF |
+| Support informatique, double authentification | Hameçonnage | Domaine sosie de l'entreprise, lien de connexion |
+| Jean-Pierre Durand, virement confidentiel | Fraude au président | Nom du PDG depuis une adresse Gmail, secret exigé |
+| Jean-Pierre Durand, petit service rapide | Cartes cadeaux | Nom du PDG depuis Outlook, codes à envoyer par mail |
+| Sophie Martin, changement de RIB pour mon salaire | Fraude à la paie | Salariée qui écrit depuis Gmail avec un nouvel IBAN |
+| Rapido Colis, colis retenu | Faux colis | Transporteur inconnu, lien de paiement pour 1,99 € |
+| Service des impôts, trop-perçu | Faux remboursement d'impôt | Lien pour « confirmer » les coordonnées bancaires |
+| Banque Horizon, opération suspecte | Faux conseiller bancaire | « Virement de sécurité » demandé par un inconnu |
+| Delivery Partners, facture DP-2026-118 | Domaine sosie | « de1ivery » avec un 1, nouveau compte bancaire |
+| Domain Services Europe, avis d'expiration | Fausse facture | Prestataire jamais payé, IBAN envoyé par un inconnu |
+| Cabinet Verlaine, facture impayée | Pièce jointe piégée | Facture au format HTML, menace de contentieux |
+| Marc Lefèvre, facture Lumio Data urgente | Vrai mail | Collègue authentifié, fournisseur et montant habituels |
+| Lumio Data, relance | Vrai mail | Vrai domaine, compte habituel |
+| Delivery Partners, facture DP-2026-104 | Vrai mail | Vrai domaine, IBAN et montant habituels |
+| Lettre Finance PME | Vrai mail | Aucune demande |
 
 ## Qui décide quoi
 
@@ -104,7 +127,6 @@ La démo s'ouvre sur http://localhost:3000.
 | `F` | Ouvre la page des profils fournisseurs. |
 | `T` | Ouvre la page des 28 attaques rejouées en direct. |
 | `E` | Ouvre la page pour tester son propre mail. |
-| `I` | Ouvre la page de l'impact en chiffres. |
 | `R` | Remet à zéro les points de vigilance. |
 
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
@@ -118,16 +140,6 @@ La page `/essayer` permet d'écrire ou de coller un mail, d'y joindre un PDF, et
 - **Exemple non modifié** : il garde son identifiant et reçoit la même analyse que dans la boîte mail.
 - **Mail écrit ou modifié** : il reçoit un identifiant neuf, donc une analyse en direct.
 - **Sans clé Mistral**, comme sur la démo publique, seul le code analyse les mails inventés. Le résultat le dit, et toute demande de paiement est signalée par prudence.
-
-### L'impact en chiffres
-
-La page `/impact` est faite pour le jury. Tous les chiffres de la démo y sont recalculés à chaque visite par le vrai code (`src/impact/compute.ts`), donc la page ne peut pas afficher un résultat que le code ne produit plus :
-
-- le montant des virements frauduleux bloqués dans la boîte de démo ;
-- les fraudes signalées et les fausses alertes, avec le code seul face à une IA trompée, puis avec l'IA ;
-- les attaques piégées arrêtées, reprises de la page `/attaques`.
-
-Le contexte du marché cite ses sources, vérifiées sur les documents d'origine : le rapport 2025 du FBI sur la cybercriminalité et l'étude fraude 2026 d'Allianz Trade et Odoxa. La page précise que ces chiffres valident la logique sur des cas choisis, et ne mesurent pas un taux de détection réel. En ligne : https://solen-demo.vercel.app/impact. Le bouton « Impact » de l'en-tête et la touche `I` y mènent.
 
 ## Tests
 

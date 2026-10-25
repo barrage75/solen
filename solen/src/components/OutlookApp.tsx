@@ -17,7 +17,6 @@ import {
   Calendar24Regular,
   CheckboxChecked24Regular,
   ChevronDown16Regular,
-  DataBarVertical20Regular,
   Delete20Regular,
   DocumentPdf24Filled,
   Drafts20Regular,
@@ -159,8 +158,6 @@ export const OutlookApp = () => {
         router.push("/attaques");
       } else if (key === "e") {
         router.push("/essayer");
-      } else if (key === "i") {
-        router.push("/impact");
       } else {
         const demoMail = DEMO_ORDER[Number(key) - 1];
         if (demoMail) {
@@ -269,9 +266,6 @@ export const OutlookApp = () => {
             </Link>
             <Link href="/essayer" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="Tester votre propre mail">
               <MailEdit20Regular /> <span>Tester un mail</span>
-            </Link>
-            <Link href="/impact" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="Impact de Solen en chiffres">
-              <DataBarVertical20Regular /> <span>Impact</span>
             </Link>
             <Alert20Regular />
             <Settings20Regular />
@@ -519,7 +513,7 @@ export const OutlookApp = () => {
       </div>
       {/* Aide discrète, toujours visible : les raccourcis tiennent en une ligne. */}
       <p className={styles.shortcutsHelp} data-shortcuts-help>
-        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>T</kbd> attaques · <kbd>E</kbd> essai · <kbd>I</kbd> impact
+        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>T</kbd> attaques · <kbd>E</kbd> essai
       </p>
       {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>

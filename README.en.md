@@ -6,7 +6,7 @@
 
 [Version française](README.md)
 
-Solen is a mailbox add-in that catches email scams: fake bank detail changes, CEO fraud, fake bank advisers, phishing, fake IT support and lookalike domains. It explains each fraud to the user in plain French. Deterministic code makes the call whenever money is at stake. The AI (Mistral) reads and explains the request, never sees an IBAN, and can only make the verdict stricter.
+Solen is a mailbox add-in that catches email scams: fake bank detail changes, CEO fraud, payroll diversion, gift card scams, fake bank advisers, fake parcel fees, fake tax refunds, fake invoices, booby-trapped attachments, phishing and lookalike domains. It explains each fraud to the user in plain French. Deterministic code makes the call whenever money is at stake. The AI (Mistral) reads and explains the request, never sees an IBAN, and can only make the verdict stricter.
 
 ![Guided tour of the demo: Solen stops a fake bank detail change, then a CEO fraud](solen/docs/demo-solen.gif)
 
@@ -23,8 +23,6 @@ Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October
 Online, nothing to install: **https://solen-demo.vercel.app**. An animated guided tour starts when the page opens.
 
 You can also **try your own email** on the [Tester un mail](https://solen-demo.vercel.app/essayer) page: you play the attacker, start from ready-made examples, and Solen analyzes it with the same pane as in the mailbox.
-
-The [Impact](https://solen-demo.vercel.app/impact) page sums up the results in figures computed live by the code: amounts blocked in the demo, frauds flagged even with a fooled AI, and market context with its sources (FBI, Allianz Trade).
 
 To run it locally, the Next.js app lives in the [`solen/`](solen/) folder.
 

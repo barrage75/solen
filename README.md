@@ -6,7 +6,7 @@
 
 [English version](README.en.md)
 
-Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
+Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, fraude à la paie, cartes cadeaux, faux conseiller bancaire, faux colis, faux remboursement d'impôt, fausses factures, pièces jointes piégées, hameçonnage, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Visite guidée de la démo : Solen bloque un faux changement de RIB puis une fraude au président](solen/docs/demo-solen.gif)
 
@@ -23,8 +23,6 @@ Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What
 En ligne, sans rien installer : **https://solen-demo.vercel.app**. Une visite guidée animée se lance à l'ouverture.
 
 Vous pouvez aussi **tester votre propre mail** sur la page [Tester un mail](https://solen-demo.vercel.app/essayer) : vous jouez l'attaquant, avec des exemples prêts à modifier, et Solen l'analyse avec le même volet que dans la boîte mail.
-
-La page [Impact](https://solen-demo.vercel.app/impact) résume les résultats en chiffres, calculés en direct par le code : montants bloqués dans la démo, fraudes signalées même avec une IA trompée, et contexte du marché avec ses sources (FBI, Allianz Trade).
 
 En local, l'application Next.js se trouve dans le dossier [`solen/`](solen/).
 

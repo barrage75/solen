@@ -9,6 +9,8 @@ const EXAMPLES: { id: string; label: string }[] = [
   { id: "nuvio", label: "Faux changement de RIB" },
   { id: "sosie", label: "Domaine sosie" },
   { id: "pdg", label: "Fraude au président" },
+  { id: "paie", label: "Fraude à la paie" },
+  { id: "cartes", label: "Cartes cadeaux" },
   { id: "mfa", label: "Hameçonnage" },
   { id: "daf", label: "Vrai mail urgent" },
 ];

@@ -126,6 +126,43 @@ export const MAILS: Mail[] = [
     internetHeaders: authHeaders("gmail.com"),
   },
   {
+    // Faux colis : quelques euros de « frais » pour voler la carte bancaire, depuis un transporteur fictif.
+    id: "colis",
+    internetMessageId: "<20261023084711.5d0e@rapidocolis-suivi.com>",
+    subject: "Votre colis est retenu : frais de réexpédition à régler",
+    from: { displayName: "Rapido Colis", emailAddress: "suivi@rapidocolis-suivi.com" },
+    to: "Claire Bernard",
+    received: { dayOffset: 0, time: "08:47" },
+    unread: true,
+    body: [
+      "Bonjour,",
+      "Votre colis n° RC 4471 2093 FR est retenu à notre centre de tri : des frais de réexpédition de 1,99 € n'ont pas été réglés.",
+      "Pour recevoir votre colis demain, réglez ces frais sous 24 h :\nhttps://rapidocolis-suivi.com/paiement/RC44712093",
+      "Sans paiement, le colis sera renvoyé à l'expéditeur.",
+      "Le service client Rapido Colis",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("rapidocolis-suivi.com"),
+  },
+  {
+    // Fraude à la paie : une salariée « change de banque » depuis une adresse personnelle pour détourner son salaire.
+    id: "paie",
+    internetMessageId: "<CAH3p9vT2@mail.gmail.com>",
+    subject: "Changement de RIB pour mon salaire",
+    from: { displayName: "Sophie Martin", emailAddress: "sophie.martin.arkos@gmail.com" },
+    to: "Claire Bernard",
+    received: { dayOffset: 0, time: "08:12" },
+    unread: true,
+    body: [
+      "Bonjour Claire,",
+      "J'ai changé de banque cette semaine. Peux-tu verser mon salaire d'octobre sur mon nouveau compte ?\nIBAN : FR79 1751 5009 0000 0412 3456 789",
+      "Je suis en déplacement chez un client jusqu'à vendredi et je n'ai pas accès à ma messagerie pro, d'où cette adresse. Le virement des salaires part jeudi, c'est pour ça que je te l'envoie maintenant.",
+      "Merci beaucoup !\nSophie",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("gmail.com"),
+  },
+  {
     // Faux conseiller bancaire : banque fictive, domaine qui n'appartient pas à la banque.
     id: "conseiller",
     internetMessageId: "<20261022174512.a1c9@banquehorizon-alerte.com>",
@@ -159,6 +196,48 @@ export const MAILS: Mail[] = [
     internetHeaders: authHeaders("lumio-data.fr"),
   },
   {
+    // Cartes cadeaux : faux PDG pressé qui demande des codes, impossibles à récupérer une fois envoyés.
+    id: "cartes",
+    internetMessageId: "<DB9P194MB1123@outlook.fr>",
+    subject: "Petit service rapide",
+    from: { displayName: "Jean-Pierre Durand", emailAddress: "jpdurand.direction@outlook.fr" },
+    to: "Claire Bernard",
+    received: { dayOffset: -1, time: "15:20" },
+    body: [
+      "Claire, tu es à ton bureau ?",
+      "J'ai besoin que tu achètes 10 cartes cadeaux de 100 €, soit 1 000 € au total, pour remercier des clients ce soir. C'est une surprise, n'en parle pas à l'équipe.",
+      "Fais le paiement avec la carte de l'entreprise, gratte le dos des cartes et envoie-moi les codes en photo par retour de mail. Je te rembourse demain.",
+      "JPD\nEnvoyé depuis mon mobile",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("outlook.fr"),
+  },
+  {
+    // Pièce jointe dangereuse : une « facture » au format HTML ouvre une fausse page de connexion.
+    id: "piece-jointe",
+    internetMessageId: "<20261022130533.e81b@verlaine-recouvrement.fr>",
+    subject: "Facture impayée n° 2026-1107 – dernier avis avant contentieux",
+    from: { displayName: "Cabinet Verlaine Recouvrement", emailAddress: "recouvrement@verlaine-recouvrement.fr" },
+    to: "Claire Bernard",
+    received: { dayOffset: -1, time: "13:05" },
+    body: [
+      "Madame,",
+      "Malgré nos relances, la facture n° 2026-1107 de 3 960,00 € reste impayée.",
+      "Ouvrez la facture jointe pour consulter le détail et procéder au règlement en ligne. Sans règlement sous 72 h, le dossier sera transmis à notre service contentieux.",
+      "Cabinet Verlaine Recouvrement",
+    ].join("\n\n"),
+    attachments: [
+      {
+        id: "verlaine-facture",
+        name: "Facture_impayee_2026-1107.html",
+        contentType: "text/html",
+        size: 3412,
+        url: "/attachments/Facture_impayee_2026-1107.html",
+      },
+    ],
+    internetHeaders: authHeaders("verlaine-recouvrement.fr"),
+  },
+  {
     // Fausse facture de conseil depuis un domaine sosie : « de1ivery » avec un 1 à la place du l.
     id: "sosie",
     internetMessageId: "<20261023100512.4b2e@de1ivery-partners.fr>",
@@ -176,6 +255,58 @@ export const MAILS: Mail[] = [
     attachments: [],
     // Le fraudeur possède ce domaine : l'authentification passe, c'est le nom qui trompe.
     internetHeaders: authHeaders("de1ivery-partners.fr"),
+  },
+  {
+    // Vrai mail : la vraie facture de Delivery Partners, vrai domaine, IBAN et montant habituels. Aucune alerte attendue.
+    id: "delivery",
+    internetMessageId: "<20261022102044.3c7a@delivery-partners.fr>",
+    subject: "Facture DP-2026-104 – mission de septembre",
+    from: { displayName: "Delivery Partners – Facturation", emailAddress: "facturation@delivery-partners.fr" },
+    to: "Claire Bernard",
+    received: { dayOffset: -1, time: "10:20" },
+    body: [
+      "Bonjour Madame Bernard,",
+      "Veuillez trouver ci-dessous notre facture DP-2026-104 pour la mission d'accompagnement de septembre, d'un montant de 13 200,00 €, payable à 30 jours sur notre compte habituel :\nIBAN : FR09 3006 6109 4700 0104 5678 941",
+      "Nous restons à votre disposition pour toute question.",
+      "Cordialement,\nService facturation, Delivery Partners",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("delivery-partners.fr"),
+  },
+  {
+    // Fausse facture de renouvellement de nom de domaine : un prestataire inconnu facture un service jamais commandé.
+    id: "domaine",
+    internetMessageId: "<20261022094012.b6f3@domain-services-europe.com>",
+    subject: "Avis d'expiration : arkos-systems.fr",
+    from: { displayName: "Domain Services Europe", emailAddress: "facturation@domain-services-europe.com" },
+    to: "Claire Bernard",
+    received: { dayOffset: -1, time: "09:40" },
+    body: [
+      "Madame, Monsieur,",
+      "Le nom de domaine arkos-systems.fr expire le 31/10/2026. Pour éviter la coupure de votre site internet et de votre messagerie, réglez la facture de renouvellement n° DSE-88412 de 389,00 € par virement :\nIBAN : FR07 1820 6000 0265 0873 2145 317",
+      "Passé ce délai, le domaine pourra être enregistré par un tiers.",
+      "Service facturation\nDomain Services Europe",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("domain-services-europe.com"),
+  },
+  {
+    // Faux remboursement d'impôt : un « trop-perçu » sert d'appât pour faire saisir les coordonnées bancaires.
+    id: "impots",
+    internetMessageId: "<20261022081533.0a4d@impots-remboursement-pro.fr>",
+    subject: "Remboursement d'un trop-perçu d'impôt : 1 284,00 €",
+    from: { displayName: "Service des impôts des entreprises", emailAddress: "remboursement@impots-remboursement-pro.fr" },
+    to: "Claire Bernard",
+    received: { dayOffset: -1, time: "08:15" },
+    body: [
+      "Madame, Monsieur,",
+      "Après recalcul de l'acompte d'impôt sur les sociétés de Arkos Systems, un trop-perçu de 1 284,00 € vous est dû.",
+      "Pour recevoir le virement, confirmez les coordonnées bancaires de l'entreprise avant le 31 octobre :\nhttps://impots-remboursement-pro.fr/sie/confirmation",
+      "Sans confirmation de votre part, le remboursement sera annulé.",
+      "Service des impôts des entreprises",
+    ].join("\n\n"),
+    attachments: [],
+    internetHeaders: authHeaders("impots-remboursement-pro.fr"),
   },
   {
     id: "news",

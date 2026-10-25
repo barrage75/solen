@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Pièce jointe piégée - démo Solen</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background: #f5f5f5;
+        color: #242424;
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      }
+      main {
+        max-width: 520px;
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+        border-top: 4px solid #b10e1c;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 20px;
+        color: #b10e1c;
+      }
+      p {
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Ceci aurait pu être une fausse page de connexion</h1>
+      <p>
+        Dans une vraie attaque, cette « facture » au format HTML s'ouvre dans le navigateur et imite la page de connexion de
+        votre messagerie. Le mot de passe saisi part directement chez le fraudeur.
+      </p>
+      <p>
+        Une vraie facture arrive en PDF, ou sur la plateforme de facturation du fournisseur. Aucune donnée n'est collectée sur
+        cette page : c'est une démonstration de Solen, avec des données fictives.
+      </p>
+    </main>
+  </body>
+</html>
