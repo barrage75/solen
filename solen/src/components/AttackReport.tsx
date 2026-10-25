@@ -79,7 +79,10 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
   const time = ranAt ? new Date(ranAt).toLocaleTimeString("fr-FR") : "";
 
   return (
-    <FluentProvider theme={webLightTheme} className={portal.root}>
+    // Classe sur un conteneur intérieur : Fluent recopie la classe du fournisseur sur ses couches flottantes
+    // (info-bulles), qui couvriraient alors tout l'écran.
+    <FluentProvider theme={webLightTheme}>
+      <div className={portal.root}>
       <header className={portal.header}>
         <span className={portal.brand}>
           <SolenLogo /> Solen
@@ -210,6 +213,7 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
           src/redteam/redteam.test.ts. Toutes les données sont fictives.
         </p>
       </main>
+      </div>
     </FluentProvider>
   );
 };
