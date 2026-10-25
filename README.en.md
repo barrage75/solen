@@ -22,6 +22,8 @@ Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October
 
 Online, nothing to install: **https://solen-demo.vercel.app**. An animated guided tour starts when the page opens.
 
+You can also **try your own email** on the [Tester un mail](https://solen-demo.vercel.app/essayer) page: you play the attacker, start from ready-made examples, and Solen analyzes it with the same pane as in the mailbox.
+
 To run it locally, the Next.js app lives in the [`solen/`](solen/) folder.
 
 ```bash

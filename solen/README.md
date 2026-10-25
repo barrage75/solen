@@ -103,11 +103,20 @@ La démo s'ouvre sur http://localhost:3000.
 | `1` à `6` | Ouvre les mails dans l'ordre de la démo (pavé numérique sur un clavier AZERTY). |
 | `F` | Ouvre la page des profils fournisseurs. |
 | `T` | Ouvre la page des 28 attaques rejouées en direct. |
+| `E` | Ouvre la page pour tester son propre mail. |
 | `R` | Remet à zéro les points de vigilance. |
 
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
 
 Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés, avec les IBAN masqués.
+
+### Tester son propre mail
+
+La page `/essayer` permet d'écrire ou de coller un mail, d'y joindre un PDF, et de voir le vrai volet Solen l'analyser. Le visiteur joue l'attaquant : cinq exemples de la démo servent de point de départ, et un encadré liste ce que Solen sait de l'entreprise fictive (fournisseurs, dirigeants) pour imaginer ses propres pièges. En ligne : https://solen-demo.vercel.app/essayer. Le bouton « Tester un mail » de l'en-tête et la touche `E` y mènent.
+
+- **Exemple non modifié** : il garde son identifiant et reçoit la même analyse que dans la boîte mail.
+- **Mail écrit ou modifié** : il reçoit un identifiant neuf, donc une analyse en direct.
+- **Sans clé Mistral**, comme sur la démo publique, seul le code analyse les mails inventés. Le résultat le dit, et toute demande de paiement est signalée par prudence.
 
 ## Tests
 

@@ -106,6 +106,9 @@ export const TOUR_STEPS: TourStep[] = [
           <li>
             <kbd>T</kbd> ouvre les 28 attaques rejouées en direct
           </li>
+          <li>
+            <kbd>E</kbd> teste votre propre mail
+          </li>
         </ul>
       </>
     ),

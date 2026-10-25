@@ -929,12 +929,29 @@
   .topIcons > svg {
     display: none;
   }
-  /* Le bouton des attaques garde son icône et son nom accessible, sans le texte. */
-  .attacksLink span {
+  /* L'avatar, décoratif, laisse sa place. Double classe : les styles de Fluent sur l'avatar
+     sont insérés après ce fichier. */
+  .topIcons > .topAvatar {
     display: none;
   }
   .topIcons {
     margin-left: auto;
+    gap: 6px;
+  }
+}
+
+/* Tablette et téléphone : les boutons Attaques et Tester un mail gardent leur icône
+   et leur nom accessible, sans le texte. */
+@media (max-width: 899.98px) {
+  .attacksLink span {
+    display: none;
+  }
+}
+
+/* Très petit téléphone : le nom du produit laisse la place aux boutons. */
+@media (max-width: 419.98px) {
+  .productName {
+    display: none;
   }
 }
 

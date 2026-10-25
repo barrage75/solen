@@ -1,0 +1,211 @@
+.main {
+  max-width: 1120px;
+}
+.lead {
+  max-width: 760px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.examplesLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #616161;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip,
+.chipOn {
+  padding: 4px 12px;
+  border: 1px solid #d1d1d1;
+  border-radius: 16px;
+  background: #fff;
+  color: #242424;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: #0b5b3f;
+}
+.chipOn {
+  border-color: #0b5b3f;
+  background: #0b5b3f;
+  color: #fff;
+}
+.chip:focus-visible,
+.chipOn:focus-visible {
+  outline: 2px solid #0b5b3f;
+  outline-offset: 2px;
+}
+
+/* Les champs peuvent rétrécir : sinon le menu prend la largeur de sa plus longue option. */
+.form > *,
+.row2 > * {
+  min-width: 0;
+}
+.form select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 4px 4px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.attachment > svg {
+  color: #c43e1c;
+}
+.hiddenInput {
+  display: none;
+}
+
+.privacy {
+  margin: 0;
+  font-size: 12px;
+  color: #616161;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.known {
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+.known summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #0b5b3f;
+}
+.known p {
+  margin: 8px 0;
+  color: #616161;
+}
+.known ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mono {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-margin-top: 16px;
+}
+.infobar {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.fraude {
+  background: #fdf3f4;
+  color: #b10e1c;
+  border: 1px solid #eeacb2;
+}
+.suspect {
+  background: #fff9f5;
+  color: #bc4b09;
+  border: 1px solid #fdcfb4;
+}
+.fiable {
+  background: #f1faf1;
+  color: #0e700e;
+  border: 1px solid #9fd89f;
+}
+.aiNote {
+  margin: 0;
+  font-size: 12px;
+  color: #616161;
+}
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background: #fdf3f4;
+  color: #b10e1c;
+  font-size: 13px;
+}
+.paneSlot > aside {
+  width: 100%;
+}
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 24px;
+  border: 1px dashed #c7c7c7;
+  border-radius: 8px;
+  color: #616161;
+  font-size: 13px;
+  text-align: center;
+}
+.placeholder p {
+  margin: 0;
+}
+
+@media (max-width: 899.98px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 599.98px) {
+  .main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .row2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .form {
+    padding: 16px;
+  }
+}
