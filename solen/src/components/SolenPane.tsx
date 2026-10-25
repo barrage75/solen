@@ -14,7 +14,6 @@ import {
   Info16Regular,
   PersonAlert20Regular,
   Pin20Filled,
-  Shield20Filled,
   ShieldCheckmark16Filled,
   Warning16Filled,
   Warning20Filled,
@@ -23,6 +22,7 @@ import type { Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
 import type { Verdict } from "@/lib/checks";
 import styles from "./outlook.module.css";
+import { SolenLogo } from "./SolenLogo";
 import { BADGES, level, POINTS_PER_LEVEL, type Reflex, type VigilanceState } from "./vigilance";
 
 const STEP_DELAY_MS = 450;
@@ -73,7 +73,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
     <aside className={styles.addinPane} aria-label="Solen" data-tour="pane" data-mail={mail.id}>
       <header className={styles.addinHeader}>
         <span className={styles.addinTitle}>
-          <Shield20Filled className={styles.brandIcon} /> Solen
+          <SolenLogo /> Solen
         </span>
         <span className={styles.addinHeaderActions}>
           <Link href="/fournisseurs" className={styles.paneSuppliersLink}>

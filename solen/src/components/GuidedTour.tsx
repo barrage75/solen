@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Spinner } from "@fluentui/react-components";
-import { LockClosed16Regular, Shield20Filled } from "@fluentui/react-icons";
+import { LockClosed16Regular } from "@fluentui/react-icons";
+import { SolenLogo } from "./SolenLogo";
 import styles from "./tour.module.css";
 
 // Texte d'accueil de la visite.
@@ -358,7 +359,7 @@ export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
           </span>
         </div>
         <h2 id="tour-title" className={styles.title}>
-          {index === 0 && <Shield20Filled className={styles.brand} />}
+          {index === 0 && <SolenLogo size={24} className={styles.brand} />}
           {step.title}
         </h2>
         <div id="tour-body" className={styles.body}>

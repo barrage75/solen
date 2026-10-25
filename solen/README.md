@@ -132,3 +132,4 @@ Projet réalisé pendant le hackathon Finaxys « Build What's Next », les 23 et
 ## Autres commandes
 
 - `node scripts/make-attachments.mjs` : régénère les PDF de démo.
+- `public/solen-logo.png` : le logo officiel. Remplacer ce fichier change le logo partout, icône de l'onglet comprise.

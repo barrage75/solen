@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, FluentProvider, webLightTheme } from "@fluentui/react-components";
-import { ArrowSync20Regular, Shield20Filled, ShieldCheckmark16Filled } from "@fluentui/react-icons";
+import { ArrowSync20Regular, ShieldCheckmark16Filled } from "@fluentui/react-icons";
+import { SolenLogo } from "./SolenLogo";
 import styles from "./portal.module.css";
 
 export type SupplierRow = {
@@ -34,7 +35,7 @@ export const SupplierPortal = ({ companyName, rows }: { companyName: string; row
     <FluentProvider theme={webLightTheme} className={styles.root}>
       <header className={styles.header}>
         <span className={styles.brand}>
-          <Shield20Filled /> Solen
+          <SolenLogo /> Solen
         </span>
         <span className={styles.company}>{companyName} · Espace entreprise</span>
       </header>

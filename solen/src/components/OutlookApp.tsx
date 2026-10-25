@@ -35,13 +35,13 @@ import {
   Search20Regular,
   Send20Regular,
   Settings20Regular,
-  Shield20Filled,
   ShieldError20Regular,
 } from "@fluentui/react-icons";
 import { MAILBOX_OWNER } from "@/data/company";
 import { MAILS, type Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
 import { SpotlightTour, TOUR_STEPS, type TourStep } from "./GuidedTour";
+import { SolenLogo } from "./SolenLogo";
 import { SolenPane } from "./SolenPane";
 import { applyReflex, BADGES, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
 import { analyze } from "./mailClient";
@@ -319,7 +319,7 @@ export const OutlookApp = () => {
                     <Button
                       appearance="subtle"
                       size="small"
-                      icon={<Shield20Filled className={styles.brandIcon} />}
+                      icon={<SolenLogo />}
                       onClick={() => setPaneOpen(true)}
                     >
                       Solen
