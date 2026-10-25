@@ -7,3 +7,22 @@ body {
   padding: 0;
   background: #f5f5f5;
 }
+
+.demo-disclaimer {
+  position: fixed;
+  left: 8px;
+  bottom: 8px;
+  z-index: 1000;
+  max-width: calc(100vw - 16px);
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.18);
+  color: #616161;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+  /* Discrète : ne bloque jamais un clic sur l'interface en dessous. */
+  pointer-events: none;
+}

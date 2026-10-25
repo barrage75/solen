@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Courrier - Claire Bernard - Outlook",
+  title: "Solen — démo",
   description: "Démo Solen : détection des fraudes au virement dans la boîte mail",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Toujours visible, sur toutes les pages : la maquette ne doit jamais passer pour un vrai service Microsoft. */}
+        <p className="demo-disclaimer" role="note">
+          Maquette de démonstration Solen — données fictives, sans lien avec Microsoft
+        </p>
+      </body>
     </html>
   );
 }
