@@ -706,3 +706,107 @@
 .questionsBox ol {
   margin-top: 6px;
 }
+
+/* Visite guidée et commandes visibles de la démo. */
+.topIconButton {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.topIconButton:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.topIconButton:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+.beforeAfter {
+  margin-left: auto;
+}
+.tourBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 4px solid #0b5b3f;
+  background: #f1faf6;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+.tourBarText {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+.tourBarText strong {
+  color: #0b3d2c;
+}
+.tourBarActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tourSurface {
+  max-width: min(560px, calc(100vw - 32px));
+}
+.tourTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tourIntro {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+.tourSteps {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tourStep {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  color: #242424;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tourStep:hover {
+  border-color: #0b5b3f;
+  background: #f1faf6;
+}
+.tourStep:focus-visible {
+  outline: 2px solid #0b5b3f;
+  outline-offset: 1px;
+}
+.tourStepNumber {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #0b5b3f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}

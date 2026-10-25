@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Avatar, Button, FluentProvider, Tooltip, webLightTheme } from "@fluentui/react-components";
 import {
   Alert20Regular,
   Apps24Regular,
+  ArrowSwap20Regular,
   Archive20Regular,
   ArrowForward20Regular,
   ArrowReply20Regular,
@@ -37,6 +38,7 @@ import {
 import { MAILBOX_OWNER } from "@/data/company";
 import { MAILS, type Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
+import { markTourSeen, TOUR_STEPS, TourBar, TourDialog, tourAlreadySeen } from "./GuidedTour";
 import { SolenPane } from "./SolenPane";
 import { applyReflex, BADGES, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
 import { analyze } from "./mailClient";
@@ -100,25 +102,36 @@ export const OutlookApp = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [vigilance, setVigilance] = useState<VigilanceState>(loadVigilance);
   const [toast, setToast] = useState<BadgeId | null>(null);
+  // Visite guidée : affichée au premier chargement seulement, puis rouverte avec le bouton « ? ».
+  const [tourOpen, setTourOpen] = useState(() => !tourAlreadySeen());
+  const [tourStep, setTourStep] = useState<number | null>(null);
 
   const mail = MAILS.find((m) => m.id === selectedId)!;
 
-  // Interrupteur caché pour la démo « avant / après » : Alt+Maj+G. Le jury ne le voit pas.
+  // Démo « avant / après » : retire ou réinstalle Solen. Bouton visible, touche S ou Alt+Maj+G.
+  const toggleInstalled = useCallback(() => {
+    setInstalled((v) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, v ? "0" : "1");
+      } catch {}
+      return !v;
+    });
+    setPaneOpen(true);
+    setDismissed(new Set());
+  }, []);
+
   useEffect(() => {
-    // Raccourcis de démo, invisibles pour le jury. L'app n'a aucun champ de saisie, une seule touche suffit.
+    // Raccourcis de démo. L'app n'a aucun champ de saisie, une seule touche suffit.
     const onKey = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.metaKey || e.altKey || (e.target as HTMLElement).closest?.("input, textarea")) return;
-      const key = e.key.toLowerCase();
-      if (key === "s") {
-        setInstalled((v) => {
-          try {
-            localStorage.setItem(STORAGE_KEY, v ? "0" : "1");
-          } catch {}
-          return !v;
-        });
-        setPaneOpen(true);
-        setDismissed(new Set());
+      if ((e.target as HTMLElement).closest?.("input, textarea")) return;
+      if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyG") {
+        e.preventDefault();
+        toggleInstalled();
+        return;
       }
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const key = e.key.toLowerCase();
+      if (key === "s") toggleInstalled();
       if (key === "r") {
         setVigilance(EMPTY_VIGILANCE);
         saveVigilance(EMPTY_VIGILANCE);
@@ -134,7 +147,7 @@ export const OutlookApp = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [toggleInstalled]);
 
   useEffect(() => {
     // Comme dans Outlook, le module ne tourne que si son volet est ouvert (épinglé) : volet fermé, aucun appel à l'IA.
@@ -170,6 +183,27 @@ export const OutlookApp = () => {
   const select = (id: string) => {
     setSelectedId(id);
     setRead((prev) => new Set(prev).add(id));
+    // Ouvrir un autre mail que celui de l'étape en cours termine la visite.
+    if (tourStep !== null && TOUR_STEPS[tourStep].mailId !== id) setTourStep(null);
+  };
+
+  const closeTourDialog = () => {
+    setTourOpen(false);
+    markTourSeen();
+  };
+
+  // Chaque étape ouvre son mail, Solen installé et volet épinglé : le visiteur voit l'analyse sans connaître les raccourcis.
+  const goToTourStep = (index: number) => {
+    const id = TOUR_STEPS[index].mailId;
+    closeTourDialog();
+    setTourStep(index);
+    setSelectedId(id);
+    setRead((prev) => new Set(prev).add(id));
+    setInstalled(true);
+    try {
+      localStorage.setItem(STORAGE_KEY, "1");
+    } catch {}
+    setPaneOpen(true);
   };
 
   const groups = useMemo(
@@ -186,225 +220,252 @@ export const OutlookApp = () => {
   const showInfobar = installed && paneOpen && result && !dismissed.has(mail.id);
 
   return (
-    <FluentProvider theme={webLightTheme} className={styles.root}>
-      <header className={styles.topBar}>
-        <span className={styles.waffle}>
-          <Grid20Regular />
-        </span>
-        <span className={styles.productName}>Outlook</span>
-        <div className={styles.search}>
-          <Search20Regular />
-          <span>Rechercher</span>
-        </div>
-        <div className={styles.topIcons}>
-          <Alert20Regular />
-          <Settings20Regular />
-          <QuestionCircle20Regular />
-          <Avatar name={MAILBOX_OWNER.name} size={32} color="colorful" />
-        </div>
-      </header>
-
-      <div className={styles.shell}>
-        <nav className={styles.appRail} aria-label="Applications">
-          <span className={styles.railActive}>
-            <Mail24Filled />
+    // La classe de mise en page reste sur un conteneur intérieur : Fluent recopie la classe du fournisseur sur les
+    // couches flottantes (info-bulles, fenêtres), qui couvriraient alors tout l'écran.
+    <FluentProvider theme={webLightTheme}>
+      <div className={styles.root}>
+        <header className={styles.topBar}>
+          <span className={styles.waffle}>
+            <Grid20Regular />
           </span>
-          <Calendar24Regular />
-          <People24Regular />
-          <CheckboxChecked24Regular />
-          <Apps24Regular />
-        </nav>
-
-        <div className={styles.main}>
-          <div className={styles.ribbonTabs}>
-            <span className={styles.ribbonTabActive}>Accueil</span>
-            <span>Afficher</span>
-            <span>Aide</span>
+          <span className={styles.productName}>Outlook</span>
+          <div className={styles.search}>
+            <Search20Regular />
+            <span>Rechercher</span>
           </div>
-          <div className={styles.ribbon}>
-            <Button appearance="primary" size="small">
-              Nouveau courrier
-            </Button>
-            <span className={styles.ribbonSep} />
-            <Button appearance="subtle" size="small" icon={<Delete20Regular />}>
-              Supprimer
-            </Button>
-            <Button appearance="subtle" size="small" icon={<Archive20Regular />}>
-              Archiver
-            </Button>
-            <Button appearance="subtle" size="small" icon={<ShieldError20Regular />}>
-              Signaler
-            </Button>
-            <span className={styles.ribbonSep} />
-            <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />}>
-              Répondre
-            </Button>
-            <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />}>
-              Répondre à tous
-            </Button>
-            <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />}>
-              Transférer
-            </Button>
-            <Button appearance="subtle" size="small" icon={<Flag20Regular />}>
-              Indicateur
-            </Button>
-            {installed && (
-              <>
-                <span className={styles.ribbonSep} />
-                <Button
-                  appearance="subtle"
-                  size="small"
-                  icon={<Shield20Filled className={styles.brandIcon} />}
-                  onClick={() => setPaneOpen(true)}
-                >
-                  Solen
-                </Button>
-              </>
-            )}
-            <Button appearance="subtle" size="small" icon={<MoreHorizontal20Regular />} aria-label="Plus d'options" />
+          <div className={styles.topIcons}>
+            <Alert20Regular />
+            <Settings20Regular />
+            <Tooltip content="Visite guidée de la démo" relationship="label">
+              <button type="button" className={styles.topIconButton} onClick={() => setTourOpen(true)}>
+                <QuestionCircle20Regular />
+              </button>
+            </Tooltip>
+            <Avatar name={MAILBOX_OWNER.name} size={32} color="colorful" />
           </div>
+        </header>
 
-          <div className={styles.panes}>
-            <nav className={styles.folderPane} aria-label="Dossiers">
-              <div className={styles.folderAccount}>
-                <ChevronDown16Regular /> {MAILBOX_OWNER.email}
-              </div>
-              <a className={styles.folderActive}>
-                <MailInbox20Regular /> Boîte de réception {unreadCount > 0 && <b>{unreadCount}</b>}
-              </a>
-              <a>
-                <FolderProhibited20Regular /> Courrier indésirable
-              </a>
-              <a>
-                <Drafts20Regular /> Brouillons
-              </a>
-              <a>
-                <Send20Regular /> Éléments envoyés
-              </a>
-              <a>
-                <Delete20Regular /> Éléments supprimés
-              </a>
-              <a>
-                <Archive20Regular /> Archive
-              </a>
-              <a>
-                <Note20Regular /> Notes
-              </a>
-            </nav>
+        <div className={styles.shell}>
+          <nav className={styles.appRail} aria-label="Applications">
+            <span className={styles.railActive}>
+              <Mail24Filled />
+            </span>
+            <Calendar24Regular />
+            <People24Regular />
+            <CheckboxChecked24Regular />
+            <Apps24Regular />
+          </nav>
 
-            <section className={styles.messageList} aria-label="Boîte de réception">
-              <div className={styles.listHeader}>
-                <div className={styles.listTabs}>
-                  <span className={styles.listTabActive}>Prioritaire</span>
-                  <span>Autres</span>
-                </div>
-                <Filter20Regular />
-              </div>
-              {groups.map((g) => (
-                <div key={g.label}>
-                  <div className={styles.groupLabel}>{g.label}</div>
-                  {g.mails.map((m) => {
-                    const unread = m.unread && !read.has(m.id);
-                    return (
-                      <button
-                        key={m.id}
-                        type="button"
-                        className={`${styles.listItem} ${m.id === selectedId ? styles.listItemSelected : ""} ${unread ? styles.listItemUnread : ""}`}
-                        onClick={() => select(m.id)}
-                      >
-                        <Avatar name={m.from.displayName} size={32} color="colorful" />
-                        <span className={styles.itemBody}>
-                          <span className={styles.itemTop}>
-                            <span className={styles.itemFrom}>{m.from.displayName}</span>
-                            <span className={styles.itemDate}>{listDate(m)}</span>
-                          </span>
-                          <span className={styles.itemSubject}>
-                            {m.attachments.length > 0 && <Attach16Regular />}
-                            <span className={styles.ellipsis}>{m.subject}</span>
-                          </span>
-                          <span className={styles.itemPreview}>{preview(m)}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              ))}
-            </section>
-
-            <article className={styles.readingPane} aria-label="Volet de lecture">
-              <h1 className={styles.subject}>{mail.subject}</h1>
-              <div className={styles.messageCard}>
-                <div className={styles.messageHeader}>
-                  <Avatar name={mail.from.displayName} size={40} color="colorful" />
-                  <div className={styles.messageMeta}>
-                    <div>
-                      <strong>{mail.from.displayName}</strong>{" "}
-                      <span className={styles.address}>&lt;{mail.from.emailAddress}&gt;</span>
-                    </div>
-                    <div className={styles.muted}>À : {mail.to}</div>
-                  </div>
-                  <div className={styles.messageActions}>
-                    <Tooltip content="Répondre" relationship="label">
-                      <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />} />
-                    </Tooltip>
-                    <Tooltip content="Répondre à tous" relationship="label">
-                      <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />} />
-                    </Tooltip>
-                    <Tooltip content="Transférer" relationship="label">
-                      <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />} />
-                    </Tooltip>
-                    <div className={styles.muted}>{fullDate(mail)}</div>
-                  </div>
-                </div>
-
-                {/* Notification de module (ErrorMessage / InformationalMessage) : 150 caractères au plus,
-                    style imposé par Outlook, et seule l'action « Ignorer » est permise en lecture. */}
-                {showInfobar && (
-                  <div
-                    className={`${styles.infobar} ${result.verdict === "fiable" ? styles.infobarInfo : styles.infobarError}`}
-                    role="status"
-                  >
-                    {result.verdict === "fiable" ? <Info20Regular /> : <ErrorCircle20Filled />}
-                    <span className={styles.infobarText}>{result.infobar}</span>
-                    <Button size="small" onClick={() => setDismissed((prev) => new Set(prev).add(mail.id))}>
-                      Ignorer
+          <div className={styles.main}>
+            <div className={styles.ribbonTabs}>
+              <span className={styles.ribbonTabActive}>Accueil</span>
+              <span>Afficher</span>
+              <span>Aide</span>
+            </div>
+            <div className={styles.ribbon}>
+              <Button appearance="primary" size="small">
+                Nouveau courrier
+              </Button>
+              <span className={styles.ribbonSep} />
+              <Button appearance="subtle" size="small" icon={<Delete20Regular />}>
+                Supprimer
+              </Button>
+              <Button appearance="subtle" size="small" icon={<Archive20Regular />}>
+                Archiver
+              </Button>
+              <Button appearance="subtle" size="small" icon={<ShieldError20Regular />}>
+                Signaler
+              </Button>
+              <span className={styles.ribbonSep} />
+              <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />}>
+                Répondre
+              </Button>
+              <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />}>
+                Répondre à tous
+              </Button>
+              <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />}>
+                Transférer
+              </Button>
+              <Button appearance="subtle" size="small" icon={<Flag20Regular />}>
+                Indicateur
+              </Button>
+              {installed && (
+                <>
+                  <span className={styles.ribbonSep} />
+                  <Tooltip content="Épingler le volet Solen (raccourci P)" relationship="description">
+                    <Button
+                      appearance="subtle"
+                      size="small"
+                      icon={<Shield20Filled className={styles.brandIcon} />}
+                      onClick={() => setPaneOpen(true)}
+                    >
+                      Solen
                     </Button>
+                  </Tooltip>
+                </>
+              )}
+              <Button appearance="subtle" size="small" icon={<MoreHorizontal20Regular />} aria-label="Plus d'options" />
+              <Tooltip
+                content={installed ? "Retirer Solen pour voir la boîte mail sans protection (Alt+Maj+G)" : "Réinstaller Solen (Alt+Maj+G)"}
+                relationship="description"
+              >
+                <Button
+                  className={styles.beforeAfter}
+                  size="small"
+                  icon={<ArrowSwap20Regular />}
+                  aria-pressed={!installed}
+                  onClick={toggleInstalled}
+                >
+                  Avant / après Solen
+                </Button>
+              </Tooltip>
+            </div>
+
+            {tourStep !== null && <TourBar index={tourStep} onStep={goToTourStep} onQuit={() => setTourStep(null)} />}
+
+            <div className={styles.panes}>
+              <nav className={styles.folderPane} aria-label="Dossiers">
+                <div className={styles.folderAccount}>
+                  <ChevronDown16Regular /> {MAILBOX_OWNER.email}
+                </div>
+                <a className={styles.folderActive}>
+                  <MailInbox20Regular /> Boîte de réception {unreadCount > 0 && <b>{unreadCount}</b>}
+                </a>
+                <a>
+                  <FolderProhibited20Regular /> Courrier indésirable
+                </a>
+                <a>
+                  <Drafts20Regular /> Brouillons
+                </a>
+                <a>
+                  <Send20Regular /> Éléments envoyés
+                </a>
+                <a>
+                  <Delete20Regular /> Éléments supprimés
+                </a>
+                <a>
+                  <Archive20Regular /> Archive
+                </a>
+                <a>
+                  <Note20Regular /> Notes
+                </a>
+              </nav>
+
+              <section className={styles.messageList} aria-label="Boîte de réception">
+                <div className={styles.listHeader}>
+                  <div className={styles.listTabs}>
+                    <span className={styles.listTabActive}>Prioritaire</span>
+                    <span>Autres</span>
                   </div>
-                )}
-
-                {mail.attachments.length > 0 && (
-                  <div className={styles.attachments}>
-                    {mail.attachments.map((a) => (
-                      <a key={a.id} className={styles.attachment} href={a.url} target="_blank" rel="noreferrer">
-                        <DocumentPdf24Filled className={styles.pdfIcon} />
-                        <span>
-                          <span className={styles.attachmentName}>{a.name}</span>
-                          <span className={styles.muted}>{kb(a.size)}</span>
-                        </span>
-                      </a>
-                    ))}
+                  <Filter20Regular />
+                </div>
+                {groups.map((g) => (
+                  <div key={g.label}>
+                    <div className={styles.groupLabel}>{g.label}</div>
+                    {g.mails.map((m) => {
+                      const unread = m.unread && !read.has(m.id);
+                      return (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className={`${styles.listItem} ${m.id === selectedId ? styles.listItemSelected : ""} ${unread ? styles.listItemUnread : ""}`}
+                          onClick={() => select(m.id)}
+                        >
+                          <Avatar name={m.from.displayName} size={32} color="colorful" />
+                          <span className={styles.itemBody}>
+                            <span className={styles.itemTop}>
+                              <span className={styles.itemFrom}>{m.from.displayName}</span>
+                              <span className={styles.itemDate}>{listDate(m)}</span>
+                            </span>
+                            <span className={styles.itemSubject}>
+                              {m.attachments.length > 0 && <Attach16Regular />}
+                              <span className={styles.ellipsis}>{m.subject}</span>
+                            </span>
+                            <span className={styles.itemPreview}>{preview(m)}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
+                ))}
+              </section>
 
-                <div className={styles.messageBody}>{mail.body}</div>
-              </div>
-            </article>
+              <article className={styles.readingPane} aria-label="Volet de lecture">
+                <h1 className={styles.subject}>{mail.subject}</h1>
+                <div className={styles.messageCard}>
+                  <div className={styles.messageHeader}>
+                    <Avatar name={mail.from.displayName} size={40} color="colorful" />
+                    <div className={styles.messageMeta}>
+                      <div>
+                        <strong>{mail.from.displayName}</strong>{" "}
+                        <span className={styles.address}>&lt;{mail.from.emailAddress}&gt;</span>
+                      </div>
+                      <div className={styles.muted}>À : {mail.to}</div>
+                    </div>
+                    <div className={styles.messageActions}>
+                      <Tooltip content="Répondre" relationship="label">
+                        <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />} />
+                      </Tooltip>
+                      <Tooltip content="Répondre à tous" relationship="label">
+                        <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />} />
+                      </Tooltip>
+                      <Tooltip content="Transférer" relationship="label">
+                        <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />} />
+                      </Tooltip>
+                      <div className={styles.muted}>{fullDate(mail)}</div>
+                    </div>
+                  </div>
 
-            {installed && paneOpen && (
-              <SolenPane
-                key={mail.id}
-                mail={mail}
-                result={result}
-                error={errors[mail.id]}
-                onClose={() => setPaneOpen(false)}
-                vigilance={vigilance}
-                onReflex={onReflex}
-                notice={toast ? BADGES.find((b) => b.id === toast)?.label : undefined}
-              />
-            )}
+                  {/* Notification de module (ErrorMessage / InformationalMessage) : 150 caractères au plus,
+                      style imposé par Outlook, et seule l'action « Ignorer » est permise en lecture. */}
+                  {showInfobar && (
+                    <div
+                      className={`${styles.infobar} ${result.verdict === "fiable" ? styles.infobarInfo : styles.infobarError}`}
+                      role="status"
+                    >
+                      {result.verdict === "fiable" ? <Info20Regular /> : <ErrorCircle20Filled />}
+                      <span className={styles.infobarText}>{result.infobar}</span>
+                      <Button size="small" onClick={() => setDismissed((prev) => new Set(prev).add(mail.id))}>
+                        Ignorer
+                      </Button>
+                    </div>
+                  )}
+
+                  {mail.attachments.length > 0 && (
+                    <div className={styles.attachments}>
+                      {mail.attachments.map((a) => (
+                        <a key={a.id} className={styles.attachment} href={a.url} target="_blank" rel="noreferrer">
+                          <DocumentPdf24Filled className={styles.pdfIcon} />
+                          <span>
+                            <span className={styles.attachmentName}>{a.name}</span>
+                            <span className={styles.muted}>{kb(a.size)}</span>
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className={styles.messageBody}>{mail.body}</div>
+                </div>
+              </article>
+
+              {installed && paneOpen && (
+                <SolenPane
+                  key={mail.id}
+                  mail={mail}
+                  result={result}
+                  error={errors[mail.id]}
+                  onClose={() => setPaneOpen(false)}
+                  vigilance={vigilance}
+                  onReflex={onReflex}
+                  notice={toast ? BADGES.find((b) => b.id === toast)?.label : undefined}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
+      <TourDialog open={tourOpen} onClose={closeTourDialog} onStep={goToTourStep} />
     </FluentProvider>
   );
 };

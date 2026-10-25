@@ -73,8 +73,8 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
           <Shield20Filled className={styles.brandIcon} /> Solen
         </span>
         <span>
-          <Tooltip content="Épinglé" relationship="label">
-            <Button appearance="subtle" size="small" icon={<Pin20Filled />} />
+          <Tooltip content="Volet épinglé : cliquez ou appuyez sur P pour le désépingler" relationship="description">
+            <Button appearance="subtle" size="small" icon={<Pin20Filled />} aria-label="Désépingler le volet" onClick={onClose} />
           </Tooltip>
           <Tooltip content="Fermer" relationship="label">
             <Button appearance="subtle" size="small" icon={<Dismiss20Regular />} onClick={onClose} />
