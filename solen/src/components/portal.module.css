@@ -24,6 +24,9 @@
   color: #cfe5dc;
   font-size: 13px;
 }
+.headerEnd {
+  margin-left: auto;
+}
 .main {
   max-width: 1200px;
   margin: 0 auto;

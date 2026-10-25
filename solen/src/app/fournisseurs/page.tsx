@@ -13,10 +13,12 @@ export default function SuppliersPage() {
     domain: s.domain,
     maskedIban: maskIban(s.iban),
     phone: s.phone,
-    usualAmount: `${s.usualAmount.min.toLocaleString("fr-FR")} à ${s.usualAmount.max.toLocaleString("fr-FR")} €`,
+    usualMin: s.usualAmount.min,
+    usualMax: s.usualAmount.max,
     // Confirmé = au moins 3 paiements réussis vers cet IBAN.
     trust: s.paymentsToIban >= 3 ? "confirmé" : "nouveau",
-    learnedFrom: `${s.paymentsToIban} paiements depuis ${s.since}`,
+    payments: s.paymentsToIban,
+    since: s.since,
   }));
 
   return <SupplierPortal companyName={COMPANY.name} rows={rows} />;

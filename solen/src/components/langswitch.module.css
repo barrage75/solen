@@ -1,0 +1,34 @@
+/* Sur fond coloré (en-tête Outlook bleu ou en-tête vert des pages Solen) : blanc et contour clair. */
+.switch {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.on,
+.off {
+  min-width: 34px;
+  padding: 3px 8px;
+  border: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.on {
+  background: #fff;
+  color: #242424;
+}
+.off {
+  background: transparent;
+  color: #fff;
+}
+.off:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.on:focus-visible,
+.off:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}

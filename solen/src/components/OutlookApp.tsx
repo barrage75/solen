@@ -43,11 +43,17 @@ import {
 } from "@fluentui/react-icons";
 import { MAILBOX_OWNER } from "@/data/company";
 import { MAILS, type Mail } from "@/data/mails";
+import { displayMail } from "@/data/mails.en";
+import { useLang } from "@/i18n/lang";
+import { translateResult } from "@/i18n/result";
+import type { Strings } from "@/i18n/ui";
+import { useStrings } from "@/i18n/useStrings";
 import type { AnalysisResult } from "@/lib/analyze";
-import { SpotlightTour, TOUR_STEPS, type TourStep } from "./GuidedTour";
+import { SpotlightTour, tourSteps, type TourStep } from "./GuidedTour";
+import { LangSwitch } from "./LangSwitch";
 import { SolenLogo } from "./SolenLogo";
 import { SolenPane } from "./SolenPane";
-import { applyReflex, BADGES, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
+import { applyReflex, EMPTY_VIGILANCE, type BadgeId, type Reflex, type VigilanceState } from "./vigilance";
 import { analyze } from "./mailClient";
 import styles from "./outlook.module.css";
 
@@ -79,17 +85,15 @@ const dateOf = (mail: Mail) => {
   return d;
 };
 
-const listDate = (mail: Mail) =>
+const listDate = (mail: Mail, locale: string) =>
   mail.received.dayOffset === 0
     ? mail.received.time
-    : dateOf(mail).toLocaleDateString("fr-FR", { weekday: "short", day: "2-digit", month: "2-digit" });
+    : dateOf(mail).toLocaleDateString(locale, { weekday: "short", day: "2-digit", month: "2-digit" });
 
-const fullDate = (mail: Mail) =>
-  `${dateOf(mail).toLocaleDateString("fr-FR", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" })} ${mail.received.time}`;
+const fullDate = (mail: Mail, locale: string) =>
+  `${dateOf(mail).toLocaleDateString(locale, { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" })} ${mail.received.time}`;
 
 const preview = (mail: Mail) => mail.body.replace(/\s+/g, " ").slice(0, 110);
-
-const kb = (size: number) => `${Math.round(size / 1024)} Ko`;
 
 // Icône de la pièce jointe selon son type : PDF, image, ou page web (souvent un piège).
 const AttachmentIcon = ({ contentType }: { contentType: string }) =>
@@ -103,6 +107,8 @@ const AttachmentIcon = ({ contentType }: { contentType: string }) =>
 
 export const OutlookApp = () => {
   const router = useRouter();
+  const lang = useLang();
+  const t: Strings = useStrings();
   const [selectedId, setSelectedId] = useState(MAILS[0].id);
   const [read, setRead] = useState<Set<string>>(new Set([MAILS[0].id]));
   // Composant rendu uniquement dans le navigateur (ssr: false) : localStorage est disponible ici.
@@ -131,7 +137,9 @@ export const OutlookApp = () => {
   // Sous 900 px, la liste des mails se replie pour laisser la place au mail et au volet Solen.
   const [listOpen, setListOpen] = useState(false);
 
+  // L'analyse lit toujours le mail d'origine ; l'écran montre sa version dans la langue choisie.
   const mail = MAILS.find((m) => m.id === selectedId)!;
+  const shown = displayMail(mail, lang);
 
   // Démo « avant / après » : retire ou réinstalle Solen. Bouton visible ou touche A.
   const toggleInstalled = useCallback(() => {
@@ -241,14 +249,18 @@ export const OutlookApp = () => {
 
   const groups = useMemo(
     () => [
-      { label: "Aujourd'hui", mails: MAILS.filter((m) => m.received.dayOffset === 0) },
-      { label: "Hier", mails: MAILS.filter((m) => m.received.dayOffset === -1) },
+      { label: t.mailbox.today, mails: MAILS.filter((m) => m.received.dayOffset === 0).map((m) => displayMail(m, lang)) },
+      { label: t.mailbox.yesterday, mails: MAILS.filter((m) => m.received.dayOffset === -1).map((m) => displayMail(m, lang)) },
     ],
-    [],
+    [t, lang],
   );
 
+  // Même tableau tant que la langue ne change pas : la visite ne relance pas son étape à chaque rendu.
+  const steps = useMemo(() => tourSteps(t), [t]);
+
   const unreadCount = MAILS.filter((m) => m.unread && !read.has(m.id)).length;
-  const result = results[mail.id];
+  const rawResult = results[mail.id];
+  const result = rawResult && translateResult(rawResult, lang).result;
   // Un module ne peut afficher sa notification que s'il tourne, c'est-à-dire volet épinglé et ouvert.
   const showInfobar = installed && paneOpen && result && !dismissed.has(mail.id);
 
@@ -264,19 +276,20 @@ export const OutlookApp = () => {
           <span className={styles.productName}>Outlook</span>
           <div className={styles.search}>
             <Search20Regular />
-            <span>Rechercher</span>
+            <span>{t.mailbox.search}</span>
           </div>
           <div className={styles.topIcons}>
             {/* Même onglet : la page fournisseurs a son bouton de retour, et l'état de la boîte mail est conservé. */}
-            <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers" aria-label="Profils fournisseurs">
-              <BuildingMultiple20Regular /> <span className={styles.suppliersText}>Profils fournisseurs</span>
+            <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers" aria-label={t.common.suppliers}>
+              <BuildingMultiple20Regular /> <span className={styles.suppliersText}>{t.common.suppliers}</span>
             </Link>
-            <Link href="/essayer" className={`${styles.suppliersLink} ${styles.compactLink}`} aria-label="Tester votre propre mail">
-              <MailEdit20Regular /> <span>Tester un mail</span>
+            <Link href="/essayer" className={`${styles.suppliersLink} ${styles.compactLink}`} aria-label={t.mailbox.tryMailLabel}>
+              <MailEdit20Regular /> <span>{t.mailbox.tryMail}</span>
             </Link>
+            <LangSwitch />
             <Alert20Regular />
             <Settings20Regular />
-            <Tooltip content="Relancer la visite guidée (raccourci V)" relationship="label">
+            <Tooltip content={t.mailbox.restartTour} relationship="label">
               <button type="button" className={styles.topIconButton} onClick={() => setTourOpen(true)}>
                 <QuestionCircle20Regular />
               </button>
@@ -286,7 +299,7 @@ export const OutlookApp = () => {
         </header>
 
         <div className={styles.shell}>
-          <nav className={styles.appRail} aria-label="Applications">
+          <nav className={styles.appRail} aria-label={t.mailbox.apps}>
             <span className={styles.railActive}>
               <Mail24Filled />
             </span>
@@ -298,43 +311,43 @@ export const OutlookApp = () => {
 
           <div className={styles.main}>
             <div className={styles.ribbonTabs}>
-              <span className={styles.ribbonTabActive}>Accueil</span>
-              <span>Afficher</span>
-              <span>Aide</span>
+              <span className={styles.ribbonTabActive}>{t.mailbox.tabs[0]}</span>
+              <span>{t.mailbox.tabs[1]}</span>
+              <span>{t.mailbox.tabs[2]}</span>
             </div>
             <div className={styles.ribbon}>
               <Button appearance="primary" size="small">
-                Nouveau courrier
+                {t.mailbox.newMail}
               </Button>
               <span className={styles.ribbonExtra}>
                 <span className={styles.ribbonSep} />
                 <Button appearance="subtle" size="small" icon={<Delete20Regular />}>
-                  Supprimer
+                  {t.mailbox.delete}
                 </Button>
                 <Button appearance="subtle" size="small" icon={<Archive20Regular />}>
-                  Archiver
+                  {t.mailbox.archive}
                 </Button>
                 <Button appearance="subtle" size="small" icon={<ShieldError20Regular />}>
-                  Signaler
+                  {t.mailbox.report}
                 </Button>
                 <span className={styles.ribbonSep} />
                 <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />}>
-                  Répondre
+                  {t.mailbox.reply}
                 </Button>
                 <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />}>
-                  Répondre à tous
+                  {t.mailbox.replyAll}
                 </Button>
                 <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />}>
-                  Transférer
+                  {t.mailbox.forward}
                 </Button>
                 <Button appearance="subtle" size="small" icon={<Flag20Regular />}>
-                  Indicateur
+                  {t.mailbox.flag}
                 </Button>
               </span>
               {installed && (
                 <>
                   <span className={styles.ribbonSep} />
-                  <Tooltip content="Ouvrir le volet Solen (raccourci S)" relationship="description">
+                  <Tooltip content={t.mailbox.openPane} relationship="description">
                     <Button
                       appearance="subtle"
                       size="small"
@@ -346,9 +359,9 @@ export const OutlookApp = () => {
                   </Tooltip>
                 </>
               )}
-              <Button appearance="subtle" size="small" icon={<MoreHorizontal20Regular />} aria-label="Plus d'options" />
+              <Button appearance="subtle" size="small" icon={<MoreHorizontal20Regular />} aria-label={t.mailbox.moreOptions} />
               <Tooltip
-                content={installed ? "Retirer Solen pour voir la boîte mail sans protection (raccourci A)" : "Réinstaller Solen (raccourci A)"}
+                content={installed ? t.mailbox.removeSolen : t.mailbox.reinstallSolen}
                 relationship="description"
               >
                 <Button
@@ -358,55 +371,55 @@ export const OutlookApp = () => {
                   aria-pressed={!installed}
                   onClick={toggleInstalled}
                 >
-                  Avant / après Solen
+                  {t.mailbox.beforeAfter}
                 </Button>
               </Tooltip>
             </div>
 
 
             <div className={styles.panes}>
-              <nav className={styles.folderPane} aria-label="Dossiers">
+              <nav className={styles.folderPane} aria-label={t.mailbox.folders}>
                 <div className={styles.folderAccount}>
                   <ChevronDown16Regular /> {MAILBOX_OWNER.email}
                 </div>
                 <a className={styles.folderActive}>
-                  <MailInbox20Regular /> Boîte de réception {unreadCount > 0 && <b>{unreadCount}</b>}
+                  <MailInbox20Regular /> {t.mailbox.inbox} {unreadCount > 0 && <b>{unreadCount}</b>}
                 </a>
                 <a>
-                  <FolderProhibited20Regular /> Courrier indésirable
+                  <FolderProhibited20Regular /> {t.mailbox.junk}
                 </a>
                 <a>
-                  <Drafts20Regular /> Brouillons
+                  <Drafts20Regular /> {t.mailbox.drafts}
                 </a>
                 <a>
-                  <Send20Regular /> Éléments envoyés
+                  <Send20Regular /> {t.mailbox.sent}
                 </a>
                 <a>
-                  <Delete20Regular /> Éléments supprimés
+                  <Delete20Regular /> {t.mailbox.deleted}
                 </a>
                 <a>
-                  <Archive20Regular /> Archive
+                  <Archive20Regular /> {t.mailbox.archiveFolder}
                 </a>
                 <a>
-                  <Note20Regular /> Notes
+                  <Note20Regular /> {t.mailbox.notes}
                 </a>
               </nav>
 
               <section
                 className={`${styles.messageList} ${listOpen ? "" : styles.messageListCollapsed}`}
-                aria-label="Boîte de réception"
+                aria-label={t.mailbox.inbox}
               >
                 {/* Visible seulement sous 900 px (voir outlook.module.css). */}
                 <button type="button" className={styles.listToggle} aria-expanded={listOpen} onClick={() => setListOpen((v) => !v)}>
-                  <MailInbox20Regular /> Boîte de réception {unreadCount > 0 && <b>{unreadCount}</b>}
-                  <span className={styles.listToggleHint}>{listOpen ? "Replier" : "Voir les mails"}</span>
+                  <MailInbox20Regular /> {t.mailbox.inbox} {unreadCount > 0 && <b>{unreadCount}</b>}
+                  <span className={styles.listToggleHint}>{listOpen ? t.mailbox.collapse : t.mailbox.showMails}</span>
                   <ChevronDown16Regular className={listOpen ? styles.chevronOpen : undefined} />
                 </button>
                 <div className={styles.listBody}>
                   <div className={styles.listHeader}>
                     <div className={styles.listTabs}>
-                      <span className={styles.listTabActive}>Prioritaire</span>
-                      <span>Autres</span>
+                      <span className={styles.listTabActive}>{t.mailbox.focused}</span>
+                      <span>{t.mailbox.other}</span>
                     </div>
                     <Filter20Regular />
                   </div>
@@ -426,7 +439,7 @@ export const OutlookApp = () => {
                             <span className={styles.itemBody}>
                               <span className={styles.itemTop}>
                                 <span className={styles.itemFrom}>{m.from.displayName}</span>
-                                <span className={styles.itemDate}>{listDate(m)}</span>
+                                <span className={styles.itemDate}>{listDate(m, t.locale)}</span>
                               </span>
                               <span className={styles.itemSubject}>
                                 {m.attachments.length > 0 && <Attach16Regular />}
@@ -442,29 +455,31 @@ export const OutlookApp = () => {
                 </div>
               </section>
 
-              <article className={styles.readingPane} aria-label="Volet de lecture" data-mail={mail.id}>
-                <h1 className={styles.subject}>{mail.subject}</h1>
+              <article className={styles.readingPane} aria-label={t.mailbox.readingPane} data-mail={mail.id}>
+                <h1 className={styles.subject}>{shown.subject}</h1>
                 <div className={styles.messageCard} data-tour="mail">
                   <div className={styles.messageHeader}>
-                    <Avatar name={mail.from.displayName} size={40} color="colorful" />
+                    <Avatar name={shown.from.displayName} size={40} color="colorful" />
                     <div className={styles.messageMeta}>
                       <div>
-                        <strong>{mail.from.displayName}</strong>{" "}
+                        <strong>{shown.from.displayName}</strong>{" "}
                         <span className={styles.address}>&lt;{mail.from.emailAddress}&gt;</span>
                       </div>
-                      <div className={styles.muted}>À : {mail.to}</div>
+                      <div className={styles.muted}>
+                        {t.mailbox.to} {mail.to}
+                      </div>
                     </div>
                     <div className={styles.messageActions}>
-                      <Tooltip content="Répondre" relationship="label">
+                      <Tooltip content={t.mailbox.reply} relationship="label">
                         <Button appearance="subtle" size="small" icon={<ArrowReply20Regular />} />
                       </Tooltip>
-                      <Tooltip content="Répondre à tous" relationship="label">
+                      <Tooltip content={t.mailbox.replyAll} relationship="label">
                         <Button appearance="subtle" size="small" icon={<ArrowReplyAll20Regular />} />
                       </Tooltip>
-                      <Tooltip content="Transférer" relationship="label">
+                      <Tooltip content={t.mailbox.forward} relationship="label">
                         <Button appearance="subtle" size="small" icon={<ArrowForward20Regular />} />
                       </Tooltip>
-                      <div className={styles.muted}>{fullDate(mail)}</div>
+                      <div className={styles.muted}>{fullDate(mail, t.locale)}</div>
                     </div>
                   </div>
 
@@ -479,7 +494,7 @@ export const OutlookApp = () => {
                       {result.verdict === "fiable" ? <Info20Regular /> : <ErrorCircle20Filled />}
                       <span className={styles.infobarText}>{result.infobar}</span>
                       <Button size="small" onClick={() => setDismissed((prev) => new Set(prev).add(mail.id))}>
-                        Ignorer
+                        {t.mailbox.dismiss}
                       </Button>
                     </div>
                   )}
@@ -491,14 +506,14 @@ export const OutlookApp = () => {
                           <AttachmentIcon contentType={a.contentType} />
                           <span>
                             <span className={styles.attachmentName}>{a.name}</span>
-                            <span className={styles.muted}>{kb(a.size)}</span>
+                            <span className={styles.muted}>{t.mailbox.kb(a.size)}</span>
                           </span>
                         </a>
                       ))}
                     </div>
                   )}
 
-                  <div className={styles.messageBody}>{mail.body}</div>
+                  <div className={styles.messageBody}>{shown.body}</div>
                   {/* Comme dans Outlook, une image jointe s'affiche aussi sous le texte : ici, le QR code piégé. */}
                   {mail.attachments
                     .filter((a) => a.contentType.startsWith("image/"))
@@ -506,7 +521,7 @@ export const OutlookApp = () => {
                       <Image
                         key={a.id}
                         src={a.url}
-                        alt={`Image jointe : ${a.name}`}
+                        alt={t.mailbox.imageAlt(a.name)}
                         width={160}
                         height={160}
                         className={styles.inlineImage}
@@ -518,13 +533,13 @@ export const OutlookApp = () => {
               {installed && paneOpen && (
                 <SolenPane
                   key={mail.id}
-                  mail={mail}
+                  mail={shown}
                   result={result}
                   error={errors[mail.id]}
                   onClose={() => setPaneOpen(false)}
                   vigilance={vigilance}
                   onReflex={onReflex}
-                  notice={toast ? BADGES.find((b) => b.id === toast)?.label : undefined}
+                  notice={toast ? t.badges[toast].label : undefined}
                 />
               )}
             </div>
@@ -533,9 +548,10 @@ export const OutlookApp = () => {
       </div>
       {/* Aide discrète, toujours visible : les raccourcis tiennent en une ligne. */}
       <p className={styles.shortcutsHelp} data-shortcuts-help>
-        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>E</kbd> essai
+        {t.mailbox.shortcuts} <kbd>S</kbd> {t.mailbox.shortcutPane} · <kbd>A</kbd> {t.mailbox.shortcutBeforeAfter} · <kbd>V</kbd>{" "}
+        {t.mailbox.shortcutTour} · <kbd>E</kbd> {t.mailbox.shortcutTry}
       </p>
-      {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
+      {tourOpen && <SpotlightTour steps={steps} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>
   );
 };

@@ -3,17 +3,10 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Spinner } from "@fluentui/react-components";
 import { LockClosed16Regular } from "@fluentui/react-icons";
+import type { Strings } from "@/i18n/ui";
+import { useStrings } from "@/i18n/useStrings";
 import { SolenLogo } from "./SolenLogo";
 import styles from "./tour.module.css";
-
-// Texte d'accueil de la visite.
-export const WELCOME = {
-  title: "Bienvenue dans la démo Solen",
-  intro:
-    "Solen s'ajoute à votre boîte mail et traite tous les types d'arnaques par mail : faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, domaines sosies, mais aussi faux colis, faux remboursement, faux support informatique, liens et QR codes piégés, pièces jointes dangereuses. Le code tranche dès que de l'argent est en jeu, et l'IA explique la fraude en clair.",
-  privacy:
-    "Solen supprime automatiquement tous les mails qu'il a lus : rien n'est conservé, c'est plus sûr pour vos données et conforme au RGPD.",
-};
 
 export type TourStep = {
   id: string;
@@ -27,84 +20,45 @@ export type TourStep = {
   pane?: boolean;
 };
 
-export const TOUR_STEPS: TourStep[] = [
+// Les étapes de la visite, dans la langue du visiteur.
+export const tourSteps = (t: Strings): TourStep[] => [
   {
     id: "accueil",
-    title: WELCOME.title,
+    title: t.tour.welcomeTitle,
     body: (
       <>
-        <p>{WELCOME.intro}</p>
+        <p>{t.tour.welcomeIntro}</p>
         <p className={styles.privacy}>
           <LockClosed16Regular />
-          <span>{WELCOME.privacy}</span>
+          <span>{t.tour.welcomePrivacy}</span>
         </p>
       </>
     ),
   },
-  {
-    id: "rib",
-    title: "Un faux changement de RIB",
-    body: "Nuvio Cloud, un vrai fournisseur, demande de payer sur un nouveau compte. Solen affiche ce bandeau rouge directement dans le mail.",
-    target: "infobar",
-    mail: "nuvio",
-    pane: true,
-  },
-  {
-    id: "volet",
-    title: "Le volet Solen explique pourquoi",
-    body: "Le verdict, le montant en jeu et les raisons. « Règle » signale ce que le code a décidé, « IA » ce que Mistral explique, sans jamais pouvoir adoucir le verdict.",
-    target: "pane",
-    mail: "nuvio",
-    pane: true,
-  },
-  {
-    id: "appel",
-    title: "Toujours une vérification par téléphone",
-    body: "Solen indique qui rappeler, au numéro enregistré et jamais à celui du mail. Cette section reste là même quand Solen ne détecte rien.",
-    target: "callback",
-    mail: "nuvio",
-    pane: true,
-  },
-  {
-    id: "daf",
-    title: "Le vrai mail urgent du DAF : aucune alerte",
-    body: "Urgent et avec un montant, mais authentifié, interne et vers un fournisseur connu payé sur son compte habituel. Solen ne crie pas au loup.",
-    target: "verdict",
-    mail: "daf",
-    pane: true,
-  },
-  {
-    id: "president",
-    title: "La fraude au président",
-    body: "Le nom du PDG, mais une adresse Gmail, 35 000 € et l'ordre de n'en parler à personne. Solen conclut à une fraude, même sans IBAN dans le mail.",
-    target: "mail",
-    mail: "pdg",
-    pane: true,
-  },
-  {
-    id: "fournisseurs",
-    title: "Les profils fournisseurs",
-    body: "Les IBAN de référence viennent des paiements passés, jamais d'un mail. Un mail ne peut jamais modifier un profil.",
-    target: "suppliers",
-  },
+  { id: "rib", title: t.tour.ribTitle, body: t.tour.ribBody, target: "infobar", mail: "nuvio", pane: true },
+  { id: "volet", title: t.tour.paneTitle, body: t.tour.paneBody, target: "pane", mail: "nuvio", pane: true },
+  { id: "appel", title: t.tour.callTitle, body: t.tour.callBody, target: "callback", mail: "nuvio", pane: true },
+  { id: "daf", title: t.tour.cfoTitle, body: t.tour.cfoBody, target: "verdict", mail: "daf", pane: true },
+  { id: "president", title: t.tour.ceoTitle, body: t.tour.ceoBody, target: "mail", mail: "pdg", pane: true },
+  { id: "fournisseurs", title: t.tour.suppliersTitle, body: t.tour.suppliersBody, target: "suppliers" },
   {
     id: "fin",
-    title: "À vous de jouer",
+    title: t.tour.endTitle,
     body: (
       <>
-        <p>Ouvrez n&apos;importe quel mail et regardez ce que Solen en pense.</p>
+        <p>{t.tour.endIntro}</p>
         <ul className={styles.keys}>
           <li>
-            <kbd>S</kbd> ouvre ou ferme le volet Solen
+            <kbd>S</kbd> {t.tour.keyPane}
           </li>
           <li>
-            <kbd>A</kbd> avant / après Solen
+            <kbd>A</kbd> {t.tour.keyBeforeAfter}
           </li>
           <li>
-            <kbd>V</kbd> relance la visite, comme le bouton <kbd>?</kbd> en haut à droite
+            <kbd>V</kbd> {t.tour.keyTour} <kbd>?</kbd> {t.tour.keyTourEnd}
           </li>
           <li>
-            <kbd>E</kbd> teste votre propre mail
+            <kbd>E</kbd> {t.tour.keyTry}
           </li>
         </ul>
       </>
@@ -183,6 +137,7 @@ type Props = {
 
 // Visite guidée animée : l'écran s'assombrit, seule la zone expliquée reste éclairée, et une bulle la commente.
 export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
+  const t = useStrings();
   const [index, setIndex] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
   const [viewport, setViewport] = useState(() => ({ w: window.innerWidth, h: window.innerHeight, reserve: 0 }));
@@ -357,7 +312,7 @@ export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
             ))}
           </ol>
           <span>
-            <span className={styles.srOnly}>Étape </span>
+            <span className={styles.srOnly}>{t.tour.step}</span>
             {index + 1}/{steps.length}
           </span>
         </div>
@@ -370,24 +325,24 @@ export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
         </div>
         {waiting && (
           <p className={styles.waiting} role="status">
-            <Spinner size="extra-tiny" /> Solen analyse le mail…
+            <Spinner size="extra-tiny" /> {t.tour.analyzing}
           </p>
         )}
         {/* Boutons aux couleurs explicites : lisibles quel que soit le thème du navigateur. */}
         <div className={styles.actions}>
           {!last && (
             <button type="button" className={styles.skip} onClick={onClose}>
-              Passer la visite
+              {t.tour.skip}
             </button>
           )}
           <span className={styles.nav}>
             {index > 0 && (
               <button type="button" className={styles.secondary} onClick={() => go(index - 1)}>
-                Précédent
+                {t.tour.previous}
               </button>
             )}
             <button type="button" className={styles.primary} onClick={() => (last ? onClose() : go(index + 1))}>
-              {index === 0 ? "Commencer" : last ? "Terminer" : "Suivant"}
+              {index === 0 ? t.tour.start : last ? t.tour.finish : t.tour.next}
             </button>
           </span>
         </div>

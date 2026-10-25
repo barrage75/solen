@@ -19,6 +19,8 @@ import {
   Warning20Filled,
 } from "@fluentui/react-icons";
 import type { Mail } from "@/data/mails";
+import type { Strings } from "@/i18n/ui";
+import { useStrings } from "@/i18n/useStrings";
 import type { AnalysisResult } from "@/lib/analyze";
 import type { Verdict } from "@/lib/checks";
 import styles from "./outlook.module.css";
@@ -27,20 +29,18 @@ import { BADGES, level, POINTS_PER_LEVEL, type Reflex, type VigilanceState } fro
 
 const STEP_DELAY_MS = 450;
 
-const stepsFor = (mail: Mail) => [
-  "Authentification de l'expéditeur",
-  ...(mail.attachments.length ? [`Lecture de ${mail.attachments[0].name}`] : []),
-  "Comparaison avec le profil fournisseur",
-  "Analyse de la demande par l'IA",
+const stepsFor = (mail: Mail, t: Strings) => [
+  t.pane.stepAuth,
+  ...(mail.attachments.length ? [t.pane.stepRead(mail.attachments[0].name)] : []),
+  t.pane.stepSupplier,
+  t.pane.stepAi,
 ];
 
-const VERDICT_UI: Record<Verdict, { title: string; className: string; Icon: typeof ErrorCircle20Filled }> = {
-  fraude: { title: "Fraude probable", className: styles.verdictFraude, Icon: ErrorCircle20Filled },
-  suspect: { title: "Demande inhabituelle", className: styles.verdictSuspect, Icon: Warning20Filled },
-  fiable: { title: "Aucune anomalie", className: styles.verdictFiable, Icon: CheckmarkCircle20Filled },
+const VERDICT_UI: Record<Verdict, { className: string; Icon: typeof ErrorCircle20Filled }> = {
+  fraude: { className: styles.verdictFraude, Icon: ErrorCircle20Filled },
+  suspect: { className: styles.verdictSuspect, Icon: Warning20Filled },
+  fiable: { className: styles.verdictFiable, Icon: CheckmarkCircle20Filled },
 };
-
-const euros = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0€`;
 
 type Props = {
   mail: Mail;
@@ -54,7 +54,8 @@ type Props = {
 };
 
 export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, notice }: Props) => {
-  const steps = stepsFor(mail);
+  const t = useStrings();
+  const steps = stepsFor(mail, t);
   const stepCount = steps.length;
   const [shownSteps, setShownSteps] = useState(0);
   const isDone = (reflex: Reflex) => vigilance.done.includes(`${mail.id}:${reflex}`);
@@ -77,12 +78,12 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
         </span>
         <span className={styles.addinHeaderActions}>
           <Link href="/fournisseurs" className={styles.paneSuppliersLink}>
-            <BuildingMultiple16Regular /> Profils fournisseurs
+            <BuildingMultiple16Regular /> {t.common.suppliers}
           </Link>
-          <Tooltip content="Volet épinglé : cliquez ou appuyez sur S pour le fermer" relationship="description">
-            <Button appearance="subtle" size="small" icon={<Pin20Filled />} aria-label="Désépingler le volet" onClick={onClose} />
+          <Tooltip content={t.pane.pinnedTip} relationship="description">
+            <Button appearance="subtle" size="small" icon={<Pin20Filled />} aria-label={t.pane.unpin} onClick={onClose} />
           </Tooltip>
-          <Tooltip content="Fermer" relationship="label">
+          <Tooltip content={t.pane.close} relationship="label">
             <Button appearance="subtle" size="small" icon={<Dismiss20Regular />} onClick={onClose} />
           </Tooltip>
         </span>
@@ -93,7 +94,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
           <div className={styles.notice} role="status">
             <ShieldCheckmark16Filled />
             <span>
-              <strong>Réflexe acquis</strong> {notice}
+              <strong>{t.pane.reflexEarned}</strong> {notice}
             </span>
           </div>
         )}
@@ -116,7 +117,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
           </ol>
         )}
 
-        {error && <p className={styles.paneError}>Analyse indisponible pour le moment. Réessayez dans un instant.</p>}
+        {error && <p className={styles.paneError}>{t.pane.error}</p>}
 
         {done && result && <Verdict result={result} isDone={isDone} onReflex={onReflex} />}
       </div>
@@ -125,6 +126,7 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
 };
 
 const VigilanceCard = ({ vigilance }: { vigilance: VigilanceState }) => {
+  const t = useStrings();
   const [open, setOpen] = useState(false);
   const stopped = Object.keys(vigilance.protectedAmounts).length;
   const saved = Object.values(vigilance.protectedAmounts).reduce((a, b) => a + b, 0);
@@ -132,10 +134,10 @@ const VigilanceCard = ({ vigilance }: { vigilance: VigilanceState }) => {
     <section className={styles.vigilance}>
       <button type="button" className={styles.vigilanceHead} onClick={() => setOpen((v) => !v)} aria-expanded={open}>
         <span>
-          <strong>Vigilance</strong> · niveau {level(vigilance.points)} · {vigilance.points} pts
+          <strong>{t.pane.vigilance}</strong> · {t.pane.level(level(vigilance.points))} · {t.pane.points(vigilance.points)}
         </span>
         <span className={styles.muted}>
-          Réflexes {vigilance.badges.length}/{BADGES.length}
+          {t.pane.reflexes} {vigilance.badges.length}/{BADGES.length}
         </span>
       </button>
       <div className={styles.progress}>
@@ -143,8 +145,8 @@ const VigilanceCard = ({ vigilance }: { vigilance: VigilanceState }) => {
       </div>
       <p className={styles.muted}>
         {stopped === 0
-          ? "Chaque bon réflexe face à une fraude vous rapporte des points."
-          : `${stopped} fraude${stopped > 1 ? "s" : ""} déjouée${stopped > 1 ? "s" : ""} · ${euros(saved)} protégés`}
+          ? t.pane.vigilanceHint
+          : t.pane.stopped(stopped, t.euros(saved))}
       </p>
       {open && (
         <ul className={styles.badges}>
@@ -154,8 +156,8 @@ const VigilanceCard = ({ vigilance }: { vigilance: VigilanceState }) => {
               <li key={b.id} className={unlocked ? styles.badgeOn : styles.badgeOff}>
                 {unlocked ? <Checkmark16Filled /> : <span className={styles.stepDot} />}
                 <span>
-                  {b.label}
-                  {!unlocked && <span className={styles.badgeHint}>{b.hint}</span>}
+                  {t.badges[b.id].label}
+                  {!unlocked && <span className={styles.badgeHint}>{t.badges[b.id].hint}</span>}
                 </span>
               </li>
             );
@@ -175,6 +177,7 @@ const Verdict = ({
   isDone: (reflex: Reflex) => boolean;
   onReflex: (reflex: Reflex) => void;
 }) => {
+  const t = useStrings();
   const ui = VERDICT_UI[result.verdict];
   const alert = result.verdict !== "fiable";
   return (
@@ -182,20 +185,20 @@ const Verdict = ({
       <section className={`${styles.verdictCard} ${ui.className}`} data-tour="verdict">
         <ui.Icon />
         <div>
-          <strong>{ui.title}</strong>
-          {alert && result.amount !== undefined && <span className={styles.amount}>{euros(result.amount)} en jeu</span>}
+          <strong>{t.pane.verdict[result.verdict]}</strong>
+          {alert && result.amount !== undefined && <span className={styles.amount}>{t.pane.atStake(t.euros(result.amount))}</span>}
         </div>
       </section>
 
       <section className={styles.paneSection}>
-        <h3>Expéditeur</h3>
+        <h3>{t.pane.sender}</h3>
         <p className={styles.senderLine}>
           {result.sender.verified ? (
             <span className={styles.badgeVerified}>
-              <ShieldCheckmark16Filled /> Vérifié
+              <ShieldCheckmark16Filled /> {t.pane.verified}
             </span>
           ) : (
-            <span className={styles.badgeUnverified}>Non vérifié</span>
+            <span className={styles.badgeUnverified}>{t.pane.unverified}</span>
           )}
           {result.sender.label}
         </p>
@@ -206,7 +209,7 @@ const Verdict = ({
               {result.sender.lookalike.segments.map((s, i) => (s.odd ? <mark key={i}>{s.text}</mark> : <span key={i}>{s.text}</span>))}
             </span>
             <span className={styles.muted}>
-              imite <span className={styles.lookalikeAddress}>{result.sender.lookalike.imitates}</span>
+              {t.pane.imitates} <span className={styles.lookalikeAddress}>{result.sender.lookalike.imitates}</span>
             </span>
           </div>
         )}
@@ -214,17 +217,17 @@ const Verdict = ({
 
       {result.demande && (
         <section className={styles.paneSection}>
-          <h3>La demande</h3>
+          <h3>{t.pane.request}</h3>
           <p>{result.demande}</p>
-          {result.langue && !/fran/i.test(result.langue) && (
-            <p className={styles.muted}>Mail en {result.langue}, analysé en français.</p>
+          {result.langue && !/^(fran|french)/i.test(result.langue) && (
+            <p className={styles.muted}>{t.pane.otherLanguage(result.langue)}</p>
           )}
         </section>
       )}
 
       {result.reasons.length > 0 && (
         <section className={styles.paneSection}>
-          <h3>{alert ? "Pourquoi" : "Ce qui a été vérifié"}</h3>
+          <h3>{alert ? t.pane.why : t.pane.checked}</h3>
           <ul className={styles.reasons}>
             {result.reasons.map((r) => (
               <li key={r.text}>
@@ -236,7 +239,7 @@ const Verdict = ({
                   <Info16Regular className={styles.warnIcon} />
                 )}
                 <span>
-                  {r.text} <span className={styles.provenance}>{r.source === "code" ? "Règle" : "IA"}</span>
+                  {r.text} <span className={styles.provenance}>{r.source === "code" ? t.pane.sourceCode : t.pane.sourceAi}</span>
                 </span>
               </li>
             ))}
@@ -246,7 +249,7 @@ const Verdict = ({
 
       {result.techniques.length > 0 && (
         <section className={styles.paneSection}>
-          <h3>Techniques de manipulation repérées</h3>
+          <h3>{t.pane.techniques}</h3>
           <div className={styles.tags}>
             {result.techniques.map((t) => (
               <span key={t} className={styles.tag}>
@@ -260,56 +263,56 @@ const Verdict = ({
       {/* Section d'appel toujours présente : l'IA peut juger fiable un mail frauduleux. */}
       {alert ? (
         <section className={styles.paneSection} data-tour="callback">
-          <h3>Que faire</h3>
+          <h3>{t.pane.whatToDo}</h3>
           <p>
-            {result.amount !== undefined ? "Ne payez pas." : "Ne cliquez pas."} Appelez <strong>{result.callback.who}</strong> au{" "}
-            <strong className={styles.phone}>{result.callback.phone}</strong> (numéro connu, pas celui du mail).
+            {result.amount !== undefined ? t.pane.dontPay : t.pane.dontClick} {t.pane.call} <strong>{result.callback.who}</strong>{" "}
+            {t.pane.at} <strong className={styles.phone}>{result.callback.phone}</strong> {t.pane.knownNumber}
           </p>
           <CallbackQuestions questions={result.callback.questions} />
           <div className={styles.paneActions}>
             <Button appearance="primary" icon={<Call20Regular />} onClick={() => onReflex("contre-appel")} disabled={isDone("contre-appel")}>
-              {isDone("contre-appel") ? "Contre-appel noté" : "Appeler"}
+              {isDone("contre-appel") ? t.pane.callDone : t.pane.callAction}
             </Button>
             <Button icon={<PersonAlert20Regular />} onClick={() => onReflex("daf")} disabled={isDone("daf")}>
-              {isDone("daf") ? "DAF prévenu" : "Prévenir le DAF"}
+              {isDone("daf") ? t.pane.cfoDone : t.pane.cfoAction}
             </Button>
           </div>
-          {isDone("daf") && <p className={styles.muted}>Résumé envoyé à Marc Lefèvre.</p>}
+          {isDone("daf") && <p className={styles.muted}>{t.pane.cfoSent}</p>}
         </section>
       ) : (
         <section className={`${styles.paneSection} ${styles.doubt}`} data-tour="callback">
-          <h3>Un doute ?</h3>
-          <p className={styles.muted}>Solen n&apos;a rien détecté, mais vous pouvez toujours vérifier.</p>
+          <h3>{t.pane.doubt}</h3>
+          <p className={styles.muted}>{t.pane.nothingFound}</p>
           <p className={styles.doubtNumber}>
-            Numéro enregistré : <strong>{result.callback.who}</strong>, <span className={styles.phone}>{result.callback.phone}</span>
+            {t.pane.registeredNumber} <strong>{result.callback.who}</strong>, <span className={styles.phone}>{result.callback.phone}</span>
           </p>
           <CallbackQuestions questions={result.callback.questions} />
           <div className={styles.paneActions}>
             <Button size="small" icon={<Call20Regular />} onClick={() => onReflex("contre-appel")} disabled={isDone("contre-appel")}>
-              {isDone("contre-appel") ? "Contre-appel noté" : "Appeler"}
+              {isDone("contre-appel") ? t.pane.callDone : t.pane.callAction}
             </Button>
             <Button size="small" icon={<Flag20Regular />} onClick={() => onReflex("signalement")} disabled={isDone("signalement")}>
-              {isDone("signalement") ? "Signalement transmis" : "Signaler ce mail"}
+              {isDone("signalement") ? t.pane.reportDone : t.pane.reportAction}
             </Button>
           </div>
           {isDone("signalement") && (
-            <p className={styles.muted}>Merci : votre signalement sera vérifié et aidera Solen à progresser.</p>
+            <p className={styles.muted}>{t.pane.reportThanks}</p>
           )}
         </section>
       )}
 
       <footer className={styles.paneFooter}>
-        L&apos;IA ne voit jamais les IBAN.{" "}
-        <Link href="/fournisseurs">Profils fournisseurs</Link>
+        {t.pane.footer} <Link href="/fournisseurs">{t.common.suppliers}</Link>
       </footer>
     </div>
   );
 };
 
-const CallbackQuestions = ({ questions }: { questions: string[] }) =>
-  questions.length > 0 ? (
+const CallbackQuestions = ({ questions }: { questions: string[] }) => {
+  const t = useStrings();
+  return questions.length > 0 ? (
     <details className={styles.questionsBox}>
-      <summary>Questions à poser ({questions.length})</summary>
+      <summary>{t.pane.questions(questions.length)}</summary>
       <ol className={styles.questions}>
         {questions.map((q) => (
           <li key={q}>{q}</li>
@@ -317,3 +320,4 @@ const CallbackQuestions = ({ questions }: { questions: string[] }) =>
       </ol>
     </details>
   ) : null;
+};

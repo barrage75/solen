@@ -6,6 +6,10 @@ import { Button, Field, FluentProvider, Input, Select, Textarea, webLightTheme }
 import { Attach20Regular, Dismiss16Regular, DocumentPdf20Regular, Send20Regular } from "@fluentui/react-icons";
 import type { Mail } from "@/data/mails";
 import type { AnalysisResult } from "@/lib/analyze";
+import { useLang } from "@/i18n/lang";
+import { translateResult, translateRole } from "@/i18n/result";
+import { useStrings } from "@/i18n/useStrings";
+import { LangSwitch } from "./LangSwitch";
 import { SolenLogo } from "./SolenLogo";
 import { SolenPane } from "./SolenPane";
 import { applyReflex, EMPTY_VIGILANCE, type Reflex } from "./vigilance";
@@ -33,21 +37,7 @@ type Props = {
 
 type Shown = { mail: Mail; result?: AnalysisResult; error?: string };
 
-const AUTH_LABEL: Record<AuthChoice, string> = {
-  pass: "Réussie",
-  fail: "Échouée (adresse usurpée)",
-  none: "Absente",
-};
-
-// Ce que la source de l'analyse change pour le visiteur, dit honnêtement.
-const AI_NOTE: Record<AnalysisResult["ai"], string> = {
-  mistral: "Analyse complète : les règles du code, puis Mistral pour comprendre et expliquer la demande. L'IA n'a vu aucun IBAN.",
-  secours:
-    "Exemple de la démo : l'avis de l'IA est une analyse enregistrée à l'avance pour ce mail. Modifiez le texte pour une analyse en direct.",
-  "non-appelée": "Aucune demande d'argent détectée : l'IA n'a pas été sollicitée, les règles du code ont suffi.",
-  échec:
-    "L'IA n'est pas branchée sur cette démo publique : seul le code a analysé ce mail. Sans l'IA, Solen signale par prudence toute demande de paiement.",
-};
+const AUTH_CHOICES: AuthChoice[] = ["pass", "fail", "none"];
 
 const toBase64 = async (attachment: DraftAttachment) => {
   const buffer = attachment.file ? await attachment.file.arrayBuffer() : await (await fetch(attachment.url!)).arrayBuffer();
@@ -81,6 +71,8 @@ const analyze = async (mail: Mail, attachment?: DraftAttachment): Promise<Analys
 };
 
 export const MailTester = ({ companyName, examples, suppliers, people }: Props) => {
+  const lang = useLang();
+  const t = useStrings();
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [exampleId, setExampleId] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ fromEmail?: string; body?: string; attachment?: string }>({});
@@ -108,9 +100,9 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
   const pickFile = (file?: File) => {
     if (!file) return;
     if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-      setErrors((e) => ({ ...e, attachment: "Seuls les PDF sont lus par Solen." }));
+      setErrors((e) => ({ ...e, attachment: t.tester.errPdfType }));
     } else if (file.size > MAX_PDF_BYTES) {
-      setErrors((e) => ({ ...e, attachment: "PDF trop lourd : 5 Mo au plus." }));
+      setErrors((e) => ({ ...e, attachment: t.tester.errPdfSize }));
     } else {
       setErrors((e) => ({ ...e, attachment: undefined }));
       update("attachment", { name: file.name, file });
@@ -121,8 +113,8 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     const found = {
-      fromEmail: isValidEmail(draft.fromEmail) ? undefined : "Indiquez une adresse complète, par exemple compta@fournisseur.fr.",
-      body: draft.body.trim() ? undefined : "Écrivez ou collez le texte du mail.",
+      fromEmail: isValidEmail(draft.fromEmail) ? undefined : t.tester.errEmail,
+      body: draft.body.trim() ? undefined : t.tester.errBody,
     };
     setErrors((e) => ({ ...e, ...found }));
     if (found.fromEmail || found.body) return;
@@ -137,10 +129,13 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
       const result = await analyze(mail, draft.attachment);
       setShown((s) => (s?.mail.id === id ? { ...s, result } : s));
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Analyse impossible.";
+      const message = error instanceof Error ? error.message : t.tester.errAnalyze;
       setShown((s) => (s?.mail.id === id ? { ...s, error: message } : s));
     }
   };
+
+  // Le résultat s'affiche dans la langue du visiteur ; l'analyse, elle, reste celle du serveur.
+  const result = shown?.result && translateResult(shown.result, lang).result;
 
   const onReflex = (reflex: Reflex) => {
     const r = shown?.result;
@@ -167,27 +162,29 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
         <span className={portal.brand}>
           <SolenLogo /> Solen
         </span>
-        <span className={portal.company}>{companyName} · Tester un mail</span>
+        <span className={portal.company}>
+          {companyName} · {t.tester.company}
+        </span>
+        <span className={portal.headerEnd}>
+          <LangSwitch />
+        </span>
       </header>
       <main className={`${portal.main} ${styles.main}`}>
         <Link href="/" className={portal.backLink}>
-          <span aria-hidden="true">←</span> Retour à la boîte mail
+          <span aria-hidden="true">←</span> {t.common.backToMailbox}
         </Link>
 
         <div className={portal.titleRow}>
           <div>
-            <h1>Testez Solen sur votre propre mail</h1>
-            <p className={styles.lead}>
-              Écrivez ou collez un mail : Solen l&apos;analyse comme dans la boîte mail. Vous jouez l&apos;attaquant, et Solen
-              protège {companyName}, une entreprise fictive.
-            </p>
+            <h1>{t.tester.title}</h1>
+            <p className={styles.lead}>{t.tester.lead(companyName)}</p>
           </div>
         </div>
 
         <div className={styles.layout}>
           <form className={styles.form} onSubmit={submit} noValidate>
             <div className={styles.examples}>
-              <span className={styles.examplesLabel}>Partir d&apos;un exemple</span>
+              <span className={styles.examplesLabel}>{t.tester.examples}</span>
               <div className={styles.chips}>
                 {examples.map((x) => (
                   <button
@@ -196,17 +193,18 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
                     className={exampleId === x.id ? styles.chipOn : styles.chip}
                     onClick={() => loadExample(x)}
                   >
-                    {x.label}
+                    {t.tester.exampleLabels[x.id] ?? x.label}
                   </button>
                 ))}
               </div>
+              {t.tester.examplesNote && <span className={styles.examplesNote}>{t.tester.examplesNote}</span>}
             </div>
 
             <div className={styles.row2}>
-              <Field label="Nom affiché">
+              <Field label={t.tester.fromName}>
                 <Input value={draft.fromName} onChange={(_, d) => update("fromName", d.value)} placeholder="Nuvio Cloud" />
               </Field>
-              <Field label="Adresse de l'expéditeur" required validationMessage={errors.fromEmail}>
+              <Field label={t.tester.fromEmail} required validationMessage={errors.fromEmail}>
                 <Input
                   type="email"
                   value={draft.fromEmail}
@@ -220,23 +218,23 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
             </div>
 
             <Field
-              label="Authentification de l'expéditeur (SPF, DKIM, DMARC)"
-              hint="« Réussie » : le mail vient bien du domaine de l'adresse. Un attaquant l'obtient avec son propre domaine sosie ou une adresse Gmail."
+              label={t.tester.auth}
+              hint={t.tester.authHint}
             >
               <Select value={draft.auth} onChange={(_, d) => update("auth", d.value as AuthChoice)}>
-                {(Object.keys(AUTH_LABEL) as AuthChoice[]).map((k) => (
+                {AUTH_CHOICES.map((k) => (
                   <option key={k} value={k}>
-                    {AUTH_LABEL[k]}
+                    {k === "pass" ? t.tester.authPass : k === "fail" ? t.tester.authFail : t.tester.authNone}
                   </option>
                 ))}
               </Select>
             </Field>
 
-            <Field label="Objet">
-              <Input value={draft.subject} onChange={(_, d) => update("subject", d.value)} placeholder="Changement de coordonnées bancaires" />
+            <Field label={t.tester.subject}>
+              <Input value={draft.subject} onChange={(_, d) => update("subject", d.value)} placeholder={t.tester.subjectPlaceholder} />
             </Field>
 
-            <Field label="Texte du mail" required validationMessage={errors.body}>
+            <Field label={t.tester.body} required validationMessage={errors.body}>
               <Textarea
                 value={draft.body}
                 onChange={(_, d) => {
@@ -246,11 +244,11 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
                 maxLength={MAX_BODY_CHARS}
                 resize="vertical"
                 rows={9}
-                placeholder="Bonjour, suite à un changement de banque, merci de régler la facture n°2026-114 de 18 400 € sur notre nouveau compte : FR76 …"
+                placeholder={t.tester.bodyPlaceholder}
               />
             </Field>
 
-            <Field label="Pièce jointe PDF (facultatif)" validationMessage={errors.attachment}>
+            <Field label={t.tester.attachment} validationMessage={errors.attachment}>
               {draft.attachment ? (
                 <span className={styles.attachment}>
                   <DocumentPdf20Regular />
@@ -259,7 +257,7 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
                     appearance="subtle"
                     size="small"
                     icon={<Dismiss16Regular />}
-                    aria-label="Retirer la pièce jointe"
+                    aria-label={t.tester.removeAttachment}
                     onClick={() => update("attachment", undefined)}
                   />
                 </span>
@@ -273,55 +271,49 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
                     onChange={(e) => pickFile(e.target.files?.[0])}
                   />
                   <Button icon={<Attach20Regular />} onClick={() => fileInput.current?.click()}>
-                    Joindre un PDF
+                    {t.tester.attach}
                   </Button>
                 </span>
               )}
             </Field>
 
-            <p className={styles.privacy}>
-              N&apos;utilisez pas de vraies données : le mail part vers le serveur de la démo. Les IBAN et numéros de compte ne
-              sont jamais transmis à l&apos;IA.
-            </p>
+            <p className={styles.privacy}>{t.tester.privacy}</p>
 
             <div className={styles.actions}>
               <Button type="submit" appearance="primary" icon={<Send20Regular />} disabled={running}>
-                {running ? "Analyse en cours…" : "Analyser avec Solen"}
+                {running ? t.tester.analyzing : t.tester.analyze}
               </Button>
               <Button type="button" onClick={clear}>
-                Tout effacer
+                {t.tester.clear}
               </Button>
             </div>
 
             <details className={styles.known}>
-              <summary>Ce que Solen sait de {companyName}</summary>
-              <p>Solen compare chaque mail à ce que l&apos;entreprise connaît déjà : ses fournisseurs et son annuaire.</p>
+              <summary>{t.tester.known(companyName)}</summary>
+              <p>{t.tester.knownIntro}</p>
               <ul>
                 {suppliers.map((s) => (
                   <li key={s.domain}>
-                    Fournisseur <strong>{s.name}</strong> · <span className={styles.mono}>{s.domain}</span>
+                    {t.tester.supplier} <strong>{s.name}</strong> · <span className={styles.mono}>{s.domain}</span>
                   </li>
                 ))}
                 {people.map((p) => (
                   <li key={p.email}>
-                    {p.role} <strong>{p.name}</strong> · <span className={styles.mono}>{p.email}</span>
+                    {lang === "en" ? translateRole(p.role) : p.role} <strong>{p.name}</strong> · <span className={styles.mono}>{p.email}</span>
                   </li>
                 ))}
               </ul>
-              <p>
-                Idées : imitez <span className={styles.mono}>nuvio-cloud.fr</span> en changeant une lettre, écrivez au nom du PDG
-                depuis Gmail, ou glissez un IBAN avec des tirets dans le texte.
-              </p>
+              <p>{t.tester.ideas}</p>
             </details>
           </form>
 
           <div className={styles.result} ref={resultRef} aria-live="polite">
             {shown ? (
               <>
-                {shown.result && (
+                {result && (
                   <>
-                    <p className={`${styles.infobar} ${styles[shown.result.verdict]}`}>{shown.result.infobar}</p>
-                    <p className={styles.aiNote}>{AI_NOTE[shown.result.ai]}</p>
+                    <p className={`${styles.infobar} ${styles[result.verdict]}`}>{result.infobar}</p>
+                    <p className={styles.aiNote}>{t.tester.aiNote[result.ai]}</p>
                   </>
                 )}
                 {shown.error && <p className={styles.error}>{shown.error}</p>}
@@ -329,7 +321,7 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
                   <SolenPane
                     key={shown.mail.id}
                     mail={shown.mail}
-                    result={shown.result}
+                    result={result}
                     error={shown.error}
                     onClose={() => setShown(null)}
                     vigilance={vigilance}
@@ -340,7 +332,7 @@ export const MailTester = ({ companyName, examples, suppliers, people }: Props) 
             ) : (
               <div className={styles.placeholder}>
                 <SolenLogo />
-                <p>Le volet Solen s&apos;affichera ici, comme dans la boîte mail.</p>
+                <p>{t.tester.placeholder}</p>
               </div>
             )}
           </div>

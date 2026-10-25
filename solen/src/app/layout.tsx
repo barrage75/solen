@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DemoChrome } from "@/components/DemoChrome";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,9 +15,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         {/* Toujours visible, sur toutes les pages : la maquette ne doit jamais passer pour un vrai service Microsoft. */}
-        <p className="demo-disclaimer" role="note">
-          Maquette de démonstration Solen — données fictives, sans lien avec Microsoft
-        </p>
+        <DemoChrome />
       </body>
     </html>
   );

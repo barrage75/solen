@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button, FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { ArrowSync20Regular, ShieldCheckmark16Filled } from "@fluentui/react-icons";
+import { useStrings } from "@/i18n/useStrings";
+import { LangSwitch } from "./LangSwitch";
 import { SolenLogo } from "./SolenLogo";
 import styles from "./portal.module.css";
 
@@ -13,12 +15,15 @@ export type SupplierRow = {
   domain: string;
   maskedIban: string;
   phone: string;
-  usualAmount: string;
+  usualMin: number;
+  usualMax: number;
   trust: "confirmé" | "nouveau";
-  learnedFrom: string;
+  payments: number;
+  since: string;
 };
 
 export const SupplierPortal = ({ companyName, rows }: { companyName: string; rows: SupplierRow[] }) => {
+  const t = useStrings();
   // Démo : la synchronisation avec le logiciel comptable est simulée (V2).
   const [syncedAt, setSyncedAt] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
@@ -27,7 +32,7 @@ export const SupplierPortal = ({ companyName, rows }: { companyName: string; row
     setSyncing(true);
     setTimeout(() => {
       setSyncing(false);
-      setSyncedAt(new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
+      setSyncedAt(new Date().toLocaleTimeString(t.locale, { hour: "2-digit", minute: "2-digit" }));
     }, 1200);
   };
 
@@ -37,37 +42,36 @@ export const SupplierPortal = ({ companyName, rows }: { companyName: string; row
         <span className={styles.brand}>
           <SolenLogo /> Solen
         </span>
-        <span className={styles.company}>{companyName} · Espace entreprise</span>
+        <span className={styles.company}>
+          {companyName} · {t.suppliers.company}
+        </span>
+        <span className={styles.headerEnd}>
+          <LangSwitch />
+        </span>
       </header>
       <main className={styles.main}>
         <Link href="/" className={styles.backLink}>
-          <span aria-hidden="true">←</span> Retour à la boîte mail
+          <span aria-hidden="true">←</span> {t.common.backToMailbox}
         </Link>
         <div className={styles.titleRow}>
           <div>
-            <h1>Profils fournisseurs</h1>
-            <p>
-              Appris à partir des paiements déjà enregistrés dans votre logiciel comptable. Un mail ne peut jamais modifier un
-              profil.
-            </p>
+            <h1>{t.suppliers.title}</h1>
+            <p>{t.suppliers.intro}</p>
           </div>
           <div className={styles.sync}>
             <Button icon={<ArrowSync20Regular />} onClick={sync} disabled={syncing}>
-              {syncing ? "Synchronisation…" : "Synchroniser avec le logiciel comptable"}
+              {syncing ? t.suppliers.syncing : t.suppliers.sync}
             </Button>
-            {syncedAt && <span>Synchronisé à {syncedAt}</span>}
+            {syncedAt && <span>{t.suppliers.syncedAt(syncedAt)}</span>}
           </div>
         </div>
         <div className={styles.tableBox}>
           <table>
             <thead>
               <tr>
-                <th>Fournisseur</th>
-                <th>Domaine</th>
-                <th>IBAN de référence</th>
-                <th>Téléphone</th>
-                <th>Montant habituel</th>
-                <th>Confiance</th>
+                {t.suppliers.head.map((h) => (
+                  <th key={h}>{h}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -77,13 +81,13 @@ export const SupplierPortal = ({ companyName, rows }: { companyName: string; row
                   <td className={styles.mono}>{r.domain}</td>
                   <td className={styles.mono}>{r.maskedIban}</td>
                   <td className={styles.mono}>{r.phone}</td>
-                  <td>{r.usualAmount}</td>
+                  <td>{t.suppliers.usualAmount(t.euros(r.usualMin), t.euros(r.usualMax))}</td>
                   <td>
                     <span className={r.trust === "confirmé" ? styles.trustOk : styles.trustNew}>
                       {r.trust === "confirmé" && <ShieldCheckmark16Filled />}
-                      {r.trust === "confirmé" ? "Confirmé" : "Nouveau"}
+                      {r.trust === "confirmé" ? t.suppliers.confirmed : t.suppliers.newTrust}
                     </span>
-                    <span className={styles.learned}>{r.learnedFrom}</span>
+                    <span className={styles.learned}>{t.suppliers.learnedFrom(r.payments, r.since)}</span>
                   </td>
                 </tr>
               ))}

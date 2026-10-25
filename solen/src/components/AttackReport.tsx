@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { Button, FluentProvider, Spinner, webLightTheme } from "@fluentui/react-components";
 import { ArrowClockwise20Regular, CheckmarkCircle20Filled, ChevronDown16Regular, DismissCircle20Filled } from "@fluentui/react-icons";
 import type { Verdict } from "@/lib/checks";
+import { useLang } from "@/i18n/lang";
+import { translateFinding, translateInfobar } from "@/i18n/result";
+import { useStrings } from "@/i18n/useStrings";
+import { CASE_TITLES_EN } from "@/redteam/cases.en";
+import { LangSwitch } from "./LangSwitch";
 import { SolenLogo } from "./SolenLogo";
 import portal from "./portal.module.css";
 import styles from "./attacks.module.css";
@@ -25,16 +30,14 @@ export type AttackRow = {
 type Props = { companyName: string; rows: AttackRow[] | null; durationMs?: number; ranAt?: string };
 
 const GENUINE = "Fausse alerte";
-const VERDICT_LABEL: Record<Verdict, string> = { fiable: "Fiable", suspect: "Suspect", fraude: "Fraude" };
 const VERDICT_CLASS: Record<Verdict, string> = { fiable: styles.vFiable, suspect: styles.vSuspect, fraude: styles.vFraude };
 // Délai entre deux lignes révélées : assez lent pour voir les coches tomber, assez rapide pour ne pas faire attendre.
 const REVEAL_MS = 70;
 
-const familyLabel = (family: string) => (family === GENUINE ? "Vrai mail" : family);
-
-const VerdictBadge = ({ verdict }: { verdict: Verdict }) => (
-  <span className={`${styles.verdict} ${VERDICT_CLASS[verdict]}`}>{VERDICT_LABEL[verdict]}</span>
-);
+const VerdictBadge = ({ verdict }: { verdict: Verdict }) => {
+  const t = useStrings();
+  return <span className={`${styles.verdict} ${VERDICT_CLASS[verdict]}`}>{t.attacks.verdict[verdict]}</span>;
+};
 
 // Révèle les lignes une à une après chaque rejeu. Mouvement réduit : tout s'affiche d'un coup.
 const useReveal = (count: number, runKey: string | undefined) => {
@@ -59,6 +62,13 @@ const useReveal = (count: number, runKey: string | undefined) => {
 
 export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) => {
   const router = useRouter();
+  const lang = useLang();
+  const t = useStrings();
+  const familyLabel = (f: string) => t.attacks.families[f] ?? f;
+  // En anglais : titre, règle et bandeau traduits ; le mail piégé reste dans sa langue d'origine.
+  const attackTitle = (row: AttackRow) => (lang === "en" ? (CASE_TITLES_EN[row.id] ?? row.attack) : row.attack);
+  const ruleText = (text: string) => (lang === "en" ? (translateFinding(text) ?? text) : text);
+  const infobarText = (text: string) => (lang === "en" ? (translateInfobar(text) ?? text) : text);
   const [replaying, startReplay] = useTransition();
   const [family, setFamily] = useState<string | null>(null);
   const all = useMemo(() => rows ?? [], [rows]);
@@ -76,7 +86,7 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
     return [...counts];
   }, [all]);
   const visible = all.map((row, index) => ({ row, index })).filter(({ row }) => !family || row.family === family);
-  const time = ranAt ? new Date(ranAt).toLocaleTimeString("fr-FR") : "";
+  const time = ranAt ? new Date(ranAt).toLocaleTimeString(t.locale) : "";
 
   return (
     // Classe sur un conteneur intérieur : Fluent recopie la classe du fournisseur sur ses couches flottantes
@@ -87,19 +97,25 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
         <span className={portal.brand}>
           <SolenLogo /> Solen
         </span>
-        <span className={portal.company}>{companyName} · Tests de sécurité</span>
+        <span className={portal.company}>
+          {companyName} · {t.attacks.company}
+        </span>
+        <span className={portal.headerEnd}>
+          <LangSwitch />
+        </span>
       </header>
       <main className={portal.main}>
         <Link href="/" className={portal.backLink}>
-          <span aria-hidden="true">←</span> Retour à la boîte mail
+          <span aria-hidden="true">←</span> {t.common.backToMailbox}
         </Link>
 
         <div className={portal.titleRow}>
           <div>
-            <h1>{all.length || 28} mails piégés, rejoués en direct</h1>
+            <h1>{t.attacks.title(all.length || 28)}</h1>
             <p className={styles.lead}>
-              À chaque ouverture de cette page, le serveur rejoue tous les cas avec une <strong>IA piégée</strong> qui répond
-              toujours « fiable ». Une attaque compte comme arrêtée seulement si le code seul la bloque, avec la règle prévue.
+              {t.attacks.leadStart}
+              <strong>{t.attacks.leadFooled}</strong>
+              {t.attacks.leadEnd}
             </p>
           </div>
           <Button
@@ -107,28 +123,28 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
             disabled={rows === null || replaying}
             onClick={() => startReplay(() => router.refresh())}
           >
-            {replaying ? "Rejeu en cours…" : "Rejouer les attaques"}
+            {replaying ? t.attacks.replaying : t.attacks.replay}
           </Button>
         </div>
 
         <section className={styles.summary} aria-live="polite">
           <div className={styles.stat}>
             <span className={styles.statValue}>{done ? `${stopped}/${attacks.length}` : "…"}</span>
-            <span className={styles.statLabel}>attaques arrêtées par le code</span>
+            <span className={styles.statLabel}>{t.attacks.stopped}</span>
           </div>
           <div className={styles.stat}>
             <span className={styles.statValue}>{done ? falseAlarms : "…"}</span>
-            <span className={styles.statLabel}>fausse alerte sur {genuine.length || 2} vrais mails</span>
+            <span className={styles.statLabel}>{t.attacks.falseAlarms(genuine.length || 2)}</span>
           </div>
           <div className={styles.stat}>
             <span className={styles.statValue}>{done && durationMs ? `${durationMs} ms` : "…"}</span>
-            <span className={styles.statLabel}>{done ? `pour tout rejouer, à ${time}` : "rejeu en cours sur le serveur"}</span>
+            <span className={styles.statLabel}>{done ? t.attacks.duration(time) : t.attacks.running}</span>
           </div>
         </section>
 
-        <div className={styles.filters} role="group" aria-label="Filtrer par famille">
+        <div className={styles.filters} role="group" aria-label={t.attacks.filter}>
           <button type="button" className={family === null ? styles.chipOn : styles.chip} onClick={() => setFamily(null)}>
-            Tous <span>{all.length}</span>
+            {t.attacks.all} <span>{all.length}</span>
           </button>
           {families.map(([f, n]) => (
             <button
@@ -144,7 +160,7 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
 
         {rows === null ? (
           <div className={styles.loading}>
-            <Spinner size="small" /> Le serveur rejoue les mails piégés…
+            <Spinner size="small" /> {t.attacks.loading}
           </div>
         ) : (
           <ol className={styles.list}>
@@ -156,45 +172,50 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
                     <summary className={styles.row}>
                       <span className={styles.status}>
                         {pending ? (
-                          <Spinner size="tiny" aria-label="En cours" />
+                          <Spinner size="tiny" aria-label={t.attacks.pending} />
                         ) : row.stopped ? (
-                          <CheckmarkCircle20Filled className={styles.ok} aria-label="Réussi" />
+                          <CheckmarkCircle20Filled className={styles.ok} aria-label={t.attacks.passed} />
                         ) : (
-                          <DismissCircle20Filled className={styles.ko} aria-label="Échec" />
+                          <DismissCircle20Filled className={styles.ko} aria-label={t.attacks.failed} />
                         )}
                       </span>
                       <span className={styles.text}>
                         <span className={styles.family}>{familyLabel(row.family)}</span>
-                        <span className={styles.attack}>{row.attack}</span>
-                        {!pending && row.decisive && <span className={styles.rule}>Règle : {row.decisive}</span>}
+                        <span className={styles.attack}>{attackTitle(row)}</span>
+                        {!pending && row.decisive && (
+                          <span className={styles.rule}>
+                            {t.attacks.rule} {ruleText(row.decisive)}
+                          </span>
+                        )}
                         {!pending && !row.decisive && row.family === GENUINE && (
-                          <span className={styles.rule}>Aucune alerte : c&apos;est le résultat attendu.</span>
+                          <span className={styles.rule}>{t.attacks.noAlert}</span>
                         )}
                       </span>
                       <span className={styles.verdicts}>
                         <span className={styles.verdictLine}>
-                          <span className={styles.verdictCaption}>Attendu</span>
+                          <span className={styles.verdictCaption}>{t.attacks.expected}</span>
                           <VerdictBadge verdict={row.expected} />
                         </span>
                         <span className={styles.verdictLine}>
-                          <span className={styles.verdictCaption}>Obtenu</span>
+                          <span className={styles.verdictCaption}>{t.attacks.obtained}</span>
                           {pending ? <span className={styles.verdictPending}>…</span> : <VerdictBadge verdict={row.obtained} />}
                         </span>
                       </span>
                       <ChevronDown16Regular className={styles.chevron} aria-hidden="true" />
                     </summary>
                     <div className={styles.detail}>
-                      <p className={styles.detailTitle}>Ce que voit l&apos;utilisateur</p>
-                      <p className={`${styles.infobar} ${VERDICT_CLASS[row.obtained]}`}>{row.infobar}</p>
-                      <p className={styles.detailTitle}>Le mail piégé</p>
+                      <p className={styles.detailTitle}>{t.attacks.userSees}</p>
+                      <p className={`${styles.infobar} ${VERDICT_CLASS[row.obtained]}`}>{infobarText(row.infobar)}</p>
+                      <p className={styles.detailTitle}>{t.attacks.trappedMail}</p>
+                      {t.attacks.mailNote && <p className={styles.mailNote}>{t.attacks.mailNote}</p>}
                       <dl className={styles.mail}>
-                        <dt>De</dt>
+                        <dt>{t.attacks.from}</dt>
                         <dd>{row.mail.from}</dd>
-                        <dt>Objet</dt>
+                        <dt>{t.attacks.subject}</dt>
                         <dd>{row.mail.subject}</dd>
                         {row.mail.attachments.length > 0 && (
                           <>
-                            <dt>Pièces jointes</dt>
+                            <dt>{t.attacks.attachments}</dt>
                             <dd>{row.mail.attachments.join(", ")}</dd>
                           </>
                         )}
@@ -208,10 +229,7 @@ export const AttackReport = ({ companyName, rows, durationMs, ranAt }: Props) =>
           </ol>
         )}
 
-        <p className={styles.footnote}>
-          Les mêmes vérifications tournent dans les tests automatiques à chaque push, dans le fichier
-          src/redteam/redteam.test.ts. Toutes les données sont fictives.
-        </p>
+        <p className={styles.footnote}>{t.attacks.footnote}</p>
       </main>
       </div>
     </FluentProvider>
