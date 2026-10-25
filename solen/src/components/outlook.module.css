@@ -1014,3 +1014,19 @@
     margin-left: auto;
   }
 }
+.tourPrivacy {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #f1faf6;
+  color: #0b3d2c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.tourPrivacy svg {
+  flex: none;
+  margin-top: 2px;
+}

@@ -9,8 +9,17 @@ import {
   DialogSurface,
   DialogTitle,
 } from "@fluentui/react-components";
-import { ArrowLeft16Regular, ArrowRight16Regular, Dismiss16Regular, Shield20Filled } from "@fluentui/react-icons";
+import { ArrowLeft16Regular, ArrowRight16Regular, Dismiss16Regular, LockClosed16Regular, Shield20Filled } from "@fluentui/react-icons";
 import styles from "./outlook.module.css";
+
+// Texte d'accueil de la visite, repris tel quel par chaque version de la visite.
+export const WELCOME = {
+  title: "Bienvenue dans la démo Solen",
+  intro:
+    "Solen s'ajoute à votre boîte mail et traite tous les types d'arnaques par mail : faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, domaines sosies, mais aussi faux colis, faux remboursement, faux support informatique, liens et QR codes piégés, pièces jointes dangereuses. Le code tranche dès que de l'argent est en jeu, et l'IA explique la fraude en clair.",
+  privacy:
+    "Solen supprime automatiquement tous les mails qu'il a lus : rien n'est conservé, c'est plus sûr pour vos données et conforme au RGPD.",
+};
 
 // Les quatre mails qui racontent Solen à un visiteur qui arrive par le lien en ligne.
 export const TOUR_STEPS = [
@@ -54,14 +63,14 @@ export const TourDialog = ({ open, onClose, onStep }: DialogProps) => (
       <DialogBody>
         <DialogTitle>
           <span className={styles.tourTitle}>
-            <Shield20Filled className={styles.brandIcon} /> Bienvenue dans la démo Solen
+            <Shield20Filled className={styles.brandIcon} /> {WELCOME.title}
           </span>
         </DialogTitle>
         <DialogContent>
-          <p className={styles.tourIntro}>
-            Solen s&apos;ajoute à la boîte mail et repère les arnaques au virement : faux changement de RIB, fraude au président,
-            faux support, domaines sosies. Le code tranche dès que de l&apos;argent est en jeu, et l&apos;IA explique la fraude en
-            clair sans jamais voir un IBAN.
+          <p className={styles.tourIntro}>{WELCOME.intro}</p>
+          <p className={styles.tourPrivacy}>
+            <LockClosed16Regular />
+            <span>{WELCOME.privacy}</span>
           </p>
           <ol className={styles.tourSteps}>
             {TOUR_STEPS.map((step, i) => (
