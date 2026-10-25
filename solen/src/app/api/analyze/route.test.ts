@@ -34,4 +34,32 @@ describe("API d'analyse", () => {
     const response = await POST(request("203.0.113.9", { ...newsletter, body: "x".repeat(60_000) }));
     expect(response.status).toBe(413);
   });
+  it("répond 400, sans planter, à un mail aux champs absents ou du mauvais type", async () => {
+    const bad = [
+      null,
+      [],
+      { ...newsletter, body: undefined },
+      { ...newsletter, subject: 42 },
+      { ...newsletter, headers: ["spf=pass"] },
+      { ...newsletter, attachments: "rib.pdf" },
+      { ...newsletter, attachments: [{ name: "rib.pdf", contentType: "application/pdf" }] },
+      { ...newsletter, attachments: [null] },
+    ];
+    for (const [i, body] of bad.entries()) {
+      expect((await POST(request(`198.51.100.${i}`, body))).status).toBe(400);
+    }
+  });
+
+  it("accepte un mail sans objet ni en-têtes", async () => {
+    const minimal = { fromEmail: newsletter.fromEmail, body: newsletter.body };
+    const response = await POST(request("198.51.100.50", minimal));
+    expect(response.status).toBe(200);
+    expect((await response.json()).verdict).toBeDefined();
+  });
+
+  it("refuse une pièce jointe trop lourde avant même de la décoder", async () => {
+    const huge = { name: "rib.pdf", contentType: "application/pdf", contentBase64: "A".repeat(8_000_000) };
+    const response = await POST(request("198.51.100.60", { ...newsletter, attachments: [huge] }));
+    expect(response.status).toBe(413);
+  });
 });
