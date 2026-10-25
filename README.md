@@ -18,9 +18,25 @@ Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What
 - **L'IA ne voit jamais un IBAN.** Les IBAN et numéros de compte sont remplacés par des jetons avant tout envoi à Mistral.
 - **28 attaques rejouées à chaque test.** IBAN cachés, lettres cyrilliques dans un domaine, consigne en blanc sur blanc dans un PDF, faux en-têtes d'authentification, PDF corrompus, conversations détournées. Les tests remplacent l'IA par une IA piégée qui répond toujours « fiable », et vérifient que le code bloque quand même chaque attaque. Vous pouvez les voir rejouées en direct sur la page [28 attaques](https://solen-demo.vercel.app/attaques).
 
+## Comment Solen décide
+
+```mermaid
+flowchart LR
+    M["Mail reçu"] --> C["Contrôles du code<br/>SPF, DKIM, DMARC<br/>domaine sosie, usurpation<br/>IBAN comparé au profil<br/>montant habituel"]
+    M -->|"s'il parle d'argent"| R["IBAN et numéros<br/>de compte masqués"]
+    R --> IA["Mistral comprend<br/>la demande et l'explique"]
+    C --> V{"Verdict final :<br/>le plus sévère des deux"}
+    IA -->|"peut seulement aggraver"| V
+    V --> B["Bandeau rouge<br/>dans le mail"]
+    V --> P["Volet Solen :<br/>les raisons"]
+    V --> T["Rappel au<br/>numéro enregistré"]
+```
+
+Le code tranche dès que de l'argent est en jeu. L'IA ne voit jamais un IBAN, et son avis ne peut jamais adoucir le verdict du code.
+
 ## Essayer la démo
 
-En ligne, sans rien installer : **https://solen-demo.vercel.app**. Une visite guidée animée se lance à l'ouverture.
+En ligne, sans rien installer : **https://solen-demo.vercel.app**. Une visite guidée animée se lance à l'ouverture. Le bouton FR / EN de l'en-tête passe toute la démo en anglais, et le lien https://solen-demo.vercel.app/?lang=en l'ouvre directement en anglais.
 
 Vous pouvez aussi **tester votre propre mail** sur la page [Tester un mail](https://solen-demo.vercel.app/essayer) : vous jouez l'attaquant, avec des exemples prêts à modifier, et Solen l'analyse avec le même volet que dans la boîte mail.
 

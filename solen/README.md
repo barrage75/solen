@@ -36,6 +36,18 @@ La boîte de réception contient 17 mails : 13 arnaques de types différents et 
 
 ## Qui décide quoi
 
+```mermaid
+flowchart LR
+    M["Mail reçu"] --> C["Contrôles du code<br/>SPF, DKIM, DMARC<br/>domaine sosie, usurpation<br/>IBAN comparé au profil<br/>montant habituel"]
+    M -->|"s'il parle d'argent"| R["IBAN et numéros<br/>de compte masqués"]
+    R --> IA["Mistral comprend<br/>la demande et l'explique"]
+    C --> V{"Verdict final :<br/>le plus sévère des deux"}
+    IA -->|"peut seulement aggraver"| V
+    V --> B["Bandeau rouge<br/>dans le mail"]
+    V --> P["Volet Solen :<br/>les raisons"]
+    V --> T["Rappel au<br/>numéro enregistré"]
+```
+
 - **Le code** : authentification de l'expéditeur (SPF, DKIM, DMARC), domaine sosie, usurpation d'un dirigeant, comparaison de l'IBAN avec le profil fournisseur, montant habituel.
 - **Mistral Small** : comprend la demande, la langue et les techniques de manipulation, puis explique en français. Il ne reçoit jamais un IBAN ni un numéro de compte, et son verdict ne peut qu'aggraver celui du code.
 - **Les humains** : un mail ne peut jamais modifier un profil fournisseur. Les profils viennent des paiements passés (page `/fournisseurs`), et Solen propose toujours de rappeler au numéro enregistré.
@@ -132,6 +144,14 @@ La démo s'ouvre sur http://localhost:3000.
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
 
 Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés, avec les IBAN masqués.
+
+### Démo en anglais
+
+Le bouton FR / EN de l'en-tête passe toute la démo en anglais : interface, 17 mails, volet Solen, visite guidée et pages annexes. Le lien `?lang=en` l'ouvre directement en anglais, et le choix suit le visiteur d'une page à l'autre.
+
+- **Le verdict ne dépend pas de la langue** : l'API analyse toujours le mail d'origine, en français. Seul l'affichage est traduit, par `src/i18n/result.ts`, sans toucher au code de détection.
+- **Un test garantit qu'il ne reste aucun français** : il rejoue les 17 mails et les 28 attaques, et échoue si une phrase produite par le code n'a pas de traduction.
+- **Limite** : avec une vraie clé Mistral, les explications de l'IA restent en français, car sa consigne est écrite en français. La démo publique, sans clé, s'affiche entièrement en anglais.
 
 ### Tester son propre mail
 

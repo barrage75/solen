@@ -2,13 +2,13 @@
 
 [![CI](https://github.com/barrage75/solen/actions/workflows/ci.yml/badge.svg)](https://github.com/barrage75/solen/actions/workflows/ci.yml) [![28 attacks tested](https://img.shields.io/badge/attacks%20tested-28%2F28-2ea44f)](https://solen-demo.vercel.app/attaques) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)
 
-[![Try the live demo](https://img.shields.io/badge/%E2%96%B6%20Try%20the%20demo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
+[![Try the live demo](https://img.shields.io/badge/%E2%96%B6%20Try%20the%20demo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app/?lang=en)
 
 [Version française](README.md)
 
 Solen is a mailbox add-in that catches email scams: fake bank detail changes, CEO fraud, payroll diversion, gift card scams, fake bank advisers, fake parcel fees, fake tax refunds, fake invoices, booby-trapped attachments and QR codes, phishing and lookalike domains. It explains each fraud to the user in plain French. Deterministic code makes the call whenever money is at stake. The AI (Mistral) reads and explains the request, never sees an IBAN, and can only make the verdict stricter.
 
-![Guided tour of the demo: Solen stops a fake bank detail change, then a CEO fraud](solen/docs/demo-solen.gif)
+![Guided tour of the demo: Solen stops a fake bank detail change, then a CEO fraud](solen/docs/demo-solen-en.gif)
 
 Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October 2026. All data is fictitious and the demo has no link with Microsoft.
 
@@ -18,11 +18,27 @@ Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October
 - **The AI never sees an IBAN.** IBANs and account numbers are replaced with tokens before anything is sent to Mistral.
 - **28 attacks replayed on every test run.** Hidden IBANs, Cyrillic letters in domains, white-on-white prompt injection in a PDF, forged authentication headers, corrupted PDFs, hijacked reply threads. The red-team suite swaps the AI for a trapped one that always answers "safe", and checks that the code still blocks every attack. Watch them replayed live on the [28 attacks page](https://solen-demo.vercel.app/attaques).
 
+## How Solen decides
+
+```mermaid
+flowchart LR
+    M["Incoming email"] --> C["Code checks<br/>SPF, DKIM, DMARC<br/>lookalike domain, impersonation<br/>IBAN vs supplier profile<br/>usual amount"]
+    M -->|"if it is about money"| R["IBANs and account<br/>numbers masked"]
+    R --> IA["Mistral understands<br/>and explains the request"]
+    C --> V{"Final verdict:<br/>the stricter of the two"}
+    IA -->|"can only make it stricter"| V
+    V --> B["Red banner<br/>in the email"]
+    V --> P["Solen pane:<br/>the reasons"]
+    V --> T["Callback on the<br/>registered number"]
+```
+
+The code makes the call whenever money is at stake. The AI never sees an IBAN, and its opinion can never soften the code's verdict.
+
 ## Try the demo
 
-Online, nothing to install: **https://solen-demo.vercel.app**. An animated guided tour starts when the page opens.
+Online, nothing to install: **https://solen-demo.vercel.app/?lang=en**. The demo opens in English, and an animated guided tour starts right away. The FR / EN switch in the header changes the language at any time.
 
-You can also **try your own email** on the [Tester un mail](https://solen-demo.vercel.app/essayer) page: you play the attacker, start from ready-made examples, and Solen analyzes it with the same pane as in the mailbox.
+You can also **try your own email** on the [Try an email](https://solen-demo.vercel.app/essayer?lang=en) page: you play the attacker, start from ready-made examples, and Solen analyzes it with the same pane as in the mailbox.
 
 To run it locally, the Next.js app lives in the [`solen/`](solen/) folder.
 
