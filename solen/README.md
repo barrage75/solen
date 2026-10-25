@@ -6,8 +6,6 @@ Solen est une extension de boîte mail qui détecte les arnaques par mail (faux 
 
 ![Solen signale un faux changement de RIB dans la boîte mail de démonstration](docs/capture-solen.png)
 
-> La capture se trouve dans `docs/capture-solen.png`. Pour la remplacer, déposez une nouvelle image sous le même nom dans le dossier `docs/`.
-
 Maquette de démonstration : toutes les données sont fictives et la démo n'a aucun lien avec Microsoft.
 
 ## Qui décide quoi
@@ -38,6 +36,18 @@ Cinq exemples marquants :
 - **Conversation détournée « RE: »** : une réponse dans un vrai échange, depuis la vraie boîte piratée du fournisseur, avec un nouvel IBAN.
 
 **La règle** : chaque attaque est arrêtée par le code même si l'IA est trompée. Le test `src/redteam/redteam.test.ts` remplace l'IA par une IA piégée qui répond toujours « fiable », et vérifie que le verdict reste au moins aussi sévère que prévu, et que c'est bien la règle attendue qui a tranché.
+
+## Stack technique
+
+| Couche | Outils |
+| --- | --- |
+| Interface | Next.js 16 (App Router), React 19, Fluent UI, CSS Modules |
+| Langage | TypeScript en mode strict |
+| IA | Mistral Small, réponse en JSON, IBAN masqués avant l'envoi |
+| Pièces jointes | unpdf pour lire les PDF, pdf-lib pour générer ceux de la démo |
+| Tests | Vitest : contrôles, verdicts, API et 28 attaques |
+| Intégration continue | GitHub Actions : lint, tests, build et types à chaque push |
+| Hébergement | Netlify |
 
 ## Lancer le projet
 
@@ -102,6 +112,8 @@ npm test
 
 Les tests rapides couvrent les contrôles (IBAN, expéditeur, montants, verdict) et les 28 attaques. Ils n'appellent jamais Mistral.
 
+À chaque push, GitHub Actions lance le lint, ces tests, le build puis `npm run typecheck`, sans jamais appeler Mistral.
+
 Les tests avec le vrai Mistral coûtent un appel par cas. Ils interrogent un serveur lancé à part, par défaut sur le port 3100, avec la clé dans `.env.local` et sans `SOLEN_AI=secours` :
 
 ```bash
@@ -128,8 +140,6 @@ La variable `SOLEN_URL` permet de viser un autre serveur, et `CASES=id1,id2` de 
 ## Contexte
 
 Projet réalisé pendant le hackathon Finaxys « Build What's Next », les 23 et 24 octobre 2026.
-
-Équipe : [NOMS DE L'ÉQUIPE]
 
 ## Autres commandes
 
