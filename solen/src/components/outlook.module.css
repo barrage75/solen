@@ -363,6 +363,18 @@
 .pdfIcon {
   color: #c50f1f;
 }
+.imageIcon {
+  color: #0f6cbd;
+}
+.webIcon {
+  color: #616161;
+}
+.inlineImage {
+  display: block;
+  margin-top: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
 .messageBody {
   margin-top: 20px;
   white-space: pre-line;

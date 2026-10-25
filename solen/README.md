@@ -4,7 +4,7 @@
 
 [![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
-Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, fraude à la paie, cartes cadeaux, faux conseiller bancaire, faux colis, faux remboursement d'impôt, fausses factures, pièces jointes piégées, hameçonnage, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
+Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, fraude à la paie, cartes cadeaux, faux conseiller bancaire, faux colis, faux remboursement d'impôt, fausses factures, pièces jointes et QR codes piégés, hameçonnage, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Solen signale un faux changement de RIB dans la boîte mail de démonstration](docs/capture-solen.png)
 
@@ -12,7 +12,7 @@ Maquette de démonstration : toutes les données sont fictives et la démo n'a a
 
 ## La boîte de démo
 
-La boîte de réception contient 16 mails : 12 arnaques de types différents et 4 vrais mails qui ne doivent déclencher aucune alerte. Chaque arnaque est signalée par le code seul, même quand l'IA est trompée (test `src/redteam/demoInbox.test.ts`).
+La boîte de réception contient 17 mails : 13 arnaques de types différents et 4 vrais mails qui ne doivent déclencher aucune alerte. Chaque arnaque est signalée par le code seul, même quand l'IA est trompée (test `src/redteam/demoInbox.test.ts`).
 
 | Mail | Type | Ce qui trahit l'arnaque |
 | --- | --- | --- |
@@ -28,6 +28,7 @@ La boîte de réception contient 16 mails : 12 arnaques de types différents et 
 | Delivery Partners, facture DP-2026-118 | Domaine sosie | « de1ivery » avec un 1, nouveau compte bancaire |
 | Domain Services Europe, avis d'expiration | Fausse facture | Prestataire jamais payé, IBAN envoyé par un inconnu |
 | Cabinet Verlaine, facture impayée | Pièce jointe piégée | Facture au format HTML, menace de contentieux |
+| Lumio Data, payez en 10 secondes par QR code | QR code piégé | Lien de paiement caché dans une image, depuis un domaine sosie |
 | Marc Lefèvre, facture Lumio Data urgente | Vrai mail | Collègue authentifié, fournisseur et montant habituels |
 | Lumio Data, relance | Vrai mail | Vrai domaine, compte habituel |
 | Delivery Partners, facture DP-2026-104 | Vrai mail | Vrai domaine, IBAN et montant habituels |

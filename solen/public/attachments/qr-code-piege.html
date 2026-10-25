@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>QR code piégé - démo Solen</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background: #f5f5f5;
+        color: #242424;
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      }
+      main {
+        max-width: 520px;
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+        border-top: 4px solid #b10e1c;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 20px;
+        color: #b10e1c;
+      }
+      p {
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Vous venez de scanner un QR code piégé</h1>
+      <p>
+        Dans une vraie attaque, ce QR code ouvrirait sur votre téléphone une fausse page de paiement. La carte bancaire saisie
+        partirait directement chez le fraudeur.
+      </p>
+      <p>
+        Le piège est efficace parce que le lien est caché dans une image : les filtres de la messagerie ne le voient pas, et le
+        téléphone personnel échappe aux protections de l'entreprise.
+      </p>
+      <p>
+        Aucune donnée n'est collectée sur cette page : c'est une démonstration de Solen, avec des données fictives.
+      </p>
+    </main>
+  </body>
+</html>

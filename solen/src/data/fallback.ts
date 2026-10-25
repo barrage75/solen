@@ -3,6 +3,21 @@
 import type { AiAnalysis } from "@/lib/ai";
 
 export const FALLBACK_ANALYSES: Record<string, AiAnalysis> = {
+  "<20261023074005.9b2c@lumio-data-paiement.fr>": {
+    demande: "Payer la facture F-2026-231 de 2 180 € par carte via un QR code.",
+    langue: "français",
+    techniques: ["urgence", "prétexte d'actualité"],
+    verdict: "fraude",
+    raisons: [
+      "Le lien de paiement est caché dans un QR code, invisible aux filtres.",
+      "Lumio Data est toujours payée par virement, jamais par carte.",
+    ],
+    questionsContreAppel: [
+      "Avez-vous changé de mode de paiement ?",
+      "La facture F-2026-231 existe-t-elle chez vous ?",
+      "Utilisez-vous le domaine lumio-data-paiement.fr ?",
+    ],
+  },
   "<20261023084711.5d0e@rapidocolis-suivi.com>": {
     demande: "Payer 1,99 € de frais de réexpédition sur un lien pour débloquer un colis.",
     langue: "français",

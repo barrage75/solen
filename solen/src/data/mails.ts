@@ -163,6 +163,34 @@ export const MAILS: Mail[] = [
     internetHeaders: authHeaders("gmail.com"),
   },
   {
+    // QR code piégé : le lien de paiement est caché dans une image, invisible pour les filtres, depuis un domaine sosie.
+    id: "qr",
+    internetMessageId: "<20261023074005.9b2c@lumio-data-paiement.fr>",
+    subject: "Facture F-2026-231 : payez en 10 secondes par QR code",
+    from: { displayName: "Lumio Data", emailAddress: "facturation@lumio-data-paiement.fr" },
+    to: "Claire Bernard",
+    received: { dayOffset: 0, time: "07:40" },
+    unread: true,
+    body: [
+      "Bonjour,",
+      "Pour simplifier vos règlements, Lumio Data passe au paiement par QR code. Votre facture F-2026-231 de 2 180,00 € est disponible.",
+      "Scannez le QR code joint avec votre téléphone pour la régler par carte bancaire en quelques secondes.",
+      "Le paiement est attendu avant vendredi pour éviter des frais de relance.",
+      "Service comptabilité, Lumio Data",
+    ].join("\n\n"),
+    attachments: [
+      {
+        id: "lumio-qr",
+        name: "QR_paiement_F-2026-231.png",
+        contentType: "image/png",
+        size: 2100,
+        url: "/attachments/QR_paiement_F-2026-231.png",
+      },
+    ],
+    // Le fraudeur possède ce domaine : l'authentification passe, c'est le nom qui trompe.
+    internetHeaders: authHeaders("lumio-data-paiement.fr"),
+  },
+  {
     // Faux conseiller bancaire : banque fictive, domaine qui n'appartient pas à la banque.
     id: "conseiller",
     internetMessageId: "<20261022174512.a1c9@banquehorizon-alerte.com>",

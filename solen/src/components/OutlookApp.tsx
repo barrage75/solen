@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, Button, FluentProvider, Tooltip, webLightTheme } from "@fluentui/react-components";
@@ -18,6 +19,7 @@ import {
   CheckboxChecked24Regular,
   ChevronDown16Regular,
   Delete20Regular,
+  DocumentGlobe24Filled,
   DocumentPdf24Filled,
   Drafts20Regular,
   ErrorCircle20Filled,
@@ -25,6 +27,7 @@ import {
   Flag20Regular,
   FolderProhibited20Regular,
   Grid20Regular,
+  Image24Filled,
   Info20Regular,
   Mail24Filled,
   MailInbox20Regular,
@@ -88,6 +91,16 @@ const fullDate = (mail: Mail) =>
 const preview = (mail: Mail) => mail.body.replace(/\s+/g, " ").slice(0, 110);
 
 const kb = (size: number) => `${Math.round(size / 1024)} Ko`;
+
+// Icône de la pièce jointe selon son type : PDF, image, ou page web (souvent un piège).
+const AttachmentIcon = ({ contentType }: { contentType: string }) =>
+  contentType === "application/pdf" ? (
+    <DocumentPdf24Filled className={styles.pdfIcon} />
+  ) : contentType.startsWith("image/") ? (
+    <Image24Filled className={styles.imageIcon} />
+  ) : (
+    <DocumentGlobe24Filled className={styles.webIcon} />
+  );
 
 export const OutlookApp = () => {
   const router = useRouter();
@@ -481,7 +494,7 @@ export const OutlookApp = () => {
                     <div className={styles.attachments}>
                       {mail.attachments.map((a) => (
                         <a key={a.id} className={styles.attachment} href={a.url} target="_blank" rel="noreferrer">
-                          <DocumentPdf24Filled className={styles.pdfIcon} />
+                          <AttachmentIcon contentType={a.contentType} />
                           <span>
                             <span className={styles.attachmentName}>{a.name}</span>
                             <span className={styles.muted}>{kb(a.size)}</span>
@@ -492,6 +505,19 @@ export const OutlookApp = () => {
                   )}
 
                   <div className={styles.messageBody}>{mail.body}</div>
+                  {/* Comme dans Outlook, une image jointe s'affiche aussi sous le texte : ici, le QR code piégé. */}
+                  {mail.attachments
+                    .filter((a) => a.contentType.startsWith("image/"))
+                    .map((a) => (
+                      <Image
+                        key={a.id}
+                        src={a.url}
+                        alt={`Image jointe : ${a.name}`}
+                        width={160}
+                        height={160}
+                        className={styles.inlineImage}
+                      />
+                    ))}
                 </div>
               </article>
 
