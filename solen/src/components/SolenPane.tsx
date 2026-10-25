@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button, Spinner, Tooltip } from "@fluentui/react-components";
 import {
+  BuildingMultiple16Regular,
   Call20Regular,
   Checkmark16Filled,
   CheckmarkCircle20Filled,
@@ -73,7 +75,10 @@ export const SolenPane = ({ mail, result, error, onClose, vigilance, onReflex, n
         <span className={styles.addinTitle}>
           <Shield20Filled className={styles.brandIcon} /> Solen
         </span>
-        <span>
+        <span className={styles.addinHeaderActions}>
+          <Link href="/fournisseurs" className={styles.paneSuppliersLink}>
+            <BuildingMultiple16Regular /> Profils fournisseurs
+          </Link>
           <Tooltip content="Volet épinglé : cliquez ou appuyez sur P pour le désépingler" relationship="description">
             <Button appearance="subtle" size="small" icon={<Pin20Filled />} aria-label="Désépingler le volet" onClick={onClose} />
           </Tooltip>
@@ -295,9 +300,7 @@ const Verdict = ({
 
       <footer className={styles.paneFooter}>
         L&apos;IA ne voit jamais les IBAN.{" "}
-        <a href="/fournisseurs" target="_blank" rel="noreferrer">
-          Profils fournisseurs
-        </a>
+        <Link href="/fournisseurs">Profils fournisseurs</Link>
       </footer>
     </div>
   );

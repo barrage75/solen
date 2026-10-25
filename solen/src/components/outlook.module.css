@@ -954,3 +954,63 @@
 .doubtNumber {
   font-size: 13px;
 }
+
+/* Accès aux profils fournisseurs, toujours visible dans l'en-tête et dans le volet Solen. */
+.suppliersLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.suppliersLink:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.suppliersLink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.addinHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.paneSuppliersLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 4px;
+  padding: 3px 8px;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  color: #0b5b3f;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.paneSuppliersLink:hover {
+  background: #f1faf6;
+  border-color: #0b5b3f;
+}
+.paneSuppliersLink:focus-visible {
+  outline: 2px solid #0b5b3f;
+  outline-offset: 1px;
+}
+
+/* Téléphone : la recherche et les icônes décoratives laissent la place au bouton Profils fournisseurs. */
+@media (max-width: 599.98px) {
+  .search,
+  .topIcons > svg {
+    display: none;
+  }
+  .topIcons {
+    margin-left: auto;
+  }
+}

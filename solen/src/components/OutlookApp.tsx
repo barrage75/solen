@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Avatar, Button, FluentProvider, Tooltip, webLightTheme } from "@fluentui/react-components";
 import {
   Alert20Regular,
@@ -11,6 +13,7 @@ import {
   ArrowReply20Regular,
   ArrowReplyAll20Regular,
   Attach16Regular,
+  BuildingMultiple20Regular,
   Calendar24Regular,
   CheckboxChecked24Regular,
   ChevronDown16Regular,
@@ -85,6 +88,7 @@ const preview = (mail: Mail) => mail.body.replace(/\s+/g, " ").slice(0, 110);
 const kb = (size: number) => `${Math.round(size / 1024)} Ko`;
 
 export const OutlookApp = () => {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState(MAILS[0].id);
   const [read, setRead] = useState<Set<string>>(new Set([MAILS[0].id]));
   // Composant rendu uniquement dans le navigateur (ssr: false) : localStorage est disponible ici.
@@ -139,7 +143,7 @@ export const OutlookApp = () => {
         setVigilance(EMPTY_VIGILANCE);
         saveVigilance(EMPTY_VIGILANCE);
       }
-      if (key === "f") window.open("/fournisseurs", "_blank");
+      if (key === "f") router.push("/fournisseurs");
       // P : épingle ou désépingle le volet. Désépinglé, Solen n'analyse plus rien (utile avant la démo).
       if (key === "p") setPaneOpen((v) => !v);
       const demoMail = DEMO_ORDER[Number(key) - 1];
@@ -150,7 +154,7 @@ export const OutlookApp = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [toggleInstalled]);
+  }, [toggleInstalled, router]);
 
   useEffect(() => {
     // Comme dans Outlook, le module ne tourne que si son volet est ouvert (épinglé) : volet fermé, aucun appel à l'IA.
@@ -198,6 +202,7 @@ export const OutlookApp = () => {
     const id = TOUR_STEPS[index].mailId;
     closeTourDialog();
     setTourStep(index);
+    if (!id) return;
     setSelectedId(id);
     setRead((prev) => new Set(prev).add(id));
     setInstalled(true);
@@ -235,6 +240,10 @@ export const OutlookApp = () => {
             <span>Rechercher</span>
           </div>
           <div className={styles.topIcons}>
+            {/* Même onglet : la page fournisseurs a son bouton de retour, et l'état de la boîte mail est conservé. */}
+            <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers">
+              <BuildingMultiple20Regular /> Profils fournisseurs
+            </Link>
             <Alert20Regular />
             <Settings20Regular />
             <Tooltip content="Visite guidée de la démo" relationship="label">

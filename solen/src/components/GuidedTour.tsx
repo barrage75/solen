@@ -34,6 +34,12 @@ export const TOUR_STEPS = [
     title: "La fraude au président depuis Gmail",
     hint: "Le nom du PDG, mais une adresse Gmail, un virement urgent et l'ordre de n'en parler à personne : Solen l'arrête et indique qui rappeler.",
   },
+  {
+    // Pas de mail à ouvrir : l'étape montre le bouton « Profils fournisseurs » en haut de la boîte mail.
+    mailId: null,
+    title: "Les profils fournisseurs",
+    hint: "Le bouton « Profils fournisseurs », en haut à droite, montre les IBAN de référence appris des paiements passés et les changements d'IBAN en attente de validation.",
+  },
 ] as const;
 
 type DialogProps = {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button, FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { ArrowSync20Regular, Shield20Filled, ShieldCheckmark16Filled } from "@fluentui/react-icons";
 import { PendingChange, type Approvers, type PendingChangeData } from "./PendingChange";
@@ -55,6 +56,9 @@ export const SupplierPortal = ({ companyName, rows: initialRows, pendingChange, 
         <span className={styles.company}>{companyName} · Espace entreprise</span>
       </header>
       <main className={styles.main}>
+        <Link href="/" className={styles.backLink}>
+          <span aria-hidden="true">←</span> Retour à la boîte mail
+        </Link>
         <div className={styles.titleRow}>
           <div>
             <h1>Profils fournisseurs</h1>
