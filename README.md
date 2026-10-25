@@ -6,7 +6,7 @@
 
 Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
-![Solen signale un faux changement de RIB dans la boîte mail de démonstration](solen/docs/capture-solen.png)
+![Visite guidée de la démo : Solen bloque un faux changement de RIB puis une fraude au président](solen/docs/demo-solen.gif)
 
 Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What's Next », les 23 et 24 octobre 2026. Toutes les données sont fictives et la démo n'a aucun lien avec Microsoft.
 
