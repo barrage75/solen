@@ -4,11 +4,19 @@
 
 [![Essayer la démo en ligne](https://img.shields.io/badge/%E2%96%B6%20Essayer%20la%20d%C3%A9mo-solen--demo.vercel.app-FFD43B?style=for-the-badge&labelColor=0B1120)](https://solen-demo.vercel.app)
 
+[English version](README.en.md)
+
 Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, faux conseiller bancaire, hameçonnage, faux support informatique, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
 ![Visite guidée de la démo : Solen bloque un faux changement de RIB puis une fraude au président](solen/docs/demo-solen.gif)
 
 Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What's Next », les 23 et 24 octobre 2026. Toutes les données sont fictives et la démo n'a aucun lien avec Microsoft.
+
+## Points forts
+
+- **Le code décide, l'IA explique.** Authentification de l'expéditeur (SPF, DKIM, DMARC), domaines sosies, usurpation d'un dirigeant, contrôle de l'IBAN et du montant : ce sont des règles TypeScript. Le verdict de l'IA peut seulement relever l'alerte, jamais la baisser.
+- **L'IA ne voit jamais un IBAN.** Les IBAN et numéros de compte sont remplacés par des jetons avant tout envoi à Mistral.
+- **28 attaques rejouées à chaque test.** IBAN cachés, lettres cyrilliques dans un domaine, consigne en blanc sur blanc dans un PDF, faux en-têtes d'authentification, PDF corrompus, conversations détournées. Les tests remplacent l'IA par une IA piégée qui répond toujours « fiable », et vérifient que le code bloque quand même chaque attaque.
 
 ## Essayer la démo
 
