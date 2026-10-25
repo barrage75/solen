@@ -900,7 +900,7 @@
 .suppliersLink:hover {
   background: rgba(255, 255, 255, 0.16);
 }
-.attacksLink {
+.compactLink {
   gap: 4px;
 }
 .suppliersLink:focus-visible {
@@ -952,10 +952,10 @@
   }
 }
 
-/* Tablette et téléphone : les boutons Attaques et Tester un mail gardent leur icône
-   et leur nom accessible, sans le texte. */
+/* Tablette et téléphone : le bouton Tester un mail garde son icône
+   et son nom accessible, sans le texte. */
 @media (max-width: 899.98px) {
-  .attacksLink span {
+  .compactLink span {
     display: none;
   }
 }

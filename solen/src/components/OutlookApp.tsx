@@ -39,7 +39,6 @@ import {
   Search20Regular,
   Send20Regular,
   Settings20Regular,
-  ShieldCheckmark20Regular,
   ShieldError20Regular,
 } from "@fluentui/react-icons";
 import { MAILBOX_OWNER } from "@/data/company";
@@ -167,8 +166,6 @@ export const OutlookApp = () => {
         saveVigilance(EMPTY_VIGILANCE);
       } else if (key === "f") {
         router.push("/fournisseurs");
-      } else if (key === "t") {
-        router.push("/attaques");
       } else if (key === "e") {
         router.push("/essayer");
       } else {
@@ -274,10 +271,7 @@ export const OutlookApp = () => {
             <Link href="/fournisseurs" className={styles.suppliersLink} data-tour="suppliers" aria-label="Profils fournisseurs">
               <BuildingMultiple20Regular /> <span className={styles.suppliersText}>Profils fournisseurs</span>
             </Link>
-            <Link href="/attaques" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="28 attaques rejouées en direct">
-              <ShieldCheckmark20Regular /> <span>28 attaques</span>
-            </Link>
-            <Link href="/essayer" className={`${styles.suppliersLink} ${styles.attacksLink}`} aria-label="Tester votre propre mail">
+            <Link href="/essayer" className={`${styles.suppliersLink} ${styles.compactLink}`} aria-label="Tester votre propre mail">
               <MailEdit20Regular /> <span>Tester un mail</span>
             </Link>
             <Alert20Regular />
@@ -539,7 +533,7 @@ export const OutlookApp = () => {
       </div>
       {/* Aide discrète, toujours visible : les raccourcis tiennent en une ligne. */}
       <p className={styles.shortcutsHelp} data-shortcuts-help>
-        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>T</kbd> attaques · <kbd>E</kbd> essai
+        Raccourcis : <kbd>S</kbd> volet Solen · <kbd>A</kbd> avant/après · <kbd>V</kbd> visite · <kbd>E</kbd> essai
       </p>
       {tourOpen && <SpotlightTour steps={TOUR_STEPS} onEnterStep={enterTourStep} onClose={() => setTourOpen(false)} />}
     </FluentProvider>

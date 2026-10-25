@@ -104,9 +104,6 @@ export const TOUR_STEPS: TourStep[] = [
             <kbd>V</kbd> relance la visite, comme le bouton <kbd>?</kbd> en haut à droite
           </li>
           <li>
-            <kbd>T</kbd> ouvre les 28 attaques rejouées en direct
-          </li>
-          <li>
             <kbd>E</kbd> teste votre propre mail
           </li>
         </ul>

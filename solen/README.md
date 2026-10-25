@@ -63,7 +63,7 @@ Cinq exemples marquants :
 
 **La règle** : chaque attaque est arrêtée par le code même si l'IA est trompée. Le test `src/redteam/redteam.test.ts` remplace l'IA par une IA piégée qui répond toujours « fiable », et vérifie que le verdict reste au moins aussi sévère que prévu, et que c'est bien la règle attendue qui a tranché.
 
-**En direct** : la page `/attaques` de la démo rejoue les 28 cas sur le serveur à chaque visite, avec la même IA piégée que les tests, et affiche pour chacun le verdict attendu, le verdict obtenu, la règle qui a tranché et le mail piégé. En ligne : https://solen-demo.vercel.app/attaques. Le bouton « 28 attaques » de l'en-tête et la touche `T` y mènent.
+**En direct** : la page `/attaques` de la démo rejoue les 28 cas sur le serveur à chaque visite, avec la même IA piégée que les tests, et affiche pour chacun le verdict attendu, le verdict obtenu, la règle qui a tranché et le mail piégé. En ligne : https://solen-demo.vercel.app/attaques. Elle n'est pas reliée à la boîte mail de la démo : on l'ouvre depuis ce lien.
 
 ## Stack technique
 
@@ -126,7 +126,6 @@ La démo s'ouvre sur http://localhost:3000.
 | `V` | Relance la visite guidée, comme le bouton « ? ». |
 | `1` à `6` | Ouvre les mails dans l'ordre de la démo (pavé numérique sur un clavier AZERTY). |
 | `F` | Ouvre la page des profils fournisseurs. |
-| `T` | Ouvre la page des 28 attaques rejouées en direct. |
 | `E` | Ouvre la page pour tester son propre mail. |
 | `R` | Remet à zéro les points de vigilance. |
 
