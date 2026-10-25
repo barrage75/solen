@@ -83,7 +83,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "fournisseurs",
     title: "Les profils fournisseurs",
-    body: "Les IBAN de référence viennent des paiements passés, jamais d'un mail. Un changement d'IBAN exige un contre-appel et deux validations.",
+    body: "Les IBAN de référence viennent des paiements passés, jamais d'un mail. Un mail ne peut jamais modifier un profil.",
     target: "suppliers",
   },
   {

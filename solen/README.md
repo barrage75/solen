@@ -12,7 +12,7 @@ Maquette de démonstration : toutes les données sont fictives et la démo n'a a
 
 - **Le code** : authentification de l'expéditeur (SPF, DKIM, DMARC), domaine sosie, usurpation d'un dirigeant, comparaison de l'IBAN avec le profil fournisseur, montant habituel.
 - **Mistral Small** : comprend la demande, la langue et les techniques de manipulation, puis explique en français. Il ne reçoit jamais un IBAN ni un numéro de compte, et son verdict ne peut qu'aggraver celui du code.
-- **Les humains** : un mail ne peut jamais modifier un profil fournisseur. Tout changement d'IBAN passe par un contre-appel et une validation à deux personnes, la comptable puis le DAF (page `/fournisseurs`).
+- **Les humains** : un mail ne peut jamais modifier un profil fournisseur. Les profils viennent des paiements passés (page `/fournisseurs`), et Solen propose toujours de rappeler au numéro enregistré.
 
 ## Testé contre 28 attaques
 
@@ -90,7 +90,7 @@ La démo s'ouvre sur http://localhost:3000.
 
 Les raccourcis tiennent en une seule touche, sans Ctrl, Alt ni Maj, et marchent sur un clavier AZERTY comme QWERTY. Ils sont ignorés pendant la visite et dans un champ de saisie. Une aide discrète les rappelle en bas de l'écran.
 
-Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés (IBAN masqués) et une demande de changement d'IBAN en attente, à valider à deux.
+Le bouton « Profils fournisseurs », dans l'en-tête et dans le volet Solen, ouvre la page `/fournisseurs` dans le même onglet. Elle montre les profils appris des paiements passés, avec les IBAN masqués.
 
 ## Tests
 
@@ -121,7 +121,6 @@ La variable `SOLEN_URL` permet de viser un autre serveur, et `CASES=id1,id2` de 
 
 - **Profils fournisseurs simulés** : en vrai, ils seraient synchronisés avec le logiciel comptable et la banque, jamais modifiés par un mail.
 - **Limite de requêtes gardée en mémoire** : elle n'est pas fiable sur Netlify, où chaque fonction a sa propre mémoire. Il faudra la remplacer par un stockage partagé.
-- **Validation à deux personnes simulée** : en vrai, chaque personne valide depuis son propre compte.
 - **Vraie intégration Outlook et Gmail à faire** : la démo reprend la forme des données d'un module Outlook (Office.js), il reste à brancher les vraies boîtes mail.
 
 ## Contexte

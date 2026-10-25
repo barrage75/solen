@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button, FluentProvider, webLightTheme } from "@fluentui/react-components";
 import { ArrowSync20Regular, Shield20Filled, ShieldCheckmark16Filled } from "@fluentui/react-icons";
-import { PendingChange, type Approvers, type PendingChangeData } from "./PendingChange";
 import styles from "./portal.module.css";
 
 export type SupplierRow = {
@@ -18,15 +17,7 @@ export type SupplierRow = {
   learnedFrom: string;
 };
 
-type Props = {
-  companyName: string;
-  rows: SupplierRow[];
-  pendingChange: PendingChangeData;
-  approvers: Approvers;
-};
-
-export const SupplierPortal = ({ companyName, rows: initialRows, pendingChange, approvers }: Props) => {
-  const [rows, setRows] = useState(initialRows);
+export const SupplierPortal = ({ companyName, rows }: { companyName: string; rows: SupplierRow[] }) => {
   // Démo : la synchronisation avec le logiciel comptable est simulée (V2).
   const [syncedAt, setSyncedAt] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
@@ -38,14 +29,6 @@ export const SupplierPortal = ({ companyName, rows: initialRows, pendingChange, 
       setSyncedAt(new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }));
     }, 1200);
   };
-
-  // Après les deux validations, le profil prend le nouvel IBAN, qui repart de zéro paiement.
-  const onApproved = (supplierId: string, maskedIban: string) =>
-    setRows((prev) =>
-      prev.map((r) =>
-        r.id === supplierId ? { ...r, maskedIban, trust: "nouveau", learnedFrom: "Validé par 2 personnes aujourd'hui, 0 paiement" } : r,
-      ),
-    );
 
   return (
     <FluentProvider theme={webLightTheme} className={styles.root}>
@@ -62,7 +45,10 @@ export const SupplierPortal = ({ companyName, rows: initialRows, pendingChange, 
         <div className={styles.titleRow}>
           <div>
             <h1>Profils fournisseurs</h1>
-            <p>Appris à partir des paiements déjà enregistrés dans votre logiciel comptable.</p>
+            <p>
+              Appris à partir des paiements déjà enregistrés dans votre logiciel comptable. Un mail ne peut jamais modifier un
+              profil.
+            </p>
           </div>
           <div className={styles.sync}>
             <Button icon={<ArrowSync20Regular />} onClick={sync} disabled={syncing}>
@@ -71,7 +57,6 @@ export const SupplierPortal = ({ companyName, rows: initialRows, pendingChange, 
             {syncedAt && <span>Synchronisé à {syncedAt}</span>}
           </div>
         </div>
-        <PendingChange change={pendingChange} approvers={approvers} onApproved={onApproved} />
         <div className={styles.tableBox}>
           <table>
             <thead>
