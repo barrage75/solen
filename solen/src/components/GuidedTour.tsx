@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Button, Spinner } from "@fluentui/react-components";
+import { Spinner } from "@fluentui/react-components";
 import { LockClosed16Regular, Shield20Filled } from "@fluentui/react-icons";
 import styles from "./tour.module.css";
 
@@ -369,21 +369,22 @@ export const SpotlightTour = ({ steps, onEnterStep, onClose }: Props) => {
             <Spinner size="extra-tiny" /> Solen analyse le mail…
           </p>
         )}
+        {/* Boutons aux couleurs explicites : lisibles quel que soit le thème du navigateur. */}
         <div className={styles.actions}>
           {!last && (
-            <Button appearance="subtle" size="small" onClick={onClose}>
+            <button type="button" className={styles.skip} onClick={onClose}>
               Passer la visite
-            </Button>
+            </button>
           )}
           <span className={styles.nav}>
             {index > 0 && (
-              <Button size="small" onClick={() => go(index - 1)}>
+              <button type="button" className={styles.secondary} onClick={() => go(index - 1)}>
                 Précédent
-              </Button>
+              </button>
             )}
-            <Button appearance="primary" size="small" onClick={() => (last ? onClose() : go(index + 1))}>
+            <button type="button" className={styles.primary} onClick={() => (last ? onClose() : go(index + 1))}>
               {index === 0 ? "Commencer" : last ? "Terminer" : "Suivant"}
-            </Button>
+            </button>
           </span>
         </div>
       </div>

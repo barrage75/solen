@@ -4,6 +4,8 @@
   position: fixed;
   inset: 0;
   z-index: 10000;
+  /* Couleurs claires imposées : la bulle reste lisible même si le système est en mode sombre. */
+  color-scheme: light;
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -252,6 +254,56 @@
   gap: 6px;
   margin-left: auto;
 }
+/* Boutons de la bulle : contrastes vérifiés (texte au moins 7:1 sur son fond). */
+.skip,
+.secondary,
+.primary {
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.skip {
+  /* Bordure fine à 3:1 sur le blanc, texte à 10:1 ; plus léger que « Précédent » pour rester secondaire. */
+  border: 1px solid #949494;
+  background: transparent;
+  color: #424242;
+  font-weight: 500;
+}
+.skip:hover {
+  border-color: #616161;
+  color: #242424;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.secondary {
+  border: 1px solid #8a8a8a;
+  background: #ffffff;
+  color: #242424;
+}
+.secondary:hover {
+  background: #f0f0f0;
+}
+.primary {
+  border: 1px solid #0b5b3f;
+  background: #0b5b3f;
+  color: #ffffff;
+}
+.primary:hover {
+  border-color: #08432e;
+  background: #08432e;
+}
+.skip:focus-visible,
+.secondary:focus-visible,
+.primary:focus-visible {
+  outline: 2px solid #0b5b3f;
+  outline-offset: 2px;
+}
+
 .srOnly {
   position: absolute;
   width: 1px;
