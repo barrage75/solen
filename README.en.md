@@ -10,7 +10,7 @@ Solen is a mailbox add-in that catches email scams: fake bank detail changes, CE
 
 ![Guided tour of the demo: Solen stops a fake bank detail change, then a CEO fraud](solen/docs/demo-solen-en.gif)
 
-[▶ Watch the high-quality video (MP4, 52 s)](solen/docs/demo-solen-en.mp4)
+[▶ Watch the high-quality video (MP4, 58 s)](solen/docs/demo-solen-en.mp4)
 
 Demo built during the Finaxys "Build What's Next" hackathon on 23 and 24 October 2026. All data is fictitious and the demo has no link with Microsoft.
 

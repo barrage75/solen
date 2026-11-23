@@ -10,7 +10,7 @@ Solen est une extension de boîte mail qui détecte les arnaques par mail (faux 
 
 ![Visite guidée de la démo : Solen bloque un faux changement de RIB puis une fraude au président](solen/docs/demo-solen.gif)
 
-[▶ Regarder la vidéo en haute qualité (MP4, 53 s)](solen/docs/demo-solen.mp4)
+[▶ Regarder la vidéo en haute qualité (MP4, 57 s)](solen/docs/demo-solen.mp4)
 
 Maquette de démonstration réalisée pendant le hackathon Finaxys « Build What's Next », les 23 et 24 octobre 2026. Toutes les données sont fictives et la démo n'a aucun lien avec Microsoft.
 
