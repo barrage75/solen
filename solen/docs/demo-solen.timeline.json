@@ -1,0 +1,164 @@
+{
+  "language": "fr",
+  "durationSeconds": 52.667,
+  "output": {
+    "video": "demo-solen.mp4",
+    "gif": "demo-solen.gif",
+    "width": 1920,
+    "height": 1200,
+    "fps": 30,
+    "codec": "H.264",
+    "pixelFormat": "yuv420p",
+    "audio": false
+  },
+  "capture": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "recordVideo": {
+      "width": 1440,
+      "height": 900
+    },
+    "output": {
+      "width": 1920,
+      "height": 1200
+    },
+    "zoom": false,
+    "reason": "html zoom 1.5 expanded the 100vh app layout past the 1200px frame; using the requested 1440x900 fallback."
+  },
+  "analysisSources": [
+    {
+      "mail": "nuvio",
+      "ai": "secours",
+      "verdict": "fraude"
+    },
+    {
+      "mail": "daf",
+      "ai": "secours",
+      "verdict": "fiable"
+    },
+    {
+      "mail": "pdg",
+      "ai": "secours",
+      "verdict": "fraude"
+    },
+    {
+      "mail": "essayer-domaine-sosie",
+      "ai": "secours",
+      "verdict": "fraude"
+    }
+  ],
+  "attackSummary": {
+    "totalCases": 28,
+    "stopped": "26/26",
+    "falseAlarms": "0",
+    "genuine": 2
+  },
+  "scenes": [
+    {
+      "id": "nuvio-infobar",
+      "start": 6.283,
+      "end": 9.056,
+      "box": {
+        "x": 875,
+        "y": 379,
+        "width": 552,
+        "height": 99
+      },
+      "zoom": 2,
+      "caption": "Un fournisseur annonce un nouveau RIB."
+    },
+    {
+      "id": "nuvio-verdict-reasons",
+      "start": 9.117,
+      "end": 11.888,
+      "box": {
+        "x": 1488,
+        "y": 401,
+        "width": 403,
+        "height": 461
+      },
+      "zoom": 2,
+      "caption": "Solen compare l'IBAN au profil du fournisseur : il ne correspond pas."
+    },
+    {
+      "id": "nuvio-callback",
+      "start": 11.915,
+      "end": 14.695,
+      "box": {
+        "x": 1488,
+        "y": 976,
+        "width": 403,
+        "height": 171
+      },
+      "zoom": 2,
+      "caption": "Solen conseille d'appeler le numéro déjà connu, jamais celui du mail."
+    },
+    {
+      "id": "daf-verdict",
+      "start": 17.015,
+      "end": 19.789,
+      "box": {
+        "x": 1488,
+        "y": 401,
+        "width": 403,
+        "height": 59
+      },
+      "zoom": 2,
+      "caption": "Un vrai mail urgent ne déclenche pas d'alerte."
+    },
+    {
+      "id": "pdg-mail-verdict",
+      "start": 22.15,
+      "end": 24.921,
+      "box": {
+        "x": 848,
+        "y": 232,
+        "width": 1043,
+        "height": 649
+      },
+      "zoom": 1.841,
+      "caption": "Un PDG n'écrit pas depuis Gmail pour 35 000 €. IA"
+    },
+    {
+      "id": "attack-summary",
+      "start": 30.5,
+      "end": 33.272,
+      "box": {
+        "x": 192,
+        "y": 291,
+        "width": 1536,
+        "height": 99
+      },
+      "zoom": 1.25,
+      "caption": "28 cas rejoués avec une IA piégée : 26/26 attaques bloquées, 0 fausse alerte sur 2 vrais mails."
+    },
+    {
+      "id": "attack-list",
+      "start": 33.998,
+      "end": 36.371,
+      "box": {
+        "x": 192,
+        "y": 163,
+        "width": 1536,
+        "height": 127
+      },
+      "zoom": 1.25,
+      "caption": "28 cas rejoués avec une IA piégée : 26/26 attaques bloquées, 0 fausse alerte sur 2 vrais mails."
+    },
+    {
+      "id": "try-lookalike-example",
+      "start": 41.598,
+      "end": 44.369,
+      "box": {
+        "x": 1195,
+        "y": 76,
+        "width": 480,
+        "height": 1124
+      },
+      "zoom": 1.068,
+      "caption": "Exemple « Domaine sosie » : Solen repère l'adresse qui imite le fournisseur."
+    }
+  ]
+}
