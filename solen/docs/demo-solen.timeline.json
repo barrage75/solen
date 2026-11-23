@@ -1,6 +1,6 @@
 {
   "language": "fr",
-  "durationSeconds": 52.667,
+  "durationSeconds": 56.767,
   "output": {
     "video": "demo-solen.mp4",
     "gif": "demo-solen.gif",
@@ -16,16 +16,23 @@
       "width": 1440,
       "height": 900
     },
-    "recordVideo": {
-      "width": 1440,
-      "height": 900
+    "deviceScaleFactor": 2,
+    "screencast": {
+      "width": 2880,
+      "height": 1800,
+      "format": "jpeg",
+      "quality": 90,
+      "everyNthFrame": 1
     },
     "output": {
       "width": 1920,
       "height": 1200
     },
-    "zoom": false,
-    "reason": "html zoom 1.5 expanded the 100vh app layout past the 1200px frame; using the requested 1440x900 fallback."
+    "averageFps": 12.04,
+    "motionFps": 16.68,
+    "motionFrameCount": 396,
+    "motionDurationSeconds": 23.735,
+    "zoom": false
   },
   "analysisSources": [
     {
@@ -58,73 +65,73 @@
   "scenes": [
     {
       "id": "nuvio-infobar",
-      "start": 6.283,
-      "end": 9.056,
+      "start": 7.837,
+      "end": 11.512,
       "box": {
         "x": 875,
         "y": 379,
         "width": 552,
         "height": 99
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Un fournisseur annonce un nouveau RIB."
     },
     {
       "id": "nuvio-verdict-reasons",
-      "start": 9.117,
-      "end": 11.888,
+      "start": 11.571,
+      "end": 15.239,
       "box": {
         "x": 1488,
         "y": 401,
         "width": 403,
         "height": 461
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Solen compare l'IBAN au profil du fournisseur : il ne correspond pas."
     },
     {
       "id": "nuvio-callback",
-      "start": 11.915,
-      "end": 14.695,
+      "start": 15.57,
+      "end": 19.185,
       "box": {
         "x": 1488,
-        "y": 976,
+        "y": 604,
         "width": 403,
         "height": 171
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Solen conseille d'appeler le numéro déjà connu, jamais celui du mail."
     },
     {
       "id": "daf-verdict",
-      "start": 17.015,
-      "end": 19.789,
+      "start": 21.869,
+      "end": 25.577,
       "box": {
         "x": 1488,
         "y": 401,
         "width": 403,
         "height": 59
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Un vrai mail urgent ne déclenche pas d'alerte."
     },
     {
       "id": "pdg-mail-verdict",
-      "start": 22.15,
-      "end": 24.921,
+      "start": 28.336,
+      "end": 31.948,
       "box": {
         "x": 848,
         "y": 232,
         "width": 1043,
         "height": 649
       },
-      "zoom": 1.841,
-      "caption": "Un PDG n'écrit pas depuis Gmail pour 35 000 €. IA"
+      "zoom": 1.7,
+      "caption": "Un PDG n'écrit pas depuis Gmail pour 35 000 €."
     },
     {
       "id": "attack-summary",
-      "start": 30.5,
-      "end": 33.272,
+      "start": 37.853,
+      "end": 41.143,
       "box": {
         "x": 192,
         "y": 291,
@@ -136,8 +143,8 @@
     },
     {
       "id": "attack-list",
-      "start": 33.998,
-      "end": 36.371,
+      "start": 42.419,
+      "end": 45.736,
       "box": {
         "x": 192,
         "y": 163,
@@ -149,15 +156,15 @@
     },
     {
       "id": "try-lookalike-example",
-      "start": 41.598,
-      "end": 44.369,
+      "start": 52.052,
+      "end": 55.615,
       "box": {
-        "x": 1195,
-        "y": 76,
-        "width": 480,
-        "height": 1124
+        "x": 1213,
+        "y": 459,
+        "width": 443,
+        "height": 250
       },
-      "zoom": 1.068,
+      "zoom": 1.7,
       "caption": "Exemple « Domaine sosie » : Solen repère l'adresse qui imite le fournisseur."
     }
   ]

@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { mkdir, rename, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
@@ -8,6 +8,9 @@ import { chromium } from "playwright-core";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WIDTH = 1440;
 const HEIGHT = 900;
+const DEVICE_SCALE_FACTOR = 2;
+const SOURCE_WIDTH = WIDTH * DEVICE_SCALE_FACTOR;
+const SOURCE_HEIGHT = HEIGHT * DEVICE_SCALE_FACTOR;
 const OUTPUT_WIDTH = 1920;
 const OUTPUT_HEIGHT = 1200;
 const WORK = path.join(process.env.HOME ?? ROOT, "profil", "solen-video-work");
@@ -56,6 +59,13 @@ const findExecutable = (names) => {
     }
   }
   return undefined;
+};
+
+const escapeConcatPath = (file) => file.replaceAll("\\", "\\\\").replaceAll("'", "'\\''");
+
+const median = (values) => {
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted.length ? sorted[Math.floor(sorted.length / 2)] : 1 / 30;
 };
 
 const executablePath = process.env.CHROME_PATH
@@ -132,17 +142,89 @@ const boxFromSelectors = async (page, selectors) => {
 
 const main = async () => {
   await mkdir(WORK, { recursive: true });
-  const browser = await chromium.launch({ headless: true, executablePath, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
+  const browser = await chromium.launch({
+    headless: true,
+    executablePath,
+    args: ["--no-sandbox", "--disable-dev-shm-usage", `--force-device-scale-factor=${DEVICE_SCALE_FACTOR}`],
+  });
   const context = await browser.newContext({
     viewport: { width: WIDTH, height: HEIGHT },
-    recordVideo: { dir: WORK, size: { width: WIDTH, height: HEIGHT } },
+    deviceScaleFactor: DEVICE_SCALE_FACTOR,
     colorScheme: "light",
   });
   const page = await context.newPage();
-  const video = page.video();
-  const recordingOrigin = performance.now();
-  const elapsed = () => (performance.now() - recordingOrigin) / 1000;
+  const framesDirectory = path.join(WORK, `demo-solen-${lang}-frames`);
+  const frameMetadataPath = path.join(WORK, `demo-solen-${lang}.frames.json`);
+  const concatPath = path.join(WORK, `demo-solen-${lang}.ffconcat`);
+  await rm(framesDirectory, { recursive: true, force: true });
+  await mkdir(framesDirectory, { recursive: true });
+
+  const cdp = await context.newCDPSession(page);
+  const frames = [];
+  const frameWrites = [];
+  const frameAcks = [];
+  const captureErrors = [];
+  const motionWindows = [];
+  let firstTimestamp;
+  let clockOffsetSeconds;
+  let resolveFirstFrame;
+  let rejectFirstFrame;
+  let screencastStarted = false;
+  const firstFrame = new Promise((resolve, reject) => {
+    resolveFirstFrame = resolve;
+    rejectFirstFrame = reject;
+  });
+  cdp.on("Page.screencastFrame", ({ data, metadata, sessionId }) => {
+    const receivedAt = performance.now();
+    const timestamp = metadata?.timestamp;
+    if (!Number.isFinite(timestamp)) {
+      const error = new Error("Chromium screencast frame did not include metadata.timestamp");
+      captureErrors.push(error);
+      rejectFirstFrame(error);
+    } else if (firstTimestamp === undefined) {
+      firstTimestamp = timestamp;
+      clockOffsetSeconds = timestamp - receivedAt / 1000;
+      resolveFirstFrame();
+    }
+
+    const filename = `frame-${String(frames.length).padStart(6, "0")}.jpg`;
+    frames.push({
+      file: filename,
+      timestamp,
+      receivedAt,
+      metadata: {
+        deviceWidth: metadata?.deviceWidth,
+        deviceHeight: metadata?.deviceHeight,
+        offsetTop: metadata?.offsetTop,
+        pageScaleFactor: metadata?.pageScaleFactor,
+        scrollOffsetX: metadata?.scrollOffsetX,
+        scrollOffsetY: metadata?.scrollOffsetY,
+      },
+    });
+    frameWrites.push(
+      writeFile(path.join(framesDirectory, filename), Buffer.from(data, "base64")).catch((error) => {
+        captureErrors.push(error);
+      }),
+    );
+    frameAcks.push(
+      cdp.send("Page.screencastFrameAck", { sessionId }).catch((error) => {
+        captureErrors.push(error);
+      }),
+    );
+  });
+
   await page.addInitScript(smoothCursor);
+  await cdp.send("Page.startScreencast", {
+    format: "jpeg",
+    quality: 90,
+    maxWidth: SOURCE_WIDTH,
+    maxHeight: SOURCE_HEIGHT,
+    everyNthFrame: 1,
+  });
+  screencastStarted = true;
+  await firstFrame;
+  const elapsed = () => Math.max(0, performance.now() / 1000 + clockOffsetSeconds - firstTimestamp);
+  const addMotionWindow = (start) => motionWindows.push({ start, end: performance.now() });
 
   const analysisSources = [];
   const scenes = [];
@@ -153,9 +235,12 @@ const main = async () => {
     if (!box) throw new Error("A required demo control is not visible");
     const x = Math.max(2, Math.min(WIDTH - 2, box.x + box.width / 2));
     const y = Math.max(2, Math.min(HEIGHT - 2, box.y + box.height / 2));
+    const motionStart = performance.now();
     await page.mouse.move(x, y, { steps: 18 });
     await page.waitForTimeout(180);
     await page.mouse.click(x, y);
+    await page.waitForTimeout(220);
+    addMotionWindow(motionStart);
   };
 
   const requestAnalysis = async (action, mail) => {
@@ -179,6 +264,16 @@ const main = async () => {
     if (!expected.test(text)) throw new Error(`Unexpected ${mail} verdict: ${text.replaceAll("\n", " · ")}`);
     return text;
   };
+
+  const verifyMailOpened = async (mail, expectedSubject) => {
+    const readingPane = page.locator(`article[data-mail="${mail}"]`);
+    await readingPane.waitFor({ state: "visible", timeout: 20000 });
+    const subject = (await readingPane.locator("h1").innerText()).trim();
+    const matches = expectedSubject instanceof RegExp ? expectedSubject.test(subject) : subject === expectedSubject;
+    if (!matches) throw new Error(`Expected ${mail} mail, found subject: ${subject}`);
+  };
+
+  const stripBadgeLabels = (text) => text.replace(/\s+(?:IA|Règle|AI|Rule)\s*$/iu, "").trim();
 
   let trimStartSeconds = 0;
   try {
@@ -205,27 +300,32 @@ const main = async () => {
     const nuvioResult = await requestAnalysis(() => moveAndClick(openPane), "nuvio");
     const nuvioExpected = lang === "fr" ? /Fraude/ : /fraud/i;
     await verifyVerdict("nuvio", nuvioExpected);
+    await verifyMailOpened("nuvio", nuvioSubject);
     if (nuvioResult.verdict !== "fraude") throw new Error(`Nuvio expected fraude, received ${nuvioResult.verdict}`);
 
     const addScene = async (id, selectors, caption, holdMs = 2300) => {
       const box = await boxFromSelectors(page, selectors);
+      if (id === "nuvio-callback" && (box.y + box.height) * OUTPUT_HEIGHT / HEIGHT > 960) {
+        throw new Error("The callback target extends into the caption band");
+      }
       const start = elapsed() - trimStartSeconds;
+      const motionStart = performance.now();
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 20 });
       await page.waitForTimeout(140);
       await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      await page.waitForTimeout(220);
+      addMotionWindow(motionStart);
       await page.waitForTimeout(holdMs);
       const end = elapsed() - trimStartSeconds;
-      const scaleX = OUTPUT_WIDTH / WIDTH;
-      const scaleY = OUTPUT_HEIGHT / HEIGHT;
       scenes.push({
         id,
         rawStart: Number(start.toFixed(3)),
         rawEnd: Number(end.toFixed(3)),
         box: {
-          x: Math.round(box.x * scaleX),
-          y: Math.round(box.y * scaleY),
-          width: Math.round(box.width * scaleX),
-          height: Math.round(box.height * scaleY),
+          x: Math.round(box.x * DEVICE_SCALE_FACTOR),
+          y: Math.round(box.y * DEVICE_SCALE_FACTOR),
+          width: Math.round(box.width * DEVICE_SCALE_FACTOR),
+          height: Math.round(box.height * DEVICE_SCALE_FACTOR),
         },
         caption,
       });
@@ -240,17 +340,30 @@ const main = async () => {
       ],
       captions[lang].reasons,
     );
-    await addScene("nuvio-callback", ['[data-mail="nuvio"] [data-tour="callback"]'], captions[lang].callback);
+    const callback = page.locator('aside[data-mail="nuvio"] [data-tour="callback"]');
+    await callback.evaluate((element) => {
+      element.parentElement.style.paddingBottom = "480px";
+      element.scrollIntoView({ block: "center", behavior: "instant" });
+    });
+    await page.waitForTimeout(300);
+    await addScene(
+      "nuvio-callback",
+      ['aside[data-mail="nuvio"] [data-tour="callback"]'],
+      captions[lang].callback,
+    );
+    await callback.evaluate((element) => element.parentElement.style.removeProperty("padding-bottom"));
 
     const dafSubject = lang === "fr" ? /Urgent.*Lumio Data/ : /Urgent.*Lumio Data/;
     const dafResult = await requestAnalysis(() => moveAndClick(page.getByText(dafSubject).first()), "daf");
     await verifyVerdict("daf", lang === "fr" ? /Aucune anomalie/ : /No anomaly/);
+    await verifyMailOpened("daf", /Urgent.*Lumio Data/i);
     if (dafResult.verdict !== "fiable") throw new Error(`DAF expected fiable, received ${dafResult.verdict}`);
     await addScene("daf-verdict", ['[data-mail="daf"] [data-tour="verdict"]'], captions[lang].daf);
 
     const pdgSubject = lang === "fr" ? "Virement confidentiel" : "Confidential transfer";
     const pdgResult = await requestAnalysis(() => moveAndClick(page.getByText(pdgSubject, { exact: true }).first()), "pdg");
     await verifyVerdict("pdg", lang === "fr" ? /Fraude/ : /fraud/i);
+    await verifyMailOpened("pdg", pdgSubject);
     if (pdgResult.verdict !== "fraude") throw new Error(`PDG expected fraude, received ${pdgResult.verdict}`);
     const pdgPaneText = await page.locator('[data-tour="pane"][data-mail="pdg"]').innerText();
     const pdgReason = pdgPaneText
@@ -258,10 +371,11 @@ const main = async () => {
       .map((line) => line.trim())
       .find((line) => (lang === "fr" ? /PDG n'écrit pas depuis Gmail/i : /CEO does not write from Gmail/i).test(line));
     if (!pdgReason) throw new Error(`Could not find the displayed PDG reason: ${pdgPaneText}`);
+    const cleanPdgReason = stripBadgeLabels(pdgReason);
     await addScene(
       "pdg-mail-verdict",
       ['[data-mail="pdg"] [data-tour="mail"]', '[data-mail="pdg"] [data-tour="verdict"]'],
-      pdgReason,
+      cleanPdgReason,
     );
 
     await page.waitForTimeout(1700);
@@ -291,9 +405,11 @@ const main = async () => {
     const attackCaption = captions[lang].attacks(totalCases, ratio, falseAlarms, genuine);
     await addScene("attack-summary", ['section[aria-live="polite"]'], attackCaption);
 
+    const scrollMotionStart = performance.now();
     await page.mouse.move(WIDTH * 0.72, HEIGHT * 0.78, { steps: 16 });
     await page.mouse.wheel(0, 240);
     await page.waitForTimeout(450);
+    addMotionWindow(scrollMotionStart);
     await addScene("attack-list", ["ol > li:nth-child(-n+3)"], attackCaption, 1900);
 
     await page.waitForTimeout(1700);
@@ -308,32 +424,87 @@ const main = async () => {
     const testerText = await page.locator("main").innerText();
     const hasRecordedFallback = /analyse enregistrée à l'avance|recorded in advance/i.test(testerText);
     const exampleCaption = hasRecordedFallback ? captions[lang].exampleFallback : captions[lang].example;
-    await addScene("try-lookalike-example", ['[data-tour="pane"]'], exampleCaption);
+    await addScene(
+      "try-lookalike-example",
+      ['[data-tour="pane"] [data-tour="verdict"]', '[data-tour="pane"] section:has(mark)'],
+      exampleCaption,
+    );
 
-    const rawVideo = path.join(WORK, `demo-solen-${lang}.webm`);
-    const temporaryVideo = await video.path();
+    await cdp.send("Page.stopScreencast");
+    screencastStarted = false;
+    await Promise.all([...frameWrites, ...frameAcks]);
+    if (captureErrors.length) throw new AggregateError(captureErrors, "Chromium screencast capture failed");
+    await cdp.detach();
     await context.close();
-    await rename(temporaryVideo, rawVideo);
+
+    const orderedFrames = [...frames].sort((a, b) => a.timestamp - b.timestamp);
+    if (orderedFrames.length < 2) throw new Error(`Expected multiple screencast frames, received ${orderedFrames.length}`);
+    const frameDeltas = orderedFrames.slice(1).map((frame, index) => frame.timestamp - orderedFrames[index].timestamp).filter((delta) => delta > 0);
+    const finalFrameDuration = median(frameDeltas.slice(-30));
+    const captureDurationSeconds = orderedFrames.at(-1).timestamp - orderedFrames[0].timestamp + finalFrameDuration;
+    const concatLines = ["ffconcat version 1.0"];
+    for (let index = 0; index < orderedFrames.length; index += 1) {
+      const frame = orderedFrames[index];
+      const next = orderedFrames[index + 1];
+      const duration = next ? Math.max(1 / 120, next.timestamp - frame.timestamp) : finalFrameDuration;
+      concatLines.push(`file '${escapeConcatPath(path.join(framesDirectory, frame.file))}'`);
+      concatLines.push(`duration ${duration.toFixed(6)}`);
+    }
+    concatLines.push(`file '${escapeConcatPath(path.join(framesDirectory, orderedFrames.at(-1).file))}'`);
+    await writeFile(concatPath, `${concatLines.join("\n")}\n`);
+
+    const motionFrames = orderedFrames.filter((frame) =>
+      motionWindows.some((window) => frame.receivedAt >= window.start && frame.receivedAt <= window.end),
+    );
+    const motionDurationSeconds = motionWindows.reduce((sum, window) => sum + (window.end - window.start) / 1000, 0);
+    const motionFps = motionDurationSeconds > 0 ? motionFrames.length / motionDurationSeconds : 0;
+    const overallFps = (orderedFrames.length - 1) / (orderedFrames.at(-1).timestamp - orderedFrames[0].timestamp);
+    const frameMetadata = {
+      language: lang,
+      width: SOURCE_WIDTH,
+      height: SOURCE_HEIGHT,
+      frameCount: orderedFrames.length,
+      frames: orderedFrames.map(({ file, timestamp, metadata }) => ({
+        file,
+        timestamp,
+        relativeTimestamp: Number((timestamp - orderedFrames[0].timestamp).toFixed(6)),
+        metadata,
+      })),
+    };
+    await writeFile(frameMetadataPath, `${JSON.stringify(frameMetadata, null, 2)}\n`);
+
     const timeline = {
       language: lang,
       capture: {
         viewport: { width: WIDTH, height: HEIGHT },
-        recordVideo: { width: WIDTH, height: HEIGHT },
+        deviceScaleFactor: DEVICE_SCALE_FACTOR,
+        screencast: { width: SOURCE_WIDTH, height: SOURCE_HEIGHT, format: "jpeg", quality: 90, everyNthFrame: 1 },
         output: { width: OUTPUT_WIDTH, height: OUTPUT_HEIGHT },
+        averageFps: Number(overallFps.toFixed(2)),
+        motionFps: Number(motionFps.toFixed(2)),
+        motionFrameCount: motionFrames.length,
+        motionDurationSeconds: Number(motionDurationSeconds.toFixed(3)),
         zoom: false,
-        reason: "html zoom 1.5 expanded the 100vh app layout past the 1200px frame; using the requested 1440x900 fallback.",
       },
-      sourceVideo: path.basename(rawVideo),
+      sourceVideo: path.basename(concatPath),
+      sourceFrames: path.basename(frameMetadataPath),
+      sourceDurationSeconds: Number(captureDurationSeconds.toFixed(6)),
       trimStartSeconds: Number(trimStartSeconds.toFixed(3)),
       analysisSources,
       attackSummary: { totalCases, stopped: ratio, falseAlarms, genuine },
       scenes,
     };
     await writeFile(path.join(WORK, `demo-solen-${lang}.timeline.json`), `${JSON.stringify(timeline, null, 2)}\n`);
-    console.log(`Recorded ${lang}: ${rawVideo}`);
+    console.log(`Recorded ${lang}: ${orderedFrames.length} screencast frames at ${SOURCE_WIDTH}x${SOURCE_HEIGHT}`);
+    console.log(`Screencast cadence: ${overallFps.toFixed(1)} fps overall; ${motionFps.toFixed(1)} fps during motion (${motionFrames.length} frames across ${motionDurationSeconds.toFixed(2)}s)`);
+    console.log(`Frame timestamps: ${frameMetadataPath}`);
+    console.log(`Timestamped FFmpeg input: ${concatPath}`);
     console.log(`Timeline: ${path.join(WORK, `demo-solen-${lang}.timeline.json`)}`);
     console.log(`Analysis sources: ${analysisSources.map(({ mail, ai, verdict }) => `${mail}=${ai}/${verdict}`).join(", ")}`);
   } catch (error) {
+    if (screencastStarted) await cdp.send("Page.stopScreencast").catch(() => {});
+    await Promise.allSettled([...frameWrites, ...frameAcks]);
+    await cdp.detach().catch(() => {});
     await context.close().catch(() => {});
     await browser.close().catch(() => {});
     throw error;

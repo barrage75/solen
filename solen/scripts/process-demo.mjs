@@ -8,11 +8,15 @@ import { chromium } from "playwright-core";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WIDTH = 1920;
 const HEIGHT = 1200;
+const SOURCE_WIDTH = 2880;
+const SOURCE_HEIGHT = 1800;
 const TITLE_SECONDS = 2.5;
 const END_SECONDS = 3;
 const WORK = path.join(process.env.HOME ?? ROOT, "profil", "solen-video-work");
 const SIZE_LIMIT_MP4 = 12 * 1024 * 1024;
-const SIZE_LIMIT_GIF = 8 * 1024 * 1024;
+const SIZE_LIMIT_GIF = 9_000_000;
+const CAPTION_TOP = HEIGHT - 48 - 152;
+const ZOOM_CENTER_Y = (CAPTION_TOP - 40) / 2;
 
 const readOption = (name, fallback) => {
   const exact = process.argv.indexOf(name);
@@ -38,7 +42,7 @@ const strings = {
 };
 
 const stem = lang === "fr" ? "demo-solen" : "demo-solen-en";
-const rawVideo = path.join(WORK, `demo-solen-${lang}.webm`);
+const rawVideo = path.join(WORK, `demo-solen-${lang}.ffconcat`);
 const rawTimeline = path.join(WORK, `demo-solen-${lang}.timeline.json`);
 const titleCard = path.join(WORK, `${stem}-title.png`);
 const endCard = path.join(WORK, `${stem}-end.png`);
@@ -100,7 +104,7 @@ const makeCardHtml = (lang, logoBase64, content, end = false) => `<!doctype html
       body{background:#0F3D2E;color:#fff;font-family:"Segoe UI",Arial,sans-serif}
       main{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 150px;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.08),transparent 52%),#0F3D2E}
       img{width:188px;height:188px;object-fit:cover;border-radius:30px;box-shadow:0 18px 42px rgba(0,0,0,.24);margin-bottom:${end ? 42 : 58}px}
-      h1{max-width:1480px;margin:0;font-size:${end ? 58 : 76}px;font-weight:650;line-height:1.14;letter-spacing:-1.6px}
+      h1{max-width:1580px;margin:0;font-size:${end ? 58 : 76}px;font-weight:650;line-height:1.14;letter-spacing:-1.6px;text-wrap:balance}
       .url{color:#ffd43b;font-size:56px;font-weight:650;margin:0 0 24px}
       .event{font-size:33px;color:rgba(255,255,255,.82);margin:0}
       .rule{width:112px;height:4px;border-radius:4px;background:#ffd43b;margin:42px 0}
@@ -141,7 +145,7 @@ const renderCards = async () => {
   }
 };
 
-const zoomFor = (box) => Math.min(2, Math.max(1, Math.min(WIDTH / box.width, HEIGHT / box.height)));
+const zoomFor = (box) => Math.min(1.7, Math.max(1, Math.min(SOURCE_WIDTH / box.width, SOURCE_HEIGHT / box.height)));
 
 const buildSegments = (timeline, mainDuration) => {
   const segments = [];
@@ -164,7 +168,7 @@ const filterGraph = (timeline, segments, mainDuration) => {
   segments.forEach((segment, index) => {
     const start = Number(segment.start.toFixed(3));
     const end = Number(segment.end.toFixed(3));
-    let chain = `[src${index}]trim=start=${start}:end=${end},setpts=PTS-STARTPTS,scale=${WIDTH}:${HEIGHT}:flags=lanczos,fps=30,setsar=1`;
+    let chain = `[src${index}]trim=start=${start}:end=${end},setpts=PTS-STARTPTS,fps=30,setsar=1`;
     if (segment.kind === "zoom") {
       const frames = Math.max(4, Math.round((end - start) * 30));
       const transition = Math.min(18, Math.floor(frames / 4));
@@ -174,7 +178,11 @@ const filterGraph = (timeline, segments, mainDuration) => {
       const easingIn = `(0.5-0.5*cos(PI*on/${transition}))`;
       const easingOut = `(0.5-0.5*cos(PI*(on-${frames - transition})/${transition}))`;
       const zoomExpr = `if(lte(on,${transition}),1+(${zoom}-1)*${easingIn},if(lte(on,${frames - transition}),${zoom},${zoom}-(${zoom}-1)*${easingOut}))`;
-      chain += `,zoompan=z='${zoomExpr}':x='min(max(${centerX}-iw/zoom/2,0),iw-iw/zoom)':y='min(max(${centerY}-ih/zoom/2,0),ih-ih/zoom)':d=1:s=${WIDTH}x${HEIGHT}:fps=30`;
+      const outputScaleY = HEIGHT / SOURCE_HEIGHT;
+      const cropY = `min(max(${centerY}-${ZOOM_CENTER_Y}/(${outputScaleY}*zoom),0),ih-ih/zoom)`;
+      chain += `,zoompan=z='${zoomExpr}':x='min(max(${centerX}-iw/zoom/2,0),iw-iw/zoom)':y='${cropY}':d=1:s=${WIDTH}x${HEIGHT}:fps=30`;
+    } else {
+      chain += `,scale=${WIDTH}:${HEIGHT}:flags=lanczos`;
     }
     graph.push(`${chain}[part${index}]`);
   });
@@ -215,8 +223,8 @@ const writeAss = async (timeline) => {
     "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text",
   ];
   for (const scene of timeline.scenes) {
-    const start = Math.min(scene.rawEnd, scene.rawStart + 0.62);
-    const end = Math.max(start + 0.12, scene.rawEnd - 0.28);
+    const start = Math.min(scene.rawEnd, scene.rawStart + 0.12);
+    const end = Math.max(start + 0.12, scene.rawEnd - 0.25);
     lines.push(
       `Dialogue: 0,${assTime(start)},${assTime(end)},Default,,0,0,0,,{\\fad(180,220)}${escapeAss(scene.caption)}`,
     );
@@ -227,7 +235,7 @@ const writeAss = async (timeline) => {
 const encodeMain = async (timeline, duration) => {
   const segments = buildSegments(timeline, duration);
   const { text, overlayInputs } = filterGraph(timeline, segments, duration);
-  const args = ["-y", "-i", rawVideo];
+  const args = ["-y", "-f", "concat", "-safe", "0", "-i", rawVideo];
   for (const input of overlayInputs) args.push(...input);
   args.push(
     "-filter_complex",
@@ -306,16 +314,17 @@ const encodeFinal = async (crf) => {
 
 const encodeGif = async () => {
   const options = [
-    { fps: 12, width: 960, colors: 128 },
-    { fps: 10, width: 840, colors: 128 },
-    { fps: 8, width: 720, colors: 96 },
-    { fps: 6, width: 640, colors: 64 },
+    { fps: 10, width: 800, colors: 128, dither: "bayer" },
+    { fps: 8, width: 800, colors: 128, dither: "bayer" },
+    { fps: 8, width: 720, colors: 64, dither: "none" },
+    { fps: 8, width: 720, colors: 48, dither: "none" },
+    { fps: 8, width: 720, colors: 32, dither: "none" },
   ];
   for (const option of options) {
     const graph = [
       `[0:v]fps=${option.fps},scale=${option.width}:-1:flags=lanczos,split[frames][paletteSource]`,
-      `[paletteSource]palettegen=max_colors=${option.colors}:stats_mode=full[palette]`,
-      "[frames][palette]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle[vout]",
+      `[paletteSource]drawbox=x=0:y=0:w=32:h=32:color=0xFFD43B:t=fill,palettegen=max_colors=${option.colors}:stats_mode=full[palette]`,
+      `[frames][palette]paletteuse=dither=${option.dither}:diff_mode=rectangle[vout]`,
     ].join(";");
     await run("ffmpeg", [
       "-y",
@@ -341,8 +350,7 @@ const main = async () => {
   const logo = path.join(ROOT, "public", "solen-logo.png");
   if (!existsSync(rawVideo) || !existsSync(logo)) throw new Error(`Missing recording or logo for ${lang}`);
   await renderCards();
-  const rawDuration = probeDuration(rawVideo);
-  const mainDuration = rawDuration - timeline.trimStartSeconds;
+  const mainDuration = timeline.sourceDurationSeconds - timeline.trimStartSeconds;
   if (mainDuration <= 0) throw new Error("The trimmed recording has no playable duration");
   await writeAss(timeline);
   await encodeMain(timeline, mainDuration);
@@ -378,7 +386,12 @@ const main = async () => {
       id: scene.id,
       start: Number((TITLE_SECONDS + scene.rawStart).toFixed(3)),
       end: Number((TITLE_SECONDS + scene.rawEnd).toFixed(3)),
-      box: scene.box,
+      box: {
+        x: Math.round(scene.box.x * WIDTH / SOURCE_WIDTH),
+        y: Math.round(scene.box.y * HEIGHT / SOURCE_HEIGHT),
+        width: Math.round(scene.box.width * WIDTH / SOURCE_WIDTH),
+        height: Math.round(scene.box.height * HEIGHT / SOURCE_HEIGHT),
+      },
       zoom: Number(zoomFor(scene.box).toFixed(3)),
       caption: scene.caption,
     })),

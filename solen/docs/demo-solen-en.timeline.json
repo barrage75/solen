@@ -1,6 +1,6 @@
 {
   "language": "en",
-  "durationSeconds": 52.167,
+  "durationSeconds": 57.6,
   "output": {
     "video": "demo-solen-en.mp4",
     "gif": "demo-solen-en.gif",
@@ -16,16 +16,23 @@
       "width": 1440,
       "height": 900
     },
-    "recordVideo": {
-      "width": 1440,
-      "height": 900
+    "deviceScaleFactor": 2,
+    "screencast": {
+      "width": 2880,
+      "height": 1800,
+      "format": "jpeg",
+      "quality": 90,
+      "everyNthFrame": 1
     },
     "output": {
       "width": 1920,
       "height": 1200
     },
-    "zoom": false,
-    "reason": "html zoom 1.5 expanded the 100vh app layout past the 1200px frame; using the requested 1440x900 fallback."
+    "averageFps": 11.91,
+    "motionFps": 16.28,
+    "motionFrameCount": 414,
+    "motionDurationSeconds": 25.429,
+    "zoom": false
   },
   "analysisSources": [
     {
@@ -58,73 +65,73 @@
   "scenes": [
     {
       "id": "nuvio-infobar",
-      "start": 6.304,
-      "end": 9.075,
+      "start": 7.891,
+      "end": 11.525,
       "box": {
         "x": 875,
         "y": 379,
         "width": 552,
         "height": 99
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "A supplier announces new bank details."
     },
     {
       "id": "nuvio-verdict-reasons",
-      "start": 9.137,
-      "end": 11.908,
+      "start": 11.575,
+      "end": 15.247,
       "box": {
         "x": 1488,
         "y": 375,
         "width": 403,
         "height": 461
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Solen compares the IBAN with the supplier's profile: it doesn't match."
     },
     {
       "id": "nuvio-callback",
-      "start": 11.936,
-      "end": 14.713,
+      "start": 15.576,
+      "end": 19.266,
       "box": {
         "x": 1488,
-        "y": 974,
+        "y": 604,
         "width": 403,
         "height": 171
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "Solen recommends calling the number already on file, never the one in the email."
     },
     {
       "id": "daf-verdict",
-      "start": 17.052,
-      "end": 19.824,
+      "start": 22.191,
+      "end": 25.896,
       "box": {
         "x": 1488,
         "y": 375,
         "width": 403,
         "height": 59
       },
-      "zoom": 2,
+      "zoom": 1.7,
       "caption": "A genuinely urgent email doesn't trigger an alert."
     },
     {
       "id": "pdg-mail-verdict",
-      "start": 22.186,
-      "end": 24.959,
+      "start": 28.59,
+      "end": 32.298,
       "box": {
         "x": 848,
         "y": 232,
         "width": 1043,
         "height": 623
       },
-      "zoom": 1.841,
-      "caption": "A CEO does not write from Gmail about €35,000. AI"
+      "zoom": 1.7,
+      "caption": "A CEO does not write from Gmail about €35,000."
     },
     {
       "id": "attack-summary",
-      "start": 30.203,
-      "end": 32.973,
+      "start": 38.14,
+      "end": 41.438,
       "box": {
         "x": 192,
         "y": 291,
@@ -136,8 +143,8 @@
     },
     {
       "id": "attack-list",
-      "start": 33.719,
-      "end": 36.108,
+      "start": 42.724,
+      "end": 46.01,
       "box": {
         "x": 192,
         "y": 163,
@@ -149,15 +156,15 @@
     },
     {
       "id": "try-lookalike-example",
-      "start": 41.251,
-      "end": 44.022,
+      "start": 52.758,
+      "end": 56.478,
       "box": {
-        "x": 1195,
-        "y": 103,
-        "width": 480,
-        "height": 1097
+        "x": 1213,
+        "y": 412,
+        "width": 443,
+        "height": 250
       },
-      "zoom": 1.094,
+      "zoom": 1.7,
       "caption": "Lookalike-domain example: Solen flags the address imitating a supplier."
     }
   ]
