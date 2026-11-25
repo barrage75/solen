@@ -1,15 +1,23 @@
 {
   "language": "fr",
-  "durationSeconds": 56.767,
+  "durationSeconds": 45.434,
   "output": {
     "video": "demo-solen.mp4",
     "gif": "demo-solen.gif",
     "width": 1920,
-    "height": 1200,
+    "height": 1080,
     "fps": 30,
     "codec": "H.264",
     "pixelFormat": "yuv420p",
     "audio": false
+  },
+  "brand": {
+    "navy": "#0A0F20",
+    "yellow": "#FFCF33",
+    "cream": "#F2F1E9",
+    "display": "Archivo 800 / 125% width",
+    "body": "Manrope 400",
+    "labels": "JetBrains Mono 400"
   },
   "capture": {
     "viewport": {
@@ -26,12 +34,17 @@
     },
     "output": {
       "width": 1920,
-      "height": 1200
+      "height": 1080
     },
-    "averageFps": 12.04,
-    "motionFps": 16.68,
-    "motionFrameCount": 396,
-    "motionDurationSeconds": 23.735,
+    "averageFps": 13.24,
+    "motionFps": 22.38,
+    "motionFrameCount": 442,
+    "motionDurationSeconds": 19.751,
+    "clockMapping": {
+      "rate": 1.00004136,
+      "medianAbsoluteResidualMs": 7.29,
+      "p95AbsoluteResidualMs": 28.96
+    },
     "zoom": false
   },
   "analysisSources": [
@@ -41,14 +54,14 @@
       "verdict": "fraude"
     },
     {
-      "mail": "daf",
-      "ai": "secours",
-      "verdict": "fiable"
-    },
-    {
       "mail": "pdg",
       "ai": "secours",
       "verdict": "fraude"
+    },
+    {
+      "mail": "daf",
+      "ai": "secours",
+      "verdict": "fiable"
     },
     {
       "mail": "essayer-domaine-sosie",
@@ -62,110 +75,194 @@
     "falseAlarms": "0",
     "genuine": 2
   },
+  "pdgTechniques": [
+    "autorité",
+    "secret",
+    "contournement de la hiérarchie"
+  ],
+  "editing": {
+    "sourceSeconds": 51.536,
+    "renderedAppSeconds": 39.956,
+    "maxInitialGapSeconds": 2,
+    "maxInterSceneGapSeconds": 1.7
+  },
+  "gif": {
+    "width": 800,
+    "fps": 10,
+    "colors": 128,
+    "sizeBytes": 8557667
+  },
   "scenes": [
     {
       "id": "nuvio-infobar",
-      "start": 7.837,
-      "end": 11.512,
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "Un fournisseur change de RIB. Solen alerte **dès la lecture**.",
+      "start": 5.15,
+      "end": 8.833,
+      "appStart": 4.5,
+      "appEnd": 7.862,
+      "sourceStart": 4.903,
+      "sourceEnd": 8.265,
       "box": {
-        "x": 875,
-        "y": 379,
-        "width": 552,
-        "height": 99
+        "x": 1312,
+        "y": 568,
+        "width": 828,
+        "height": 148
       },
-      "zoom": 1.7,
-      "caption": "Un fournisseur annonce un nouveau RIB."
+      "zoom": 1.7
     },
     {
       "id": "nuvio-verdict-reasons",
-      "start": 11.571,
-      "end": 15.239,
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "L'IBAN ne correspond pas **au profil du fournisseur**.",
+      "start": 8.583,
+      "end": 12.519,
+      "appStart": 7.933,
+      "appEnd": 11.267,
+      "sourceStart": 8.336,
+      "sourceEnd": 11.67,
       "box": {
-        "x": 1488,
-        "y": 401,
-        "width": 403,
-        "height": 461
+        "x": 2232,
+        "y": 602,
+        "width": 604,
+        "height": 691
       },
-      "zoom": 1.7,
-      "caption": "Solen compare l'IBAN au profil du fournisseur : il ne correspond pas."
+      "zoom": 1.7
     },
     {
       "id": "nuvio-callback",
-      "start": 15.57,
-      "end": 19.185,
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "Appeler **le numéro connu**, jamais celui du mail.",
+      "start": 12.269,
+      "end": 14.894,
+      "appStart": 11.619,
+      "appEnd": 15.044,
+      "sourceStart": 12.022,
+      "sourceEnd": 15.447,
       "box": {
-        "x": 1488,
-        "y": 604,
-        "width": 403,
-        "height": 171
+        "x": 2232,
+        "y": 906,
+        "width": 604,
+        "height": 257
       },
-      "zoom": 1.7,
-      "caption": "Solen conseille d'appeler le numéro déjà connu, jamais celui du mail."
-    },
-    {
-      "id": "daf-verdict",
-      "start": 21.869,
-      "end": 25.577,
-      "box": {
-        "x": 1488,
-        "y": 401,
-        "width": 403,
-        "height": 59
-      },
-      "zoom": 1.7,
-      "caption": "Un vrai mail urgent ne déclenche pas d'alerte."
+      "zoom": 1.7
     },
     {
       "id": "pdg-mail-verdict",
-      "start": 28.336,
-      "end": 31.948,
+      "chapter": "02 — FAUX PRÉSIDENT",
+      "activeChecklistIndex": 2,
+      "headline": "Un PDG n'écrit pas **depuis Gmail** pour 35 000 €.",
+      "start": 17.394,
+      "end": 21.039,
+      "appStart": 16.744,
+      "appEnd": 20.11,
+      "sourceStart": 18.037,
+      "sourceEnd": 21.403,
       "box": {
-        "x": 848,
-        "y": 232,
-        "width": 1043,
-        "height": 649
+        "x": 1272,
+        "y": 348,
+        "width": 1564,
+        "height": 974
       },
-      "zoom": 1.7,
-      "caption": "Un PDG n'écrit pas depuis Gmail pour 35 000 €."
+      "zoom": 1.7
+    },
+    {
+      "id": "pdg-techniques",
+      "chapter": "02 — FAUX PRÉSIDENT",
+      "activeChecklistIndex": 2,
+      "headline": "**Tout est expliqué** : autorité, secret, contournement de la hiérarchie.",
+      "start": 20.789,
+      "end": 23.329,
+      "appStart": 20.139,
+      "appEnd": 23.479,
+      "sourceStart": 21.432,
+      "sourceEnd": 24.772,
+      "box": {
+        "x": 2232,
+        "y": 1408,
+        "width": 604,
+        "height": 152
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "daf-verdict",
+      "chapter": "03 — VRAI MAIL",
+      "activeChecklistIndex": null,
+      "headline": "Un vrai mail urgent : **aucune fausse alerte**.",
+      "start": 25.829,
+      "end": 28.443,
+      "appStart": 25.179,
+      "appEnd": 28.593,
+      "sourceStart": 27.201,
+      "sourceEnd": 30.615,
+      "box": {
+        "x": 2232,
+        "y": 602,
+        "width": 604,
+        "height": 88
+      },
+      "zoom": 1.7
     },
     {
       "id": "attack-summary",
-      "start": 37.853,
-      "end": 41.143,
+      "chapter": "04 — AUCUNE MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "Même avec une IA piégée, **26/26 attaques** bloquées.",
+      "start": 30.943,
+      "end": 35.34,
+      "appStart": 30.293,
+      "appEnd": 33.41,
+      "sourceStart": 35.11,
+      "sourceEnd": 38.227,
       "box": {
-        "x": 192,
-        "y": 291,
-        "width": 1536,
-        "height": 99
+        "x": 288,
+        "y": 436,
+        "width": 2304,
+        "height": 148
       },
-      "zoom": 1.25,
-      "caption": "28 cas rejoués avec une IA piégée : 26/26 attaques bloquées, 0 fausse alerte sur 2 vrais mails."
+      "zoom": 1.25
     },
     {
       "id": "attack-list",
-      "start": 42.419,
-      "end": 45.736,
+      "chapter": "04 — AUCUNE MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "**0 fausse alerte** sur 2 vrais mails.",
+      "start": 35.09,
+      "end": 37.138,
+      "appStart": 34.44,
+      "appEnd": 37.288,
+      "sourceStart": 39.257,
+      "sourceEnd": 42.105,
       "box": {
-        "x": 192,
-        "y": 163,
-        "width": 1536,
-        "height": 127
+        "x": 288,
+        "y": 244,
+        "width": 2304,
+        "height": 190
       },
-      "zoom": 1.25,
-      "caption": "28 cas rejoués avec une IA piégée : 26/26 attaques bloquées, 0 fausse alerte sur 2 vrais mails."
+      "zoom": 1.25
     },
     {
       "id": "try-lookalike-example",
-      "start": 52.052,
-      "end": 55.615,
+      "chapter": "05 — FAUSSE FACTURE",
+      "activeChecklistIndex": 0,
+      "headline": "Une adresse qui imite le fournisseur : **repérée**.",
+      "start": 39.638,
+      "end": 42.306,
+      "appStart": 38.988,
+      "appEnd": 42.456,
+      "sourceStart": 48.068,
+      "sourceEnd": 51.536,
       "box": {
-        "x": 1213,
-        "y": 459,
-        "width": 443,
-        "height": 250
+        "x": 1820,
+        "y": 688,
+        "width": 664,
+        "height": 375
       },
-      "zoom": 1.7,
-      "caption": "Exemple « Domaine sosie » : Solen repère l'adresse qui imite le fournisseur."
+      "zoom": 1.7
     }
   ]
 }

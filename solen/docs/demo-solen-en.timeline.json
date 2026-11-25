@@ -1,15 +1,23 @@
 {
   "language": "en",
-  "durationSeconds": 57.6,
+  "durationSeconds": 46.067,
   "output": {
     "video": "demo-solen-en.mp4",
     "gif": "demo-solen-en.gif",
     "width": 1920,
-    "height": 1200,
+    "height": 1080,
     "fps": 30,
     "codec": "H.264",
     "pixelFormat": "yuv420p",
     "audio": false
+  },
+  "brand": {
+    "navy": "#0A0F20",
+    "yellow": "#FFCF33",
+    "cream": "#F2F1E9",
+    "display": "Archivo 800 / 125% width",
+    "body": "Manrope 400",
+    "labels": "JetBrains Mono 400"
   },
   "capture": {
     "viewport": {
@@ -26,12 +34,17 @@
     },
     "output": {
       "width": 1920,
-      "height": 1200
+      "height": 1080
     },
-    "averageFps": 11.91,
-    "motionFps": 16.28,
-    "motionFrameCount": 414,
-    "motionDurationSeconds": 25.429,
+    "averageFps": 13.12,
+    "motionFps": 21.38,
+    "motionFrameCount": 459,
+    "motionDurationSeconds": 21.47,
+    "clockMapping": {
+      "rate": 1.00032555,
+      "medianAbsoluteResidualMs": 9.57,
+      "p95AbsoluteResidualMs": 36.04
+    },
     "zoom": false
   },
   "analysisSources": [
@@ -41,14 +54,14 @@
       "verdict": "fraude"
     },
     {
-      "mail": "daf",
-      "ai": "secours",
-      "verdict": "fiable"
-    },
-    {
       "mail": "pdg",
       "ai": "secours",
       "verdict": "fraude"
+    },
+    {
+      "mail": "daf",
+      "ai": "secours",
+      "verdict": "fiable"
     },
     {
       "mail": "essayer-domaine-sosie",
@@ -62,110 +75,194 @@
     "falseAlarms": "0",
     "genuine": 2
   },
+  "pdgTechniques": [
+    "authority",
+    "secrecy",
+    "bypassing the hierarchy"
+  ],
+  "editing": {
+    "sourceSeconds": 52.143,
+    "renderedAppSeconds": 40.602,
+    "maxInitialGapSeconds": 2,
+    "maxInterSceneGapSeconds": 1.7
+  },
+  "gif": {
+    "width": 800,
+    "fps": 10,
+    "colors": 128,
+    "sizeBytes": 8501895
+  },
   "scenes": [
     {
       "id": "nuvio-infobar",
-      "start": 7.891,
-      "end": 11.525,
+      "chapter": "01 — FAKE BANK DETAILS",
+      "activeChecklistIndex": 0,
+      "headline": "A supplier changes bank details. Solen alerts **on reading**.",
+      "start": 5.15,
+      "end": 8.939,
+      "appStart": 4.5,
+      "appEnd": 7.968,
+      "sourceStart": 4.843,
+      "sourceEnd": 8.311,
       "box": {
-        "x": 875,
-        "y": 379,
-        "width": 552,
-        "height": 99
+        "x": 1312,
+        "y": 568,
+        "width": 828,
+        "height": 148
       },
-      "zoom": 1.7,
-      "caption": "A supplier announces new bank details."
+      "zoom": 1.7
     },
     {
       "id": "nuvio-verdict-reasons",
-      "start": 11.575,
-      "end": 15.247,
+      "chapter": "01 — FAKE BANK DETAILS",
+      "activeChecklistIndex": 0,
+      "headline": "The IBAN doesn't match **the supplier profile**.",
+      "start": 8.689,
+      "end": 12.655,
+      "appStart": 8.039,
+      "appEnd": 11.418,
+      "sourceStart": 8.382,
+      "sourceEnd": 11.761,
       "box": {
-        "x": 1488,
-        "y": 375,
-        "width": 403,
-        "height": 461
+        "x": 2232,
+        "y": 562,
+        "width": 604,
+        "height": 691
       },
-      "zoom": 1.7,
-      "caption": "Solen compares the IBAN with the supplier's profile: it doesn't match."
+      "zoom": 1.7
     },
     {
       "id": "nuvio-callback",
-      "start": 15.576,
-      "end": 19.266,
+      "chapter": "01 — FAKE BANK DETAILS",
+      "activeChecklistIndex": 0,
+      "headline": "Call **the known number**, never the one in the email.",
+      "start": 12.405,
+      "end": 15.294,
+      "appStart": 11.755,
+      "appEnd": 15.444,
+      "sourceStart": 12.098,
+      "sourceEnd": 15.787,
       "box": {
-        "x": 1488,
-        "y": 604,
-        "width": 403,
-        "height": 171
+        "x": 2232,
+        "y": 906,
+        "width": 604,
+        "height": 257
       },
-      "zoom": 1.7,
-      "caption": "Solen recommends calling the number already on file, never the one in the email."
-    },
-    {
-      "id": "daf-verdict",
-      "start": 22.191,
-      "end": 25.896,
-      "box": {
-        "x": 1488,
-        "y": 375,
-        "width": 403,
-        "height": 59
-      },
-      "zoom": 1.7,
-      "caption": "A genuinely urgent email doesn't trigger an alert."
+      "zoom": 1.7
     },
     {
       "id": "pdg-mail-verdict",
-      "start": 28.59,
-      "end": 32.298,
+      "chapter": "02 — FAKE CEO",
+      "activeChecklistIndex": 2,
+      "headline": "A CEO doesn't email **from Gmail** about €35,000.",
+      "start": 17.794,
+      "end": 21.679,
+      "appStart": 17.144,
+      "appEnd": 20.752,
+      "sourceStart": 18.643,
+      "sourceEnd": 22.251,
       "box": {
-        "x": 848,
-        "y": 232,
-        "width": 1043,
-        "height": 623
+        "x": 1272,
+        "y": 348,
+        "width": 1564,
+        "height": 934
       },
-      "zoom": 1.7,
-      "caption": "A CEO does not write from Gmail about €35,000."
+      "zoom": 1.7
+    },
+    {
+      "id": "pdg-techniques",
+      "chapter": "02 — FAKE CEO",
+      "activeChecklistIndex": 2,
+      "headline": "**Everything explained**: authority, secrecy, bypassing the hierarchy.",
+      "start": 21.429,
+      "end": 24.098,
+      "appStart": 20.779,
+      "appEnd": 24.248,
+      "sourceStart": 22.278,
+      "sourceEnd": 25.747,
+      "box": {
+        "x": 2232,
+        "y": 1331,
+        "width": 604,
+        "height": 94
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "daf-verdict",
+      "chapter": "03 — GENUINE EMAIL",
+      "activeChecklistIndex": null,
+      "headline": "A genuine urgent email: **no false alarm**.",
+      "start": 26.598,
+      "end": 29.265,
+      "appStart": 25.948,
+      "appEnd": 29.415,
+      "sourceStart": 28.168,
+      "sourceEnd": 31.635,
+      "box": {
+        "x": 2232,
+        "y": 562,
+        "width": 604,
+        "height": 88
+      },
+      "zoom": 1.7
     },
     {
       "id": "attack-summary",
-      "start": 38.14,
-      "end": 41.438,
+      "chapter": "04 — NO MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "Even with a trapped AI, **26/26 attacks** blocked.",
+      "start": 31.765,
+      "end": 36.099,
+      "appStart": 31.115,
+      "appEnd": 34.208,
+      "sourceStart": 36.024,
+      "sourceEnd": 39.117,
       "box": {
-        "x": 192,
-        "y": 291,
-        "width": 1536,
-        "height": 99
+        "x": 288,
+        "y": 436,
+        "width": 2304,
+        "height": 148
       },
-      "zoom": 1.25,
-      "caption": "28 cases replayed with a fooled AI: 26/26 attacks blocked, 0 false alarms across 2 genuine emails."
+      "zoom": 1.25
     },
     {
       "id": "attack-list",
-      "start": 42.724,
-      "end": 46.01,
+      "chapter": "04 — NO MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "**0 false alarms** on 2 genuine emails.",
+      "start": 35.849,
+      "end": 37.932,
+      "appStart": 35.199,
+      "appEnd": 38.082,
+      "sourceStart": 40.108,
+      "sourceEnd": 42.991,
       "box": {
-        "x": 192,
-        "y": 163,
-        "width": 1536,
-        "height": 127
+        "x": 288,
+        "y": 244,
+        "width": 2304,
+        "height": 190
       },
-      "zoom": 1.25,
-      "caption": "28 cases replayed with a fooled AI: 26/26 attacks blocked, 0 false alarms across 2 genuine emails."
+      "zoom": 1.25
     },
     {
       "id": "try-lookalike-example",
-      "start": 52.758,
-      "end": 56.478,
+      "chapter": "05 — FAKE INVOICE",
+      "activeChecklistIndex": 0,
+      "headline": "An address imitating the supplier: **caught**.",
+      "start": 40.432,
+      "end": 42.952,
+      "appStart": 39.782,
+      "appEnd": 43.102,
+      "sourceStart": 48.823,
+      "sourceEnd": 52.143,
       "box": {
-        "x": 1213,
-        "y": 412,
-        "width": 443,
-        "height": 250
+        "x": 1820,
+        "y": 618,
+        "width": 664,
+        "height": 375
       },
-      "zoom": 1.7,
-      "caption": "Lookalike-domain example: Solen flags the address imitating a supplier."
+      "zoom": 1.7
     }
   ]
 }
