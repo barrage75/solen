@@ -147,7 +147,7 @@ const makeEndHtml = (logo, lang) => `<!doctype html><html lang="${lang}"><head><
 const makeBaseHtml = () => `<!doctype html><html><head><meta charset="utf-8"><style>
   *{box-sizing:border-box}html,body{width:${WIDTH}px;height:${HEIGHT}px;margin:0;overflow:hidden;background:${COLORS.navy}}
   .arcs{position:absolute;inset:0;width:100%;height:100%}
-  .shadow{position:absolute;left:${APP_X}px;top:${APP_Y}px;width:${APP_WIDTH}px;height:${APP_HEIGHT}px;border-radius:18px;box-shadow:0 24px 72px rgba(0,0,0,.46)}
+  .shadow{position:absolute;left:${APP_X}px;top:${APP_Y}px;width:${APP_WIDTH}px;height:${APP_HEIGHT}px;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.34)}
 </style></head><body>${makeArcs(COLORS.yellow,".26")}<div class="shadow"></div></body></html>`;
 
 const makeWindowFrameHtml = () => `<!doctype html><html><head><style>
@@ -332,13 +332,15 @@ const makeMainGraph = (timeline, segments, chapterImages, headlineImages) => {
   imageInput += chapterImages.length;
   const sorted = [...headlineImages].sort((a, b) => a.outputStart - b.outputStart);
   for (const [index, scene] of sorted.entries()) {
-    const start = scene.outputStart + 0.65;
+    const previous = sorted[index - 1];
+    const followsSameChapter = previous?.chapter === scene.chapter;
+    const start = scene.outputStart + 0.65 + (followsSameChapter ? 1 / 30 : 0);
     const next = sorted[index + 1];
     const sameChapter = next?.chapter === scene.chapter;
-    const end = sameChapter ? next.outputStart + 0.9 : Math.max(start + 0.25, scene.outputEnd - 0.15);
-    const fadeOut = Math.max(start, end - 0.25);
+    const end = sameChapter ? next.outputStart + 0.65 : Math.max(start + 0.25, scene.outputEnd - 0.15);
+    const fadeOut = Math.max(start, end - 0.2);
     const inputIndex = imageInput + index;
-    graph.push(`[${inputIndex}:v]format=rgba,fade=t=in:st=${start.toFixed(3)}:d=0.25:alpha=1,fade=t=out:st=${fadeOut.toFixed(3)}:d=0.25:alpha=1[headline${index}]`);
+    graph.push(`[${inputIndex}:v]format=rgba,fade=t=in:st=${start.toFixed(3)}:d=0.25:alpha=1,fade=t=out:st=${fadeOut.toFixed(3)}:d=0.2:alpha=1[headline${index}]`);
     graph.push(`[${current}][headline${index}]overlay=0:0:shortest=1[withHeadline${index}]`);
     current = `withHeadline${index}`;
     scene.headlineStart = Number(start.toFixed(3));
