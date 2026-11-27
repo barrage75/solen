@@ -29,6 +29,10 @@ def frames(seconds):
     return math.ceil(seconds * FPS)
 
 
+def rounded_frames(seconds):
+    return math.floor(seconds * FPS + 0.5)
+
+
 def extract_frame(frame, path):
     subprocess.run(
         [
@@ -109,13 +113,13 @@ def main():
         story_cursor += scene_frames
 
     start_frames = {
-        scene["id"]: round(scene["start"] * FPS) for scene in timeline["scenes"]
+        scene["id"]: rounded_frames(scene["start"]) for scene in timeline["scenes"]
     }
-    title_frames = round(DEMO_START_SOURCE_SECONDS * FPS)
+    title_frames = rounded_frames(DEMO_START_SOURCE_SECONDS)
     pre_roll_frames = start_frames[DEMO_LINES[0][1]] - title_frames
     cursor = pre_roll_frames
-    end_card_source_frame = round(
-        (timeline["durationSeconds"] - DEMO_END_CARD_SECONDS) * FPS
+    end_card_source_frame = rounded_frames(
+        timeline["durationSeconds"] - DEMO_END_CARD_SECONDS
     )
 
     for index, (line_id, scene_id) in enumerate(DEMO_LINES):
