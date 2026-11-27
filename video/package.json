@@ -1,0 +1,22 @@
+{
+  "name": "solen-pitch-video",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "render:raw": "remotion render src/index.ts SolenPitchFR out/solen-pitch-fr-raw.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=192k --pixel-format=yuv420p --overwrite",
+    "render": "npm run render:raw && ffmpeg -nostdin -y -i out/solen-pitch-fr-raw.mp4 -map 0:v:0 -map 0:a:0 -c:v copy -af loudnorm=I=-16:TP=-1.5:LRA=11:linear=true:print_format=summary -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../solen/docs/solen-pitch-fr.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.547",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.547"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.9.3"
+  }
+}

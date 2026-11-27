@@ -1,2 +1,7 @@
 .playwright-mcp/
 solen/.env.local
+video/node_modules/
+video/out/
+video/.remotion/
+video/.cache/
+video/.venv/
