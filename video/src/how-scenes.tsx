@@ -19,12 +19,19 @@ const Pop = ({frame, children}: {frame: number; children: ReactNode}) => {
 
 const Profile = ({frame}: {frame: number}) => {
   const y = interpolate(frame, [0, 80], [22, -16], {extrapolateRight: "clamp"});
+  const zoom = interpolate(frame, [24, 70], [1, 1.16], {extrapolateRight: "clamp"});
+  const rowOpacity = interpolate(frame, [28, 42], [0, 1], {extrapolateRight: "clamp"});
   return (
     <>
       <StoryLabel>PROFIL FOURNISSEUR · NUVIO CLOUD</StoryLabel>
-      <div style={{...panel, left: 90, top: 190, width: 950, height: 680, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
-        <img alt="Capture réelle du profil fournisseur Nuvio Cloud" src={staticFile("images/supplier-nuvio-live.png")} style={{width: 950, height: 270, objectFit: "contain", objectPosition: "center center"}} />
-        <div style={{position: "absolute", left: 16, right: 16, bottom: 16, display: "flex", gap: 10}}>
+      <div style={{...panel, left: 90, top: 190, width: 950, height: 232, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
+        <div style={{position:"relative",width:950,height:160,overflow:"hidden"}}>
+          <div style={{position:"absolute",inset:0,transform:`scale(${zoom})`,transformOrigin:"center 112px"}}>
+            <img alt="Capture réelle du profil fournisseur Nuvio Cloud" src={staticFile("images/supplier-nuvio-table.png")} style={{position:"absolute",inset:0,width:950,height:160,objectFit:"fill"}} />
+            <div style={{position:"absolute",left:4,top:97,width:942,height:58,border:`3px solid ${COLORS.yellow}`,borderRadius:8,boxShadow:"0 0 22px rgba(255,207,51,.56)",background:"rgba(255,207,51,.06)",opacity:rowOpacity}}/>
+          </div>
+        </div>
+        <div style={{position: "absolute", left: 16, right: 16, bottom: 12, display: "flex", gap: 10}}>
           {["nuvio-cloud.fr", "FR03 •••• •••• 5530", "04 72 18 52 30"].map((value, i) => <Pop key={value} frame={frame-i*8}><span style={{display:"block",padding:"12px 14px",background:COLORS.navy,border:`1px solid ${COLORS.yellow}`,borderRadius:12,fontFamily:"JetBrainsDeck, monospace",fontSize:16,color:COLORS.cream}}>{value}</span></Pop>)}
         </div>
       </div>

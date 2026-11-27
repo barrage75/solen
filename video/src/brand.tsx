@@ -115,8 +115,8 @@ export const StoryLabel = ({children}: {children: ReactNode}) => (
   <div
     style={{
       position: "absolute",
-      top: 58,
-      left: 96,
+      top: 135,
+      left: 145,
       color: COLORS.yellow,
       fontFamily: "JetBrainsDeck, monospace",
       fontSize: 24,

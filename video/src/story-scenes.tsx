@@ -324,6 +324,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
 
 const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
   const fps = useVideoConfig().fps;
+  const glitchX = frame < 22 ? Math.sin(frame * 3.1) * (22 - frame) * 1.2 : 0;
   const appear = spring({
     frame: frame - 9,
     fps,
@@ -353,15 +354,15 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
         style={{
           position: "absolute",
           left: 704,
-          top: 126,
+          top: 160,
           width: 1100,
-          height: 822,
+          height: 640,
           backgroundColor: COLORS.cream,
           borderRadius: 24,
           boxShadow: "0 28px 70px rgba(0,0,0,.36)",
           overflow: "hidden",
           color: COLORS.navy,
-          transform: `translateY(${(1 - appear) * 40}px) scale(${0.97 + appear * 0.03})`,
+          transform: `translate(${glitchX}px,${(1 - appear) * 40}px) scale(${0.97 + appear * 0.03})`,
           opacity: interpolate(frame, [0, 14], [0, 1], {extrapolateRight: "clamp"}),
         }}
       >
@@ -397,7 +398,7 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
                   fontWeight: index === 1 ? 700 : 500,
                 }}
               >
-                {line}
+                {index === 1 ? <>j'ai besoin que tu passes un virement de <mark style={{background:COLORS.yellow,color:COLORS.navy,padding:"0 4px"}}>35 000 €</mark> aujourd'hui</> : index === 2 ? <><mark style={{background:COLORS.yellow,color:COLORS.navy,padding:"0 4px"}}>n'en parle à personne</mark>, même pas à Marc</> : line}
               </div>
             );
           })}
@@ -527,13 +528,13 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>05 — LE LENDEMAIN</StoryLabel>
-      <div style={{position: "absolute", left: 104, top: 165, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
+      <div style={{position: "absolute", left: 104, top: 188, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         LE VRAI PDG APPELLE
       </div>
-      <div style={{position: "absolute", left: 100, top: 228, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 100, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
         <span style={{color: COLORS.red}}>35 000 €</span> sont partis.
       </div>
-      <div style={{position: "absolute", left: 105, top: 340, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
+      <div style={{position: "absolute", left: 105, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
       {bills.map((bill, index) => (
         <div
           key={index}
@@ -558,15 +559,15 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           50 €
         </div>
       ))}
-      <div style={{position: "absolute", left: 115, bottom: 95, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 104, letterSpacing: -3}}>
+      <div style={{position: "absolute", left: 128, top: 490, width: 910, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 146, letterSpacing: -5}}>
         −{formatted} €
       </div>
       <div
         style={{
           position: "absolute",
-          right: 130,
-          top: 500,
-          width: 620,
+          right: 105,
+          top: 454,
+          width: 690,
           padding: "26px 30px",
           borderRadius: 20,
           backgroundColor: COLORS.cream,

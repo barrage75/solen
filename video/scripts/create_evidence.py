@@ -40,7 +40,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch3"
+    out = Path.home() / "profil" / "video-check" / "pitch4"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -61,6 +61,13 @@ def main():
                 start + voice_frames // 2,
             )
         )
+        if line["id"].startswith("demo-"):
+            line_frames.append(
+                (
+                    f"demo-70-{line['id']}.png",
+                    min(end - 1, start + round(voice_frames * 0.7)),
+                )
+            )
         boundaries = [
             {
                 "text": word["text"],
@@ -141,6 +148,25 @@ def main():
             "-frames:v",
             "1",
             str(contact_sheet),
+        ],
+        check=True,
+    )
+
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-nostdin",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-i",
+            str(OUTPUT_VIDEO),
+            "-vf",
+            "fps=1/2,scale=384:216,tile=5x10:padding=12:margin=12:color=0x0A0F20",
+            "-frames:v",
+            "1",
+            str(out / "every-2s.png"),
         ],
         check=True,
     )
