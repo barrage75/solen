@@ -1,71 +1,101 @@
 {
   "voice": "fr-FR-HenriNeural",
-  "rate": "+10%",
+  "rate": "+15%",
   "lines": [
+    {
+      "id": "hook-01",
+      "section": "story",
+      "text": "Trente-cinq mille euros. Partis en un seul clic."
+    },
     {
       "id": "story-01-alarm",
       "section": "story",
-      "text": "Lundi, sept heures. Claire, comptable chez Arkos Systems, se lève."
+      "text": "Lundi, sept heures. Claire, assistante de direction chez Arkos Systems."
     },
     {
       "id": "story-02-routine",
       "section": "story",
-      "text": "Café, métro, ordinateur. Une journée normale."
+      "text": "Café. Métro. Boîte mail."
     },
     {
       "id": "story-03-mail",
       "section": "story",
-      "text": "Neuf heures trente et une : un mail du PDG. Un virement urgent de trente-cinq mille euros. Et surtout, n'en parler à personne."
+      "text": "Neuf heures trente et une : le PDG lui écrit. Virement urgent, trente-cinq mille euros. Et pas un mot à personne."
     },
     {
       "id": "story-04-click",
       "section": "story",
-      "text": "Le patron est pressé. Claire valide."
+      "text": "Pas le temps de vérifier. Claire valide."
     },
     {
       "id": "story-05-loss",
       "section": "story",
-      "text": "Le lendemain, le vrai PDG tombe des nues : il n'a jamais envoyé ce mail. Trente-cinq mille euros, partis."
+      "text": "Le lendemain, le vrai PDG l'appelle : « Quel virement ? »"
     },
     {
       "id": "story-06-cost",
       "section": "story",
-      "text": "En France, cette arnaque a coûté cinq cent seize millions d'euros en 2025. Trente-quatre pour cent de plus en un an."
+      "text": "Trente-cinq mille euros perdus. En France, cette arnaque a coûté cinq cent seize millions d'euros en 2025."
     },
     {
       "id": "story-07-rewind",
       "section": "story",
-      "text": "Tout ça aurait pu être évité. Avec Solen."
+      "text": "Et si Claire avait eu Solen ?"
+    },
+    {
+      "id": "how-01-profile",
+      "section": "how",
+      "text": "Solen connaît chaque fournisseur : son IBAN, son téléphone, ses montants habituels."
+    },
+    {
+      "id": "how-02-history",
+      "section": "how",
+      "text": "Ces profils viennent de l'historique des paiements, jamais d'un mail. Nuvio Cloud : vingt-deux paiements sur le même IBAN depuis 2019."
+    },
+    {
+      "id": "how-03-code",
+      "section": "how",
+      "text": "À chaque mail, le code contrôle l'expéditeur, les coordonnées bancaires et le montant."
+    },
+    {
+      "id": "how-04-ai",
+      "section": "how",
+      "text": "Puis l'IA lit la demande, sans jamais voir l'IBAN, et démasque le piège : un faux prétexte, un délai trop court."
+    },
+    {
+      "id": "how-05-rule",
+      "section": "how",
+      "text": "L'IA peut durcir le verdict. Jamais l'adoucir."
     },
     {
       "id": "demo-01-nuvio-infobar",
       "section": "demo",
       "scene": "nuvio-infobar",
-      "text": "Solen s'installe dans Outlook. Ici, un fournisseur annonce un nouveau RIB : Solen alerte dès l'ouverture du mail."
+      "text": "Nuvio annonce un nouveau RIB ? Alerte dès l'ouverture."
     },
     {
       "id": "demo-02-iban",
       "section": "demo",
       "scene": "nuvio-verdict-reasons",
-      "text": "L'IBAN ne correspond pas à celui du profil fournisseur."
+      "text": "L'IBAN ne correspond pas au profil."
     },
     {
       "id": "demo-03-callback",
       "section": "demo",
       "scene": "nuvio-callback",
-      "text": "Solen conseille d'appeler le numéro connu, jamais celui du mail."
+      "text": "Solen fait rappeler le numéro connu, jamais celui du mail."
     },
     {
       "id": "demo-04-pdg",
       "section": "demo",
       "scene": "pdg-mail-verdict",
-      "text": "Et le mail qui a piégé Claire ? Bloqué. Un PDG n'écrit pas depuis Gmail pour trente-cinq mille euros."
+      "text": "Le faux PDG de Claire ? Bloqué. Un PDG n'écrit pas depuis Gmail."
     },
     {
       "id": "demo-05-techniques",
       "section": "demo",
       "scene": "pdg-techniques",
-      "text": "Et Solen explique pourquoi : autorité, secret, contournement de la hiérarchie."
+      "text": "Autorité, secret, hiérarchie contournée : tout est expliqué."
     },
     {
       "id": "demo-06-daf",
@@ -77,18 +107,18 @@
       "id": "demo-07-attacks",
       "section": "demo",
       "scene": "attack-summary",
-      "text": "Vingt-huit cas rejoués avec une IA piégée : vingt-six attaques sur vingt-six bloquées, zéro fausse alerte."
+      "text": "Vingt-huit cas rejoués : vingt-six attaques sur vingt-six bloquées. Zéro fausse alerte."
     },
     {
       "id": "demo-08-lookalike",
       "section": "demo",
       "scene": "try-lookalike-example",
-      "text": "Même une adresse qui imite un fournisseur est repérée."
+      "text": "Même une adresse sosie est repérée."
     },
     {
-      "id": "end-card",
-      "section": "end-card",
-      "text": "Solen. On bloque l'arnaque par mail à la source. Essayez-la sur solen-demo point vercel point app."
+      "id": "end",
+      "section": "end",
+      "text": "Solen. On bloque l'arnaque par mail à la source."
     }
   ]
 }

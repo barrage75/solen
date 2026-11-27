@@ -1,97 +1,80 @@
 import voiceManifest from "./voice-manifest.json";
-import {
-  DEMO_END_CARD_START_FRAME,
-  DEMO_SCHEDULE_SCENES,
-  DEMO_SOURCE_DURATION_FRAMES,
-  DEMO_START_SOURCE_SECONDS,
-  FPS,
-} from "./demo-timeline";
+import {FPS} from "./demo-timeline";
 
-export type VoiceLine = (typeof voiceManifest.lines)[number];
-
-export const VOICE_LINES = voiceManifest.lines as VoiceLine[];
+export type VoiceLine = {
+  id: string;
+  section: "story" | "how" | "demo" | "end";
+  text: string;
+  file: string;
+  durationSeconds: number;
+  scene?: string;
+  wordBoundaries?: {text: string; startSeconds: number; endSeconds: number}[];
+};
+export const VOICE_LINES = voiceManifest.lines as unknown as VoiceLine[];
 export const VOICE_RATE = voiceManifest.rate;
 export const VOICE_NAME = voiceManifest.voice;
-
-export const FRAME_GAP = 6;
-export const END_CARD_HOLD_FRAMES = 36;
-export const END_CARD_FADE_FRAMES = 18;
-
+export const FRAME_GAP = 0;
+export const END_CARD_FADE_FRAMES = 30;
 export const toFrames = (seconds: number) => Math.ceil(seconds * FPS);
 
 const linesById = new Map(VOICE_LINES.map((line) => [line.id, line]));
-
 export const getVoiceLine = (id: string) => {
   const line = linesById.get(id);
-  if (!line) {
-    throw new Error(`Missing voice line: ${id}`);
-  }
+  if (!line) throw new Error(`Missing voice line: ${id}`);
   return line;
 };
 
-export const STORY_SCHEDULE = (() => {
+const schedule = (lines: VoiceLine[]) => {
   let cursor = 0;
-  return VOICE_LINES.filter((line) => line.section === "story").map((line) => {
+  return lines.map((line) => {
     const startFrame = cursor;
     const voiceFrames = toFrames(line.durationSeconds);
-    const endFrame = startFrame + voiceFrames;
-    cursor = endFrame + FRAME_GAP;
-    return { line, startFrame, voiceFrames, endFrame, sceneFrames: cursor - startFrame };
+    const sceneFrames = voiceFrames;
+    cursor += sceneFrames + FRAME_GAP;
+    return {line, startFrame, voiceFrames, sceneFrames, endFrame: cursor};
   });
-})();
+};
 
-export const STORY_DURATION_FRAMES =
-  STORY_SCHEDULE[STORY_SCHEDULE.length - 1].startFrame +
-  STORY_SCHEDULE[STORY_SCHEDULE.length - 1].sceneFrames;
+export const STORY_SCHEDULE = schedule(VOICE_LINES.filter((line) => line.section === "story"));
+export const STORY_DURATION_FRAMES = STORY_SCHEDULE.at(-1)?.endFrame ?? 0;
+export const HOW_SCHEDULE = schedule(VOICE_LINES.filter((line) => line.section === "how"));
+export const HOW_START_FRAME = STORY_DURATION_FRAMES;
+export const HOW_DURATION_FRAMES = HOW_SCHEDULE.at(-1)?.endFrame ?? 0;
 
-export const DEMO_PRE_ROLL_FRAMES =
-  DEMO_SCHEDULE_SCENES[0].sourceStartFrame -
-  Math.round(DEMO_START_SOURCE_SECONDS * FPS);
+export const DEMO_SOURCE_SCENES = [
+  ["nuvio-infobar", 4.82, 8.218],
+  ["nuvio-verdict-reasons", 8.271, 11.657],
+  ["nuvio-callback", 12.009, 15.323],
+  ["pdg-mail-verdict", 17.89, 21.487],
+  ["pdg-techniques", 21.523, 24.952],
+  ["daf-verdict", 27.356, 30.866],
+  ["attack-summary", 35.464, 42.557],
+  ["try-lookalike-example", 48.429, 51.806],
+] as const;
 
-export const DEMO_SCHEDULE = (() => {
-  let cursor = DEMO_PRE_ROLL_FRAMES;
-  return DEMO_SCHEDULE_SCENES.map((scene, index) => {
-    const nextScene = DEMO_SCHEDULE_SCENES[index + 1];
-    const sourceEndFrame =
-      nextScene?.sourceStartFrame ?? DEMO_END_CARD_START_FRAME;
-    const sourceFrames = sourceEndFrame - scene.sourceStartFrame;
-    const line = getVoiceLine(scene.lineId);
-    const voiceFrames = toFrames(line.durationSeconds);
-    const sceneFrames = Math.max(sourceFrames, voiceFrames + FRAME_GAP);
-    const holdFrames = sceneFrames - sourceFrames;
-    const startFrame = cursor;
-    cursor += sceneFrames;
-    return {
-      ...scene,
-      line,
-      startFrame,
-      sourceEndFrame,
-      sourceFrames,
-      voiceFrames,
-      sceneFrames,
-      holdFrames,
-      endFrame: cursor,
-    };
-  });
-})();
-
-export const DEMO_SECTION_START_FRAME = STORY_DURATION_FRAMES;
-export const DEMO_START_FRAME = DEMO_SECTION_START_FRAME;
-export const DEMO_SCHEDULE_START_FRAME =
-  DEMO_START_FRAME + DEMO_PRE_ROLL_FRAMES;
-export const DEMO_END_FRAME =
-  DEMO_START_FRAME +
-  DEMO_PRE_ROLL_FRAMES +
-  DEMO_SCHEDULE.reduce((total, scene) => total + scene.sceneFrames, 0);
-
-export const END_CARD_LINE = getVoiceLine("end-card");
+export const DEMO_START_FRAME = HOW_START_FRAME + HOW_DURATION_FRAMES;
+export const DEMO_SCHEDULE = DEMO_SOURCE_SCENES.map(([sceneId, sourceStart, sourceEnd]) => {
+  const line = VOICE_LINES.find((candidate) => candidate.section === "demo" && candidate.scene === sceneId);
+  if (!line) throw new Error(`Missing voice for demo scene ${sceneId}`);
+  const voiceFrames = toFrames(line.durationSeconds);
+  const sourceStartFrame = toFrames(sourceStart);
+  const sourceEndFrame = toFrames(sourceEnd);
+  const sourceFrames = sourceEndFrame - sourceStartFrame;
+  const sceneFrames = voiceFrames;
+  return {
+    sceneId,
+    line,
+    sourceStartFrame,
+    sourceEndFrame,
+    sourceFrames,
+    voiceFrames,
+    sceneFrames,
+    playbackRate: sourceFrames / sceneFrames,
+  };
+});
+export const DEMO_END_FRAME = DEMO_START_FRAME + DEMO_SCHEDULE.reduce((sum, scene) => sum + scene.sceneFrames, 0);
+export const END_CARD_LINE = getVoiceLine("end");
 export const END_CARD_START_FRAME = DEMO_END_FRAME;
 export const END_CARD_VOICE_FRAMES = toFrames(END_CARD_LINE.durationSeconds);
-export const END_CARD_DURATION_FRAMES =
-  END_CARD_VOICE_FRAMES + END_CARD_HOLD_FRAMES;
-export const PITCH_DURATION_FRAMES =
-  END_CARD_START_FRAME + END_CARD_DURATION_FRAMES;
-
-export const STORY_BY_ID = new Map(
-  STORY_SCHEDULE.map((entry) => [entry.line.id, entry]),
-);
+export const END_CARD_DURATION_FRAMES = END_CARD_VOICE_FRAMES + END_CARD_FADE_FRAMES;
+export const PITCH_DURATION_FRAMES = END_CARD_START_FRAME + END_CARD_DURATION_FRAMES;

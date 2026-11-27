@@ -34,24 +34,47 @@ async def main():
     lines = []
     for line in config["lines"]:
         path = OUTPUT / f'{line["id"]}.mp3'
-        last_error = None
         for attempt in range(3):
             try:
                 communicate = edge_tts.Communicate(
-                    line["text"], config["voice"], rate=config["rate"]
+                    line["text"],
+                    config["voice"],
+                    rate=config["rate"],
+                    boundary="WordBoundary",
                 )
-                await communicate.save(str(path))
+                word_boundaries = []
+                with path.open("wb") as audio_file:
+                    async for chunk in communicate.stream():
+                        if chunk["type"] == "audio":
+                            audio_file.write(chunk["data"])
+                        elif chunk["type"] == "WordBoundary":
+                            word_boundaries.append(
+                                {
+                                    "text": chunk["text"],
+                                    "startSeconds": round(
+                                        chunk["offset"] / 10_000_000, 4
+                                    ),
+                                    "endSeconds": round(
+                                        (chunk["offset"] + chunk["duration"])
+                                        / 10_000_000,
+                                        4,
+                                    ),
+                                }
+                            )
                 break
             except Exception as error:
-                last_error = error
+                path.unlink(missing_ok=True)
                 if attempt == 2:
                     raise
                 await asyncio.sleep(1 + attempt)
+        if not word_boundaries:
+            raise RuntimeError(f'No word timing metadata received for {line["id"]}')
         lines.append(
             {
                 **line,
                 "file": path.relative_to(ROOT / "public").as_posix(),
                 "durationSeconds": duration_seconds(path),
+                "wordBoundaries": word_boundaries,
             }
         )
         print(f'{line["id"]}: {lines[-1]["durationSeconds"]:.3f}s')

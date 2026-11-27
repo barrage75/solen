@@ -111,6 +111,15 @@ def shine():
     return 0.6 * tone * np.exp(-2.8 * time) + 0.35 * bell
 
 
+def glitch():
+    length = int(RATE * 0.34)
+    time = np.arange(length) / RATE
+    chopped = (np.sin(2 * np.pi * 27 * time) > 0).astype(np.float64)
+    static = noise(length, 9451) * np.exp(-time * 5)
+    sweep_tone = sweep(length, 1800, 260) * np.exp(-time * 4)
+    return chopped * (0.5 * static + 0.5 * sweep_tone)
+
+
 def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     sounds = {
@@ -124,6 +133,7 @@ def main():
         "boom.wav": boom(),
         "rewind.wav": rewind(),
         "shine.wav": shine(),
+        "glitch.wav": glitch(),
     }
     for name, samples in sounds.items():
         save(name, samples)

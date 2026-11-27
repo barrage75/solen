@@ -40,12 +40,18 @@ const enterStyle = (frame: number, fps: number) => {
   };
 };
 
-const Shell = ({children}: {children: ReactNode}) => (
+const Shell = ({children, frame, durationFrames}: {children: ReactNode; frame: number; durationFrames: number}) => {
+  const push = interpolate(frame, [0, durationFrames], [1, 1.055], {extrapolateRight: "clamp"});
+  const drift = interpolate(frame, [0, durationFrames], [32, 12], {extrapolateRight: "clamp"});
+  return (
   <div style={{...shellStyle, position: "absolute", inset: 0}}>
-    <BrandArcs />
-    {children}
+    <div style={{position: "absolute", inset: -46, overflow: "hidden", transform: `translateX(${drift}px) scale(${push})`, transformOrigin: "center"}}>
+      <BrandArcs />
+      {children}
+    </div>
   </div>
-);
+  );
+};
 
 const Claire = ({
   style,
@@ -105,7 +111,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   });
   const waking = sitProgress > 0.7;
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>01 — RÉVEIL</StoryLabel>
       <div
         style={{
@@ -133,7 +139,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           letterSpacing: 1,
         }}
       >
-        CLAIRE BERNARD · COMPTABLE
+        ASSISTANTE DE DIRECTION
         <br />
         ARKOS SYSTEMS
       </div>
@@ -234,12 +240,12 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
   const items = [
     {number: "01", title: "Café", label: "LE RÉVEIL"},
     {number: "02", title: "Métro", label: "LE TRAJET"},
-    {number: "03", title: "Ordinateur", label: "AU BUREAU"},
+    {number: "03", title: "Boîte mail", label: "AU BUREAU"},
   ];
   const current = items[index];
   const localFrame = frame - cutFrames * index;
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>02 — ROUTINE</StoryLabel>
       <div
         style={{
@@ -331,7 +337,7 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   const lineStart = durationFrames * 0.2;
   const lineStep = durationFrames * 0.17;
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>03 — LE MESSAGE · 9:31</StoryLabel>
       <div style={{position: "absolute", left: 103, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
         L'urgence.
@@ -429,7 +435,7 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   const pointerX = interpolate(frame, [0, clickFrame - 8, clickFrame], [810, 1330, 1330], {extrapolateRight: "clamp"});
   const pointerY = interpolate(frame, [0, clickFrame - 8, clickFrame], [625, 680, 680], {extrapolateRight: "clamp"});
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>04 — LE CLIC</StoryLabel>
       <div style={{position: "absolute", left: 100, top: 202, width: 560, ...displayStyle, fontSize: 66, ...enterStyle(frame, fps)}}>
         Le patron est pressé.
@@ -513,13 +519,13 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
     const start = (index * 37) % durationFrames;
     const t = (frame + start) / Math.max(durationFrames, 1);
     return {
-      x: 1120 + ((index * 101) % 670),
-      y: 300 + ((index * 89) % 510) + Math.sin(t * Math.PI * 2) * 34,
+      x: 1120 + ((index * 101) % 650) + (frame / Math.max(durationFrames, 1)) * 210,
+      y: 300 + ((index * 47) % 110) + Math.sin(t * Math.PI * 2) * 24,
       rotate: Math.sin(t * Math.PI * 2) * 26 + (index % 2 ? 16 : -16),
     };
   });
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>05 — LE LENDEMAIN</StoryLabel>
       <div style={{position: "absolute", left: 104, top: 165, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         LE VRAI PDG APPELLE
@@ -588,7 +594,7 @@ const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   const amount = Math.round(interpolate(frame, [6, 48], [0, 516], {extrapolateRight: "clamp"}));
   const growth = interpolate(frame, [34, 64], [0, 1], {extrapolateRight: "clamp"});
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>06 — LE COÛT</StoryLabel>
       <div style={{position: "absolute", left: 102, top: 193, ...displayStyle, fontSize: 130, color: COLORS.yellow, ...enterStyle(frame, fps)}}>
         35 000 €
@@ -613,7 +619,7 @@ const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, color: COLORS.yellow, fontSize: 84}}>+34 %</div>
           <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 28, color: COLORS.cream}}>en un an</div>
         </div>
-        <div style={{position: "absolute", bottom: 32, right: 44, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 15, letterSpacing: 0.7}}>
+        <div style={{position: "absolute", bottom: 32, right: 44, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 17, letterSpacing: 0.7}}>
           SOURCE : BANQUE DE FRANCE, RAPPORT OSMP 2025
         </div>
       </div>
@@ -627,7 +633,7 @@ const RewindScene = ({frame, durationFrames}: {frame: number; durationFrames: nu
   const reveal = interpolate(frame, [revealAt, revealAt + 22], [0, 1], {extrapolateRight: "clamp"});
   const flicker = frame < revealAt ? 0.55 + (frame % 4) * 0.035 : 0.2;
   return (
-    <Shell>
+    <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>07 — LA BONNE DÉCISION</StoryLabel>
       {frame < revealAt && (
         <>
@@ -661,9 +667,35 @@ const RewindScene = ({frame, durationFrames}: {frame: number; durationFrames: nu
   );
 };
 
+const HookScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+  const shake = frame < 18 ? Math.sin(frame * 2.7) * (18 - frame) * 0.9 : 0;
+  const slam = spring({frame: frame - 3, fps: 30, config: {damping: 10, stiffness: 170}});
+  const rewind = interpolate(frame, [durationFrames - 23, durationFrames - 1], [0, 1], {extrapolateLeft: "clamp"});
+  return (
+    <Shell frame={frame} durationFrames={durationFrames}>
+      <div style={{position:"absolute",inset:0,background:`linear-gradient(112deg, ${COLORS.navy} 0 53%, #151F32 53% 100%)`,transform:`translateX(${rewind*180}px)`}} />
+      <div style={{position:"absolute",left:160,top:170,color:COLORS.red,fontFamily:"JetBrainsDeck, monospace",fontSize:24,letterSpacing:4,opacity:.8}}>VIREMENT · ARKOS SYSTEMS</div>
+      <div style={{position:"absolute",left:142,top:300,width:1200,fontFamily:"ArchivoDeck, sans-serif",fontWeight:800,fontSize:154,color:COLORS.cream,letterSpacing:-7,transform:`translate(${shake}px,${(1-slam)*90}px) scale(${.72+slam*.28}) rotate(${shake*.025}deg)`,textShadow:frame<18?"5px 0 #EE6D6A, -5px 0 #58B8E5":"none"}}>
+        −35 000 €
+      </div>
+      <div style={{position:"absolute",left:160,top:520,fontFamily:"ArchivoDeck, sans-serif",fontSize:58,fontWeight:800,color:COLORS.yellow,opacity:interpolate(frame,[18,30],[0,1],{extrapolateRight:"clamp"})}}>PARTIS EN UN SEUL CLIC.</div>
+      <div style={{position:"absolute",right:155,top:710,width:430,height:170,borderRadius:24,background:COLORS.cream,color:COLORS.navy,padding:28,transform:`translateX(${interpolate(frame,[20,45],[600,0],{extrapolateRight:"clamp"})}px)`}}>
+        <div style={{fontFamily:"JetBrainsDeck, monospace",fontSize:18}}>VIREMENT CONFIDENTIEL</div>
+        <div style={{marginTop:25,height:58,borderRadius:12,background:COLORS.yellow,display:"grid",placeItems:"center",fontFamily:"ManropeDeck, sans-serif",fontSize:22,fontWeight:800}}>VALIDER LE VIREMENT</div>
+      </div>
+      <div style={{position:"absolute",left:0,right:0,bottom:0,height:150,background:COLORS.yellow,transform:`translateY(${(1-rewind)*180}px) skewY(-5deg)`,display:"flex",alignItems:"center",paddingLeft:140,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:28,letterSpacing:3}}>
+        RETOUR AU DÉBUT · LUNDI, 7 H 02
+      </div>
+      <div style={{position:"absolute",inset:0,pointerEvents:"none",opacity:frame<18?.17:0,background:"repeating-linear-gradient(to bottom, transparent 0 5px, rgba(255,255,255,.55) 6px 7px)"}}/>
+    </Shell>
+  );
+};
+
 export const StoryScene = ({id, durationFrames}: StorySceneProps) => {
   const frame = useCurrentFrame();
   switch (id) {
+    case "hook-01":
+      return <HookScene frame={frame} durationFrames={durationFrames} />;
     case "story-01-alarm":
       return <AlarmScene frame={frame} durationFrames={durationFrames} />;
     case "story-02-routine":

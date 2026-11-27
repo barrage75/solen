@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "generate:voice": "python3 scripts/generate_voice.py",
+    "generate:sfx": "python3 scripts/generate_sfx.py",
+    "generate:music": "python3 scripts/generate_music.py",
+    "prepare:demo": "python3 scripts/prepare_demo_source.py",
+    "evidence": "python3 scripts/create_evidence.py",
     "render:raw": "remotion render src/index.ts SolenPitchFR out/solen-pitch-fr-raw.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=192k --pixel-format=yuv420p --overwrite",
     "render": "npm run render:raw && ffmpeg -nostdin -y -i out/solen-pitch-fr-raw.mp4 -map 0:v:0 -map 0:a:0 -c:v copy -af loudnorm=I=-16:TP=-1.5:LRA=11:linear=true:print_format=summary -c:a aac -b:a 192k -ar 48000 -movflags +faststart ../solen/docs/solen-pitch-fr.mp4",
     "typecheck": "tsc --noEmit"
