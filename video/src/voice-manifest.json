@@ -1,55 +1,55 @@
 {
   "voice": "fr-FR-HenriNeural",
-  "rate": "+5%",
+  "rate": "+10%",
   "lines": [
     {
       "id": "story-01-alarm",
       "section": "story",
-      "text": "Voici Claire. Comptable chez Arkos Systems. Lundi matin, sept heures.",
+      "text": "Lundi, sept heures. Claire, comptable chez Arkos Systems, se lève.",
       "file": "audio/voice/story-01-alarm.mp3",
-      "durationSeconds": 6.552
+      "durationSeconds": 5.472
     },
     {
       "id": "story-02-routine",
       "section": "story",
-      "text": "Café, métro, ordinateur. Une journée comme les autres.",
+      "text": "Café, métro, ordinateur. Une journée normale.",
       "file": "audio/voice/story-02-routine.mp3",
-      "durationSeconds": 5.064
+      "durationSeconds": 4.584
     },
     {
       "id": "story-03-mail",
       "section": "story",
-      "text": "Neuf heures trente et une. Un mail du PDG : un virement urgent de trente-cinq mille euros. Et surtout, n'en parler à personne.",
+      "text": "Neuf heures trente et une : un mail du PDG. Un virement urgent de trente-cinq mille euros. Et surtout, n'en parler à personne.",
       "file": "audio/voice/story-03-mail.mp3",
-      "durationSeconds": 8.376
+      "durationSeconds": 7.896
     },
     {
       "id": "story-04-click",
       "section": "story",
-      "text": "Le patron est pressé. Claire ne veut pas le décevoir. Elle valide.",
+      "text": "Le patron est pressé. Claire valide.",
       "file": "audio/voice/story-04-click.mp3",
-      "durationSeconds": 5.76
+      "durationSeconds": 3.456
     },
     {
       "id": "story-05-loss",
       "section": "story",
-      "text": "Le lendemain, le vrai PDG n'a jamais envoyé ce mail. Les trente-cinq mille euros sont partis. Pour de bon.",
+      "text": "Le lendemain, le vrai PDG tombe des nues : il n'a jamais envoyé ce mail. Trente-cinq mille euros, partis.",
       "file": "audio/voice/story-05-loss.mp3",
-      "durationSeconds": 7.68
+      "durationSeconds": 6.648
     },
     {
       "id": "story-06-cost",
       "section": "story",
-      "text": "Et Claire n'est pas seule : en France, cette fraude a coûté cinq cent seize millions d'euros en 2025. En hausse de trente-quatre pour cent.",
+      "text": "En France, cette arnaque a coûté cinq cent seize millions d'euros en 2025. Trente-quatre pour cent de plus en un an.",
       "file": "audio/voice/story-06-cost.mp3",
-      "durationSeconds": 7.992
+      "durationSeconds": 7.008
     },
     {
       "id": "story-07-rewind",
       "section": "story",
-      "text": "Tout ça ne serait jamais arrivé… si Claire avait eu Solen.",
+      "text": "Tout ça aurait pu être évité. Avec Solen.",
       "file": "audio/voice/story-07-rewind.mp3",
-      "durationSeconds": 3.696
+      "durationSeconds": 3.72
     },
     {
       "id": "demo-01-nuvio-infobar",
@@ -57,7 +57,7 @@
       "scene": "nuvio-infobar",
       "text": "Solen s'installe dans Outlook. Ici, un fournisseur annonce un nouveau RIB : Solen alerte dès l'ouverture du mail.",
       "file": "audio/voice/demo-01-nuvio-infobar.mp3",
-      "durationSeconds": 7.32
+      "durationSeconds": 6.984
     },
     {
       "id": "demo-02-iban",
@@ -65,7 +65,7 @@
       "scene": "nuvio-verdict-reasons",
       "text": "L'IBAN ne correspond pas à celui du profil fournisseur.",
       "file": "audio/voice/demo-02-iban.mp3",
-      "durationSeconds": 3.624
+      "durationSeconds": 3.456
     },
     {
       "id": "demo-03-callback",
@@ -73,7 +73,7 @@
       "scene": "nuvio-callback",
       "text": "Solen conseille d'appeler le numéro connu, jamais celui du mail.",
       "file": "audio/voice/demo-03-callback.mp3",
-      "durationSeconds": 4.104
+      "durationSeconds": 3.912
     },
     {
       "id": "demo-04-pdg",
@@ -81,7 +81,7 @@
       "scene": "pdg-mail-verdict",
       "text": "Et le mail qui a piégé Claire ? Bloqué. Un PDG n'écrit pas depuis Gmail pour trente-cinq mille euros.",
       "file": "audio/voice/demo-04-pdg.mp3",
-      "durationSeconds": 7.296
+      "durationSeconds": 6.96
     },
     {
       "id": "demo-05-techniques",
@@ -89,7 +89,7 @@
       "scene": "pdg-techniques",
       "text": "Et Solen explique pourquoi : autorité, secret, contournement de la hiérarchie.",
       "file": "audio/voice/demo-05-techniques.mp3",
-      "durationSeconds": 5.136
+      "durationSeconds": 4.896
     },
     {
       "id": "demo-06-daf",
@@ -97,7 +97,7 @@
       "scene": "daf-verdict",
       "text": "Un vrai mail urgent, lui, passe sans fausse alerte.",
       "file": "audio/voice/demo-06-daf.mp3",
-      "durationSeconds": 3.672
+      "durationSeconds": 3.504
     },
     {
       "id": "demo-07-attacks",
@@ -105,7 +105,7 @@
       "scene": "attack-summary",
       "text": "Vingt-huit cas rejoués avec une IA piégée : vingt-six attaques sur vingt-six bloquées, zéro fausse alerte.",
       "file": "audio/voice/demo-07-attacks.mp3",
-      "durationSeconds": 5.856
+      "durationSeconds": 5.616
     },
     {
       "id": "demo-08-lookalike",
@@ -113,14 +113,14 @@
       "scene": "try-lookalike-example",
       "text": "Même une adresse qui imite un fournisseur est repérée.",
       "file": "audio/voice/demo-08-lookalike.mp3",
-      "durationSeconds": 3.264
+      "durationSeconds": 3.12
     },
     {
       "id": "end-card",
       "section": "end-card",
       "text": "Solen. On bloque l'arnaque par mail à la source. Essayez-la sur solen-demo point vercel point app.",
       "file": "audio/voice/end-card.mp3",
-      "durationSeconds": 7.416
+      "durationSeconds": 7.08
     }
   ]
 }

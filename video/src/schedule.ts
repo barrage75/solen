@@ -3,7 +3,7 @@ import {
   DEMO_END_CARD_START_FRAME,
   DEMO_SCHEDULE_SCENES,
   DEMO_SOURCE_DURATION_FRAMES,
-  DEMO_TITLE_SECONDS,
+  DEMO_START_SOURCE_SECONDS,
   FPS,
 } from "./demo-timeline";
 
@@ -13,7 +13,7 @@ export const VOICE_LINES = voiceManifest.lines as VoiceLine[];
 export const VOICE_RATE = voiceManifest.rate;
 export const VOICE_NAME = voiceManifest.voice;
 
-export const FRAME_GAP = 9;
+export const FRAME_GAP = 6;
 export const END_CARD_HOLD_FRAMES = 36;
 export const END_CARD_FADE_FRAMES = 18;
 
@@ -46,7 +46,7 @@ export const STORY_DURATION_FRAMES =
 
 export const DEMO_PRE_ROLL_FRAMES =
   DEMO_SCHEDULE_SCENES[0].sourceStartFrame -
-  Math.round(DEMO_TITLE_SECONDS * FPS);
+  Math.round(DEMO_START_SOURCE_SECONDS * FPS);
 
 export const DEMO_SCHEDULE = (() => {
   let cursor = DEMO_PRE_ROLL_FRAMES;

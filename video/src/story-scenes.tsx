@@ -96,13 +96,17 @@ const Claire = ({
 
 const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
   const fps = useVideoConfig().fps;
+  const sitProgress = interpolate(frame, [24, 70], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   const sunrise = interpolate(frame, [0, durationFrames * 0.85], [174, 116], {
     extrapolateRight: "clamp",
   });
-  const waking = frame > durationFrames * 0.35;
+  const waking = sitProgress > 0.7;
   return (
     <Shell>
-      <StoryLabel>01 — LUNDI · 7:02</StoryLabel>
+      <StoryLabel>01 — RÉVEIL</StoryLabel>
       <div
         style={{
           position: "absolute",
@@ -110,15 +114,13 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           top: 190,
           width: 640,
           ...displayStyle,
-          fontSize: 82,
+          fontSize: 84,
           ...enterStyle(frame, fps),
         }}
       >
-        Une journée
+        Lundi,
         <br />
-        comme les
-        <br />
-        autres<span style={{color: COLORS.yellow}}>.</span>
+        <span style={{color: COLORS.yellow}}>7 h 02.</span>
       </div>
       <div
         style={{
@@ -157,6 +159,14 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
         <text x="194" y="705" textAnchor="middle" fill={COLORS.yellow} fontFamily="JetBrainsDeck, monospace" fontSize="25" fontWeight="700">7:02</text>
         <path d="M129 645c-24-17-26-43-8-60m140 60c24-17 26-43 8-60" fill="none" stroke={COLORS.yellow} strokeWidth="4" strokeLinecap="round" opacity="0.8" />
         <path d="M440 742c52-40 106-42 157 0" fill="none" stroke="#E8B995" strokeWidth="19" strokeLinecap="round" />
+        <g opacity={1 - sitProgress}>
+          <rect x="395" y="635" width="214" height="80" rx="38" fill="#E9E5D9" />
+          <circle cx="520" cy="632" r="66" fill="#E8B995" />
+          <path d="M456 637c-13-88 21-123 78-115 57 8 78 51 57 114-20-24-44-34-73-31-25 2-43 14-62 32Z" fill="#201925" />
+          <path d="M496 633c10 8 20 8 30 0m34 0c10 8 20 8 30 0" fill="none" stroke="#35272A" strokeWidth="5" strokeLinecap="round" />
+          <path d={`M560 677c49-23 70-${Math.round(22 + 26 * Math.sin(sitProgress * Math.PI))} 88-${Math.round(42 + 30 * Math.sin(sitProgress * Math.PI))}`} fill="none" stroke="#E8B995" strokeWidth="20" strokeLinecap="round" />
+          <path d="M610 704c56-36 156-41 234 2v82H610Z" fill="#FFCF33" />
+        </g>
       </svg>
       <Claire
         waking={waking}
@@ -166,22 +176,10 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           height: 570,
           right: 180,
           top: 355,
-          transform: `translateY(${interpolate(frame, [0, durationFrames * 0.5], [34, 0], {extrapolateRight: "clamp"})}px)`,
+          opacity: sitProgress,
+          transform: `translateY(${interpolate(sitProgress, [0, 1], [95, 0])}px)`,
         }}
       />
-      <div
-        style={{
-          position: "absolute",
-          right: 139,
-          bottom: 76,
-          color: COLORS.yellow,
-          fontFamily: "JetBrainsDeck, monospace",
-          fontSize: 20,
-          letterSpacing: 2,
-        }}
-      >
-        07:02 · ARKOS
-      </div>
     </Shell>
   );
 };
@@ -231,14 +229,15 @@ const RoutineVisual = ({kind}: {kind: number}) => {
 
 const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
   const fps = useVideoConfig().fps;
-  const index = Math.min(2, Math.floor((frame / durationFrames) * 3));
+  const cutFrames = Math.min(Math.round(fps), Math.floor(durationFrames / 3));
+  const index = Math.min(2, Math.floor(frame / cutFrames));
   const items = [
     {number: "01", title: "Café", label: "LE RÉVEIL"},
     {number: "02", title: "Métro", label: "LE TRAJET"},
     {number: "03", title: "Ordinateur", label: "AU BUREAU"},
   ];
   const current = items[index];
-  const localFrame = frame - Math.floor((durationFrames / 3) * index);
+  const localFrame = frame - cutFrames * index;
   return (
     <Shell>
       <StoryLabel>02 — ROUTINE</StoryLabel>
@@ -432,23 +431,21 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   return (
     <Shell>
       <StoryLabel>04 — LE CLIC</StoryLabel>
-      <div style={{position: "absolute", left: 100, top: 202, width: 560, ...displayStyle, fontSize: 72, ...enterStyle(frame, fps)}}>
-        Claire hésite.
+      <div style={{position: "absolute", left: 100, top: 202, width: 560, ...displayStyle, fontSize: 66, ...enterStyle(frame, fps)}}>
+        Le patron est pressé.
         <br />
-        <span style={{color: COLORS.yellow}}>Elle valide.</span>
-      </div>
-      <div style={{position: "absolute", left: 105, top: 385, width: 490, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 1.4}}>
-        LE PATRON EST PRESSÉ.
+        <span style={{color: COLORS.yellow}}>Claire valide.</span>
       </div>
       <Claire style={{position: "absolute", left: 610, top: 415, width: 360, height: 440}} />
       <div style={{position: "absolute", right: 126, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40}}>
         <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 1.5}}>VIREMENT À EXÉCUTER</div>
-        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 49, marginTop: 32}}>Arkos Systems</div>
-        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 23, color: COLORS.muted, marginTop: 14}}>Bénéficiaire · Compte confidentiel</div>
-        <div style={{height: 1, backgroundColor: "#384153", margin: "32px 0"}} />
+        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 33, marginTop: 24}}>Bénéficiaire : compte inconnu</div>
+        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted, marginTop: 12}}>Objet : acquisition confidentielle</div>
+        <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: COLORS.muted, marginTop: 13}}>IBAN · FR76 •••• •••• 4417</div>
+        <div style={{height: 1, backgroundColor: "#384153", margin: "24px 0"}} />
         <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted}}>MONTANT</div>
         <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 76, fontWeight: 800, color: COLORS.cream, marginTop: 5}}>35 000 €</div>
-        <div style={{display: "flex", gap: 14, marginTop: 42}}>
+        <div style={{display: "flex", gap: 14, marginTop: 32}}>
           <div style={{height: 66, padding: "0 25px", display: "flex", alignItems: "center", border: "1px solid #525C6D", borderRadius: 12, color: COLORS.cream, fontFamily: "ManropeDeck, sans-serif", fontSize: 21}}>Annuler</div>
           <div
             style={{
@@ -507,7 +504,8 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
 
 const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
   const fps = useVideoConfig().fps;
-  const moneyProgress = interpolate(frame, [durationFrames * 0.08, durationFrames * 0.55], [0, 35000], {extrapolateRight: "clamp"});
+  const countEndFrame = Math.max(1, durationFrames - Math.round(fps * 1.5));
+  const moneyProgress = interpolate(frame, [durationFrames * 0.08, countEndFrame], [0, 35000], {extrapolateRight: "clamp"});
   const money = Math.floor(moneyProgress / 250) * 250;
   const formatted = money.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
   const callOpacity = interpolate(frame, [durationFrames * 0.52, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
@@ -515,7 +513,7 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
     const start = (index * 37) % durationFrames;
     const t = (frame + start) / Math.max(durationFrames, 1);
     return {
-      x: 180 + ((index * 173) % 1470),
+      x: 1120 + ((index * 101) % 670),
       y: 300 + ((index * 89) % 510) + Math.sin(t * Math.PI * 2) * 34,
       rotate: Math.sin(t * Math.PI * 2) * 26 + (index % 2 ? 16 : -16),
     };
@@ -526,12 +524,10 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
       <div style={{position: "absolute", left: 104, top: 165, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         LE VRAI PDG APPELLE
       </div>
-      <div style={{position: "absolute", left: 100, top: 228, ...displayStyle, fontSize: 64, width: 820, ...enterStyle(frame, fps)}}>
-        Les trente-cinq mille euros
-        <br />
-        sont partis<span style={{color: COLORS.red}}>.</span>
+      <div style={{position: "absolute", left: 100, top: 228, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
+        <span style={{color: COLORS.red}}>35 000 €</span> sont partis.
       </div>
-      <div style={{position: "absolute", left: 105, top: 445, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Pour de bon.</div>
+      <div style={{position: "absolute", left: 105, top: 340, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
       {bills.map((bill, index) => (
         <div
           key={index}
@@ -543,7 +539,7 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
             height: 54,
             border: `2px solid ${index % 2 ? COLORS.cream : COLORS.yellow}`,
             borderRadius: 6,
-            opacity: 0.35,
+            opacity: 0.22,
             transform: `rotate(${bill.rotate}deg)`,
             color: COLORS.cream,
             fontFamily: "JetBrainsDeck, monospace",

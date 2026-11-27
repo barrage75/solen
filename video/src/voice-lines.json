@@ -1,41 +1,41 @@
 {
   "voice": "fr-FR-HenriNeural",
-  "rate": "+5%",
+  "rate": "+10%",
   "lines": [
     {
       "id": "story-01-alarm",
       "section": "story",
-      "text": "Voici Claire. Comptable chez Arkos Systems. Lundi matin, sept heures."
+      "text": "Lundi, sept heures. Claire, comptable chez Arkos Systems, se lève."
     },
     {
       "id": "story-02-routine",
       "section": "story",
-      "text": "Café, métro, ordinateur. Une journée comme les autres."
+      "text": "Café, métro, ordinateur. Une journée normale."
     },
     {
       "id": "story-03-mail",
       "section": "story",
-      "text": "Neuf heures trente et une. Un mail du PDG : un virement urgent de trente-cinq mille euros. Et surtout, n'en parler à personne."
+      "text": "Neuf heures trente et une : un mail du PDG. Un virement urgent de trente-cinq mille euros. Et surtout, n'en parler à personne."
     },
     {
       "id": "story-04-click",
       "section": "story",
-      "text": "Le patron est pressé. Claire ne veut pas le décevoir. Elle valide."
+      "text": "Le patron est pressé. Claire valide."
     },
     {
       "id": "story-05-loss",
       "section": "story",
-      "text": "Le lendemain, le vrai PDG n'a jamais envoyé ce mail. Les trente-cinq mille euros sont partis. Pour de bon."
+      "text": "Le lendemain, le vrai PDG tombe des nues : il n'a jamais envoyé ce mail. Trente-cinq mille euros, partis."
     },
     {
       "id": "story-06-cost",
       "section": "story",
-      "text": "Et Claire n'est pas seule : en France, cette fraude a coûté cinq cent seize millions d'euros en 2025. En hausse de trente-quatre pour cent."
+      "text": "En France, cette arnaque a coûté cinq cent seize millions d'euros en 2025. Trente-quatre pour cent de plus en un an."
     },
     {
       "id": "story-07-rewind",
       "section": "story",
-      "text": "Tout ça ne serait jamais arrivé… si Claire avait eu Solen."
+      "text": "Tout ça aurait pu être évité. Avec Solen."
     },
     {
       "id": "demo-01-nuvio-infobar",

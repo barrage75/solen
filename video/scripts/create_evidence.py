@@ -9,8 +9,8 @@ OUTPUT_VIDEO = REPO / "solen" / "docs" / "solen-pitch-fr.mp4"
 TIMELINE_PATH = REPO / "solen" / "docs" / "demo-solen.timeline.json"
 VOICE_MANIFEST_PATH = ROOT / "src" / "voice-manifest.json"
 FPS = 30
-FRAME_GAP = 9
-DEMO_TITLE_SECONDS = 2.5
+FRAME_GAP = 6
+DEMO_START_SOURCE_SECONDS = 4.5
 DEMO_END_CARD_SECONDS = 3
 
 DEMO_LINES = [
@@ -57,7 +57,7 @@ def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
     timeline = json.loads(TIMELINE_PATH.read_text(encoding="utf-8"))
     voice_by_id = {line["id"]: line for line in manifest["lines"]}
-    out = Path.home() / "profil" / "video-check" / "pitch"
+    out = Path.home() / "profil" / "video-check" / "pitch2"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -76,6 +76,27 @@ def main():
                 start_frame + scene_frames // 2,
             )
         )
+        if line["id"] == "story-01-alarm":
+            shot_frames.extend(
+                [
+                    ("fr-story-01-alarm-lying.png", start_frame + 12),
+                    ("fr-story-01-alarm-sitting.png", start_frame + 75),
+                ]
+            )
+        if line["id"] == "story-02-routine":
+            shot_frames.extend(
+                [
+                    (f"fr-story-02-routine-cut-{cut + 1:02d}.png", start_frame + 15 + cut * FPS)
+                    for cut in range(3)
+                ]
+            )
+        if line["id"] == "story-05-loss":
+            shot_frames.append(
+                (
+                    "fr-story-05-loss-counter-hold.png",
+                    start_frame + scene_frames - math.ceil(FPS * 1.25),
+                )
+            )
         line_timings.append(
             {
                 "id": line["id"],
@@ -90,7 +111,7 @@ def main():
     start_frames = {
         scene["id"]: round(scene["start"] * FPS) for scene in timeline["scenes"]
     }
-    title_frames = round(DEMO_TITLE_SECONDS * FPS)
+    title_frames = round(DEMO_START_SOURCE_SECONDS * FPS)
     pre_roll_frames = start_frames[DEMO_LINES[0][1]] - title_frames
     cursor = pre_roll_frames
     end_card_source_frame = round(
@@ -153,6 +174,8 @@ def main():
         "rate": manifest["rate"],
         "fps": FPS,
         "storySeconds": round(story_cursor / FPS, 3),
+        "demoStartSeconds": round(story_cursor / FPS, 3),
+        "firstDemoVoiceOffsetSeconds": round(pre_roll_frames / FPS, 3),
         "durationSeconds": round(
             (end_card_start + end_card_frames + 36) / FPS, 3
         ),

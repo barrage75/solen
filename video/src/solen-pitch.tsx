@@ -14,7 +14,7 @@ import {
 } from "./schedule";
 import {
   FPS,
-  DEMO_TITLE_SECONDS,
+  DEMO_START_SOURCE_SECONDS,
   DEMO_VIDEO,
 } from "./demo-timeline";
 import {StoryScene} from "./story-scenes";
@@ -42,7 +42,7 @@ const STORY_CUES: Record<string, {offset: number; sound: string; volume: number;
   ],
   "story-05-loss": [
     {offset: 12, sound: "whoosh.wav", volume: 0.075, duration: 0.72},
-    {offset: 54, sound: "boom.wav", volume: 0.12, duration: 1.15},
+    {offset: 54, sound: "boom.wav", volume: 0.11, duration: 1.15},
   ],
   "story-06-cost": [
     {offset: 35, sound: "pop.wav", volume: 0.085, duration: 0.16},
@@ -63,12 +63,20 @@ const storySounds: SoundCue[] = STORY_SCHEDULE.flatMap((entry) =>
   })),
 );
 
-const demoSounds: SoundCue[] = DEMO_SCHEDULE.map((scene) => ({
-  frame: DEMO_START_FRAME + scene.startFrame,
-  sound: "whoosh.wav",
-  volume: 0.065,
-  duration: toFrames(0.72),
-}));
+const demoSounds: SoundCue[] = [
+  {
+    frame: DEMO_START_FRAME,
+    sound: "whoosh.wav",
+    volume: 0.065,
+    duration: toFrames(0.72),
+  },
+  ...DEMO_SCHEDULE.slice(1).map((scene) => ({
+    frame: DEMO_START_FRAME + scene.startFrame,
+    sound: "whoosh.wav",
+    volume: 0.065,
+    duration: toFrames(0.72),
+  })),
+];
 
 const soundEvents: SoundCue[] = [
   ...storySounds,
@@ -128,7 +136,7 @@ const StoryShot = ({
 
 const DemoPlayback = () => {
   const videoSource = staticFile(DEMO_VIDEO);
-  const titleFrames = Math.round(DEMO_TITLE_SECONDS * FPS);
+  const demoStartFrame = Math.round(DEMO_START_SOURCE_SECONDS * FPS);
   const firstSceneFrame = DEMO_SCHEDULE[0].sourceStartFrame;
   const demoDuration = DEMO_PRE_ROLL_FRAMES + DEMO_SCHEDULE.reduce(
     (total, scene) => total + scene.sceneFrames,
@@ -150,7 +158,7 @@ const DemoPlayback = () => {
         <Sequence durationInFrames={DEMO_PRE_ROLL_FRAMES}>
           <OffthreadVideo
             src={videoSource}
-            startFrom={titleFrames}
+            startFrom={demoStartFrame}
             endAt={firstSceneFrame}
             volume={0}
             style={{width: "100%", height: "100%", objectFit: "contain"}}
@@ -215,7 +223,7 @@ const EndCard = () => {
     >
       <BrandArcs opacity={0.34} />
       <div style={{position: "absolute", left: 120, top: 85}}>
-        <DeckLogo page={4} style={{width: 410, height: 165}} />
+        <DeckLogo page={1} style={{width: 410, height: 165}} />
       </div>
       <div style={{position: "absolute", left: 128, top: 340, color: COLORS.yellow, fontFamily: "JetBrainsDeck, monospace", fontSize: 23, fontWeight: 700, letterSpacing: 2}}>
         ESSAYEZ-LA
@@ -230,7 +238,6 @@ const EndCard = () => {
       <div style={{position: "absolute", left: 126, top: 630, width: 930, fontFamily: "ManropeDeck, sans-serif", fontSize: 29, lineHeight: 1.35, color: COLORS.cream, opacity: 0.88}}>
         Bloquer l'arnaque par mail à la source.
       </div>
-      <div style={{position: "absolute", right: 92, top: 0, bottom: 0, width: 12, backgroundColor: COLORS.yellow, transform: `scaleY(${interpolate(frame, [0, 18], [0, 1], {extrapolateRight: "clamp"})})`, transformOrigin: "top"}} />
     </div>
   );
 };

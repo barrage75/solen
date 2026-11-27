@@ -1,7 +1,7 @@
 import timeline from "../../solen/docs/demo-solen.timeline.json";
 
 export const FPS = 30;
-export const DEMO_TITLE_SECONDS = 2.5;
+export const DEMO_START_SOURCE_SECONDS = 4.5;
 export const DEMO_END_CARD_SECONDS = 3;
 export const DEMO_VIDEO = "demo-solen-v4.mp4";
 
