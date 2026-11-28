@@ -1,0 +1,1357 @@
+{
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+15%",
+  "lines": [
+    {
+      "id": "hook-01",
+      "section": "story",
+      "text": "Trente-cinq mille euros. Partis en un seul clic.",
+      "file": "audio/voice/hook-01.mp3",
+      "durationSeconds": 3.624,
+      "wordBoundaries": [
+        {
+          "text": "Trente-cinq",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.4956
+        },
+        {
+          "text": "mille",
+          "startSeconds": 0.5065,
+          "endSeconds": 0.637
+        },
+        {
+          "text": "euros",
+          "startSeconds": 0.6478,
+          "endSeconds": 0.9413
+        },
+        {
+          "text": "Partis",
+          "startSeconds": 1.6848,
+          "endSeconds": 2.0
+        },
+        {
+          "text": "en",
+          "startSeconds": 2.0109,
+          "endSeconds": 2.0652
+        },
+        {
+          "text": "un",
+          "startSeconds": 2.0761,
+          "endSeconds": 2.1957
+        },
+        {
+          "text": "seul",
+          "startSeconds": 2.2065,
+          "endSeconds": 2.3913
+        },
+        {
+          "text": "clic",
+          "startSeconds": 2.4022,
+          "endSeconds": 2.837
+        }
+      ]
+    },
+    {
+      "id": "story-01-alarm",
+      "section": "story",
+      "text": "Lundi, sept heures. Claire, assistante de direction chez Arkos Systems.",
+      "file": "audio/voice/story-01-alarm.mp3",
+      "durationSeconds": 5.256,
+      "wordBoundaries": [
+        {
+          "text": "Lundi",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.5065
+        },
+        {
+          "text": "sept",
+          "startSeconds": 0.7022,
+          "endSeconds": 0.9087
+        },
+        {
+          "text": "heures",
+          "startSeconds": 0.9196,
+          "endSeconds": 1.2239
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 1.9674,
+          "endSeconds": 2.2826
+        },
+        {
+          "text": "assistante",
+          "startSeconds": 2.5652,
+          "endSeconds": 2.9674
+        },
+        {
+          "text": "de",
+          "startSeconds": 2.9783,
+          "endSeconds": 3.0761
+        },
+        {
+          "text": "direction",
+          "startSeconds": 3.087,
+          "endSeconds": 3.5
+        },
+        {
+          "text": "chez",
+          "startSeconds": 3.5109,
+          "endSeconds": 3.6739
+        },
+        {
+          "text": "Arkos",
+          "startSeconds": 3.6848,
+          "endSeconds": 3.913
+        },
+        {
+          "text": "Systems",
+          "startSeconds": 3.9239,
+          "endSeconds": 4.4674
+        }
+      ]
+    },
+    {
+      "id": "story-02-routine",
+      "section": "story",
+      "text": "Café. Métro. Boîte mail.",
+      "file": "audio/voice/story-02-routine.mp3",
+      "durationSeconds": 3.936,
+      "wordBoundaries": [
+        {
+          "text": "Café",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.5065
+        },
+        {
+          "text": "Métro",
+          "startSeconds": 1.2609,
+          "endSeconds": 1.7609
+        },
+        {
+          "text": "Boîte",
+          "startSeconds": 2.5109,
+          "endSeconds": 2.8152
+        },
+        {
+          "text": "mail",
+          "startSeconds": 2.8261,
+          "endSeconds": 3.1739
+        }
+      ]
+    },
+    {
+      "id": "story-03-mail",
+      "section": "story",
+      "text": "Neuf heures trente et une : le PDG lui écrit. Virement urgent, trente-cinq mille euros. Et pas un mot à personne.",
+      "file": "audio/voice/story-03-mail.mp3",
+      "durationSeconds": 7.176,
+      "wordBoundaries": [
+        {
+          "text": "Neuf",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.3217
+        },
+        {
+          "text": "heures",
+          "startSeconds": 0.3326,
+          "endSeconds": 0.4196
+        },
+        {
+          "text": "trente",
+          "startSeconds": 0.4304,
+          "endSeconds": 0.6913
+        },
+        {
+          "text": "et",
+          "startSeconds": 0.7022,
+          "endSeconds": 0.7456
+        },
+        {
+          "text": "une",
+          "startSeconds": 0.7565,
+          "endSeconds": 0.9196
+        },
+        {
+          "text": "le",
+          "startSeconds": 1.1043,
+          "endSeconds": 1.2022
+        },
+        {
+          "text": "PDG",
+          "startSeconds": 1.213,
+          "endSeconds": 1.5826
+        },
+        {
+          "text": "lui",
+          "startSeconds": 1.5935,
+          "endSeconds": 1.713
+        },
+        {
+          "text": "écrit",
+          "startSeconds": 1.7239,
+          "endSeconds": 2.05
+        },
+        {
+          "text": "Virement",
+          "startSeconds": 2.8043,
+          "endSeconds": 3.1522
+        },
+        {
+          "text": "urgent",
+          "startSeconds": 3.163,
+          "endSeconds": 3.5109
+        },
+        {
+          "text": "trente-cinq",
+          "startSeconds": 3.75,
+          "endSeconds": 4.087
+        },
+        {
+          "text": "mille",
+          "startSeconds": 4.0978,
+          "endSeconds": 4.2282
+        },
+        {
+          "text": "euros",
+          "startSeconds": 4.2391,
+          "endSeconds": 4.5217
+        },
+        {
+          "text": "Et",
+          "startSeconds": 5.2717,
+          "endSeconds": 5.4022
+        },
+        {
+          "text": "pas",
+          "startSeconds": 5.413,
+          "endSeconds": 5.5435
+        },
+        {
+          "text": "un",
+          "startSeconds": 5.5543,
+          "endSeconds": 5.663
+        },
+        {
+          "text": "mot",
+          "startSeconds": 5.6739,
+          "endSeconds": 5.8043
+        },
+        {
+          "text": "à",
+          "startSeconds": 5.8152,
+          "endSeconds": 5.8695
+        },
+        {
+          "text": "personne",
+          "startSeconds": 5.8804,
+          "endSeconds": 6.3913
+        }
+      ]
+    },
+    {
+      "id": "story-04-click",
+      "section": "story",
+      "text": "Pas le temps de vérifier. Claire valide.",
+      "file": "audio/voice/story-04-click.mp3",
+      "durationSeconds": 3.288,
+      "wordBoundaries": [
+        {
+          "text": "Pas",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2239
+        },
+        {
+          "text": "le",
+          "startSeconds": 0.2348,
+          "endSeconds": 0.3326
+        },
+        {
+          "text": "temps",
+          "startSeconds": 0.3435,
+          "endSeconds": 0.4739
+        },
+        {
+          "text": "de",
+          "startSeconds": 0.4848,
+          "endSeconds": 0.5826
+        },
+        {
+          "text": "vérifier",
+          "startSeconds": 0.5935,
+          "endSeconds": 1.1043
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 1.8478,
+          "endSeconds": 2.0652
+        },
+        {
+          "text": "valide",
+          "startSeconds": 2.0761,
+          "endSeconds": 2.5326
+        }
+      ]
+    },
+    {
+      "id": "story-05-loss",
+      "section": "story",
+      "text": "Le lendemain, le vrai PDG l'appelle : « Quel virement ? »",
+      "file": "audio/voice/story-05-loss.mp3",
+      "durationSeconds": 3.408,
+      "wordBoundaries": [
+        {
+          "text": "Le",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2347
+        },
+        {
+          "text": "lendemain",
+          "startSeconds": 0.2457,
+          "endSeconds": 0.6152
+        },
+        {
+          "text": "le",
+          "startSeconds": 0.887,
+          "endSeconds": 0.9957
+        },
+        {
+          "text": "vrai",
+          "startSeconds": 1.0065,
+          "endSeconds": 1.1587
+        },
+        {
+          "text": "PDG",
+          "startSeconds": 1.1696,
+          "endSeconds": 1.5174
+        },
+        {
+          "text": "l'appelle",
+          "startSeconds": 1.5283,
+          "endSeconds": 1.8978
+        },
+        {
+          "text": "Quel",
+          "startSeconds": 2.0826,
+          "endSeconds": 2.2457
+        },
+        {
+          "text": "virement",
+          "startSeconds": 2.2565,
+          "endSeconds": 2.6261
+        }
+      ]
+    },
+    {
+      "id": "story-06-cost",
+      "section": "story",
+      "text": "Trente-cinq mille euros perdus. En France, cette arnaque a coûté cinq cent seize millions d'euros en 2025.",
+      "file": "audio/voice/story-06-cost.mp3",
+      "durationSeconds": 6.312,
+      "wordBoundaries": [
+        {
+          "text": "Trente-cinq",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.5065
+        },
+        {
+          "text": "mille",
+          "startSeconds": 0.5174,
+          "endSeconds": 0.6478
+        },
+        {
+          "text": "euros",
+          "startSeconds": 0.6587,
+          "endSeconds": 0.8217
+        },
+        {
+          "text": "perdus",
+          "startSeconds": 0.8326,
+          "endSeconds": 1.2457
+        },
+        {
+          "text": "En",
+          "startSeconds": 2.0,
+          "endSeconds": 2.1413
+        },
+        {
+          "text": "France",
+          "startSeconds": 2.1522,
+          "endSeconds": 2.6304
+        },
+        {
+          "text": "cette",
+          "startSeconds": 2.8696,
+          "endSeconds": 3.0761
+        },
+        {
+          "text": "arnaque",
+          "startSeconds": 3.087,
+          "endSeconds": 3.3261
+        },
+        {
+          "text": "a",
+          "startSeconds": 3.337,
+          "endSeconds": 3.3913
+        },
+        {
+          "text": "coûté",
+          "startSeconds": 3.4022,
+          "endSeconds": 3.6739
+        },
+        {
+          "text": "cinq",
+          "startSeconds": 3.6848,
+          "endSeconds": 3.837
+        },
+        {
+          "text": "cent",
+          "startSeconds": 3.8478,
+          "endSeconds": 3.9782
+        },
+        {
+          "text": "seize",
+          "startSeconds": 3.9891,
+          "endSeconds": 4.1848
+        },
+        {
+          "text": "millions",
+          "startSeconds": 4.1957,
+          "endSeconds": 4.4457
+        },
+        {
+          "text": "d'euros",
+          "startSeconds": 4.4565,
+          "endSeconds": 4.6848
+        },
+        {
+          "text": "en",
+          "startSeconds": 4.6957,
+          "endSeconds": 4.7717
+        },
+        {
+          "text": "2025",
+          "startSeconds": 4.7826,
+          "endSeconds": 5.5435
+        }
+      ]
+    },
+    {
+      "id": "story-07-rewind",
+      "section": "story",
+      "text": "Et si Claire avait eu Solen ?",
+      "file": "audio/voice/story-07-rewind.mp3",
+      "durationSeconds": 2.064,
+      "wordBoundaries": [
+        {
+          "text": "Et",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2239
+        },
+        {
+          "text": "si",
+          "startSeconds": 0.2348,
+          "endSeconds": 0.387
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 0.3978,
+          "endSeconds": 0.6152
+        },
+        {
+          "text": "avait",
+          "startSeconds": 0.6261,
+          "endSeconds": 0.7457
+        },
+        {
+          "text": "eu",
+          "startSeconds": 0.7565,
+          "endSeconds": 0.8761
+        },
+        {
+          "text": "Solen",
+          "startSeconds": 0.887,
+          "endSeconds": 1.2891
+        }
+      ]
+    },
+    {
+      "id": "how-01-profile",
+      "section": "how",
+      "text": "Solen connaît chaque fournisseur : son IBAN, son téléphone, ses montants habituels.",
+      "file": "audio/voice/how-01-profile.mp3",
+      "durationSeconds": 4.968,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.4522
+        },
+        {
+          "text": "connaît",
+          "startSeconds": 0.463,
+          "endSeconds": 0.713
+        },
+        {
+          "text": "chaque",
+          "startSeconds": 0.7239,
+          "endSeconds": 0.9305
+        },
+        {
+          "text": "fournisseur",
+          "startSeconds": 0.9413,
+          "endSeconds": 1.5282
+        },
+        {
+          "text": "son",
+          "startSeconds": 1.6804,
+          "endSeconds": 1.7891
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 1.8,
+          "endSeconds": 2.1152
+        },
+        {
+          "text": "son",
+          "startSeconds": 2.3652,
+          "endSeconds": 2.463
+        },
+        {
+          "text": "téléphone",
+          "startSeconds": 2.4739,
+          "endSeconds": 3.0174
+        },
+        {
+          "text": "ses",
+          "startSeconds": 3.2457,
+          "endSeconds": 3.3544
+        },
+        {
+          "text": "montants",
+          "startSeconds": 3.3652,
+          "endSeconds": 3.6043
+        },
+        {
+          "text": "habituels",
+          "startSeconds": 3.6152,
+          "endSeconds": 4.2022
+        }
+      ]
+    },
+    {
+      "id": "how-02-history",
+      "section": "how",
+      "text": "Ces profils viennent de l'historique des paiements, jamais d'un mail. Nuvio Cloud : vingt-deux paiements sur le même IBAN depuis 2019.",
+      "file": "audio/voice/how-02-history.mp3",
+      "durationSeconds": 7.44,
+      "wordBoundaries": [
+        {
+          "text": "Ces",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.3
+        },
+        {
+          "text": "profils",
+          "startSeconds": 0.3109,
+          "endSeconds": 0.6478
+        },
+        {
+          "text": "viennent",
+          "startSeconds": 0.6587,
+          "endSeconds": 0.8544
+        },
+        {
+          "text": "de",
+          "startSeconds": 0.8652,
+          "endSeconds": 0.9522
+        },
+        {
+          "text": "l'historique",
+          "startSeconds": 0.963,
+          "endSeconds": 1.3652
+        },
+        {
+          "text": "des",
+          "startSeconds": 1.3761,
+          "endSeconds": 1.4739
+        },
+        {
+          "text": "paiements",
+          "startSeconds": 1.4848,
+          "endSeconds": 1.8109
+        },
+        {
+          "text": "jamais",
+          "startSeconds": 2.0935,
+          "endSeconds": 2.3217
+        },
+        {
+          "text": "d'un",
+          "startSeconds": 2.3326,
+          "endSeconds": 2.4413
+        },
+        {
+          "text": "mail",
+          "startSeconds": 2.4522,
+          "endSeconds": 2.7674
+        },
+        {
+          "text": "Nuvio",
+          "startSeconds": 3.5109,
+          "endSeconds": 3.8478
+        },
+        {
+          "text": "Cloud",
+          "startSeconds": 3.8587,
+          "endSeconds": 4.1848
+        },
+        {
+          "text": "vingt-deux",
+          "startSeconds": 4.3696,
+          "endSeconds": 4.6305
+        },
+        {
+          "text": "paiements",
+          "startSeconds": 4.6413,
+          "endSeconds": 4.9022
+        },
+        {
+          "text": "sur",
+          "startSeconds": 4.913,
+          "endSeconds": 5.0435
+        },
+        {
+          "text": "le",
+          "startSeconds": 5.0543,
+          "endSeconds": 5.1304
+        },
+        {
+          "text": "même",
+          "startSeconds": 5.1413,
+          "endSeconds": 5.3261
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 5.337,
+          "endSeconds": 5.5435
+        },
+        {
+          "text": "depuis",
+          "startSeconds": 5.5543,
+          "endSeconds": 5.837
+        },
+        {
+          "text": "2019",
+          "startSeconds": 5.8478,
+          "endSeconds": 6.663
+        }
+      ]
+    },
+    {
+      "id": "how-03-code",
+      "section": "how",
+      "text": "À chaque mail, le code contrôle l'expéditeur, les coordonnées bancaires et le montant.",
+      "file": "audio/voice/how-03-code.mp3",
+      "durationSeconds": 4.8,
+      "wordBoundaries": [
+        {
+          "text": "À",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2347
+        },
+        {
+          "text": "chaque",
+          "startSeconds": 0.2457,
+          "endSeconds": 0.4739
+        },
+        {
+          "text": "mail",
+          "startSeconds": 0.4848,
+          "endSeconds": 0.7239
+        },
+        {
+          "text": "le",
+          "startSeconds": 1.0174,
+          "endSeconds": 1.1152
+        },
+        {
+          "text": "code",
+          "startSeconds": 1.1261,
+          "endSeconds": 1.3
+        },
+        {
+          "text": "contrôle",
+          "startSeconds": 1.3109,
+          "endSeconds": 1.637
+        },
+        {
+          "text": "l'expéditeur",
+          "startSeconds": 1.6478,
+          "endSeconds": 2.3761
+        },
+        {
+          "text": "les",
+          "startSeconds": 2.6696,
+          "endSeconds": 2.7565
+        },
+        {
+          "text": "coordonnées",
+          "startSeconds": 2.7674,
+          "endSeconds": 3.2022
+        },
+        {
+          "text": "bancaires",
+          "startSeconds": 3.213,
+          "endSeconds": 3.55
+        },
+        {
+          "text": "et",
+          "startSeconds": 3.5609,
+          "endSeconds": 3.5826
+        },
+        {
+          "text": "le",
+          "startSeconds": 3.5935,
+          "endSeconds": 3.6587
+        },
+        {
+          "text": "montant",
+          "startSeconds": 3.6696,
+          "endSeconds": 4.0392
+        }
+      ]
+    },
+    {
+      "id": "how-04-ai",
+      "section": "how",
+      "text": "Puis l'IA lit la demande, sans jamais voir l'IBAN, et démasque le piège : un faux prétexte, un délai trop court.",
+      "file": "audio/voice/how-04-ai.mp3",
+      "durationSeconds": 5.856,
+      "wordBoundaries": [
+        {
+          "text": "Puis",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2456
+        },
+        {
+          "text": "l'IA",
+          "startSeconds": 0.2565,
+          "endSeconds": 0.4087
+        },
+        {
+          "text": "lit",
+          "startSeconds": 0.4196,
+          "endSeconds": 0.5065
+        },
+        {
+          "text": "la",
+          "startSeconds": 0.5174,
+          "endSeconds": 0.6043
+        },
+        {
+          "text": "demande",
+          "startSeconds": 0.6152,
+          "endSeconds": 0.9739
+        },
+        {
+          "text": "sans",
+          "startSeconds": 1.2348,
+          "endSeconds": 1.3544
+        },
+        {
+          "text": "jamais",
+          "startSeconds": 1.3652,
+          "endSeconds": 1.6043
+        },
+        {
+          "text": "voir",
+          "startSeconds": 1.6152,
+          "endSeconds": 1.7782
+        },
+        {
+          "text": "l'IBAN",
+          "startSeconds": 1.7891,
+          "endSeconds": 2.0935
+        },
+        {
+          "text": "et",
+          "startSeconds": 2.3326,
+          "endSeconds": 2.3653
+        },
+        {
+          "text": "démasque",
+          "startSeconds": 2.3761,
+          "endSeconds": 2.713
+        },
+        {
+          "text": "le",
+          "startSeconds": 2.7239,
+          "endSeconds": 2.8217
+        },
+        {
+          "text": "piège",
+          "startSeconds": 2.8326,
+          "endSeconds": 3.1696
+        },
+        {
+          "text": "un",
+          "startSeconds": 3.3435,
+          "endSeconds": 3.3978
+        },
+        {
+          "text": "faux",
+          "startSeconds": 3.4087,
+          "endSeconds": 3.5609
+        },
+        {
+          "text": "prétexte",
+          "startSeconds": 3.5718,
+          "endSeconds": 3.9739
+        },
+        {
+          "text": "un",
+          "startSeconds": 4.2457,
+          "endSeconds": 4.2891
+        },
+        {
+          "text": "délai",
+          "startSeconds": 4.3,
+          "endSeconds": 4.4957
+        },
+        {
+          "text": "trop",
+          "startSeconds": 4.5065,
+          "endSeconds": 4.6696
+        },
+        {
+          "text": "court",
+          "startSeconds": 4.6804,
+          "endSeconds": 5.1043
+        }
+      ]
+    },
+    {
+      "id": "how-05-rule",
+      "section": "how",
+      "text": "L'IA peut durcir le verdict. Jamais l'adoucir.",
+      "file": "audio/voice/how-05-rule.mp3",
+      "durationSeconds": 3.888,
+      "wordBoundaries": [
+        {
+          "text": "L'IA",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.3761
+        },
+        {
+          "text": "peut",
+          "startSeconds": 0.387,
+          "endSeconds": 0.5282
+        },
+        {
+          "text": "durcir",
+          "startSeconds": 0.5391,
+          "endSeconds": 0.8652
+        },
+        {
+          "text": "le",
+          "startSeconds": 0.8761,
+          "endSeconds": 0.9413
+        },
+        {
+          "text": "verdict",
+          "startSeconds": 0.9522,
+          "endSeconds": 1.463
+        },
+        {
+          "text": "Jamais",
+          "startSeconds": 2.2065,
+          "endSeconds": 2.5217
+        },
+        {
+          "text": "l'adoucir",
+          "startSeconds": 2.5326,
+          "endSeconds": 3.1305
+        }
+      ]
+    },
+    {
+      "id": "demo-01-nuvio-infobar",
+      "section": "demo",
+      "scene": "nuvio-infobar",
+      "text": "Nuvio annonce un nouveau RIB ? Alerte dès l'ouverture.",
+      "file": "audio/voice/demo-01-nuvio-infobar.mp3",
+      "durationSeconds": 4.032,
+      "wordBoundaries": [
+        {
+          "text": "Nuvio",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.4304
+        },
+        {
+          "text": "annonce",
+          "startSeconds": 0.4413,
+          "endSeconds": 0.7239
+        },
+        {
+          "text": "un",
+          "startSeconds": 0.7348,
+          "endSeconds": 0.7891
+        },
+        {
+          "text": "nouveau",
+          "startSeconds": 0.8,
+          "endSeconds": 1.0283
+        },
+        {
+          "text": "RIB",
+          "startSeconds": 1.0391,
+          "endSeconds": 1.3978
+        },
+        {
+          "text": "Alerte",
+          "startSeconds": 2.1522,
+          "endSeconds": 2.5435
+        },
+        {
+          "text": "dès",
+          "startSeconds": 2.5543,
+          "endSeconds": 2.6413
+        },
+        {
+          "text": "l'ouverture",
+          "startSeconds": 2.6522,
+          "endSeconds": 3.2609
+        }
+      ]
+    },
+    {
+      "id": "demo-02-iban",
+      "section": "demo",
+      "scene": "nuvio-verdict-reasons",
+      "text": "L'IBAN ne correspond pas au profil.",
+      "file": "audio/voice/demo-02-iban.mp3",
+      "durationSeconds": 2.448,
+      "wordBoundaries": [
+        {
+          "text": "L'IBAN",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.4087
+        },
+        {
+          "text": "ne",
+          "startSeconds": 0.4196,
+          "endSeconds": 0.5065
+        },
+        {
+          "text": "correspond",
+          "startSeconds": 0.5174,
+          "endSeconds": 0.8978
+        },
+        {
+          "text": "pas",
+          "startSeconds": 0.9087,
+          "endSeconds": 1.0283
+        },
+        {
+          "text": "au",
+          "startSeconds": 1.0391,
+          "endSeconds": 1.1587
+        },
+        {
+          "text": "profil",
+          "startSeconds": 1.1696,
+          "endSeconds": 1.6913
+        }
+      ]
+    },
+    {
+      "id": "demo-03-callback",
+      "section": "demo",
+      "scene": "nuvio-callback",
+      "text": "Solen fait rappeler le numéro connu, jamais celui du mail.",
+      "file": "audio/voice/demo-03-callback.mp3",
+      "durationSeconds": 3.552,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.4522
+        },
+        {
+          "text": "fait",
+          "startSeconds": 0.463,
+          "endSeconds": 0.5935
+        },
+        {
+          "text": "rappeler",
+          "startSeconds": 0.6043,
+          "endSeconds": 0.8761
+        },
+        {
+          "text": "le",
+          "startSeconds": 0.887,
+          "endSeconds": 0.963
+        },
+        {
+          "text": "numéro",
+          "startSeconds": 0.9739,
+          "endSeconds": 1.2674
+        },
+        {
+          "text": "connu",
+          "startSeconds": 1.2783,
+          "endSeconds": 1.5935
+        },
+        {
+          "text": "jamais",
+          "startSeconds": 1.8543,
+          "endSeconds": 2.1261
+        },
+        {
+          "text": "celui",
+          "startSeconds": 2.137,
+          "endSeconds": 2.3543
+        },
+        {
+          "text": "du",
+          "startSeconds": 2.3652,
+          "endSeconds": 2.463
+        },
+        {
+          "text": "mail",
+          "startSeconds": 2.4739,
+          "endSeconds": 2.8
+        }
+      ]
+    },
+    {
+      "id": "demo-04-pdg",
+      "section": "demo",
+      "scene": "pdg-mail-verdict",
+      "text": "Le faux PDG de Claire ? Bloqué. Un PDG n'écrit pas depuis Gmail.",
+      "file": "audio/voice/demo-04-pdg.mp3",
+      "durationSeconds": 5.784,
+      "wordBoundaries": [
+        {
+          "text": "Le",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2891
+        },
+        {
+          "text": "faux",
+          "startSeconds": 0.3,
+          "endSeconds": 0.4522
+        },
+        {
+          "text": "PDG",
+          "startSeconds": 0.463,
+          "endSeconds": 0.8109
+        },
+        {
+          "text": "de",
+          "startSeconds": 0.8217,
+          "endSeconds": 0.9305
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 0.9413,
+          "endSeconds": 1.3217
+        },
+        {
+          "text": "Bloqué",
+          "startSeconds": 2.0761,
+          "endSeconds": 2.5978
+        },
+        {
+          "text": "Un",
+          "startSeconds": 3.3587,
+          "endSeconds": 3.5109
+        },
+        {
+          "text": "PDG",
+          "startSeconds": 3.5217,
+          "endSeconds": 3.8913
+        },
+        {
+          "text": "n'écrit",
+          "startSeconds": 3.9022,
+          "endSeconds": 4.1848
+        },
+        {
+          "text": "pas",
+          "startSeconds": 4.1957,
+          "endSeconds": 4.3261
+        },
+        {
+          "text": "depuis",
+          "startSeconds": 4.337,
+          "endSeconds": 4.5978
+        },
+        {
+          "text": "Gmail",
+          "startSeconds": 4.6087,
+          "endSeconds": 5.0109
+        }
+      ]
+    },
+    {
+      "id": "demo-05-techniques",
+      "section": "demo",
+      "scene": "pdg-techniques",
+      "text": "Autorité, secret, hiérarchie contournée : tout est expliqué.",
+      "file": "audio/voice/demo-05-techniques.mp3",
+      "durationSeconds": 4.224,
+      "wordBoundaries": [
+        {
+          "text": "Autorité",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.7022
+        },
+        {
+          "text": "secret",
+          "startSeconds": 0.9304,
+          "endSeconds": 1.3217
+        },
+        {
+          "text": "hiérarchie",
+          "startSeconds": 1.5935,
+          "endSeconds": 1.963
+        },
+        {
+          "text": "contournée",
+          "startSeconds": 1.9739,
+          "endSeconds": 2.4739
+        },
+        {
+          "text": "tout",
+          "startSeconds": 2.6587,
+          "endSeconds": 2.7783
+        },
+        {
+          "text": "est",
+          "startSeconds": 2.7891,
+          "endSeconds": 2.887
+        },
+        {
+          "text": "expliqué",
+          "startSeconds": 2.8978,
+          "endSeconds": 3.4739
+        }
+      ]
+    },
+    {
+      "id": "demo-06-daf",
+      "section": "demo",
+      "scene": "daf-verdict",
+      "text": "Un vrai mail urgent, lui, passe sans fausse alerte.",
+      "file": "audio/voice/demo-06-daf.mp3",
+      "durationSeconds": 3.36,
+      "wordBoundaries": [
+        {
+          "text": "Un",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.2565
+        },
+        {
+          "text": "vrai",
+          "startSeconds": 0.2674,
+          "endSeconds": 0.4304
+        },
+        {
+          "text": "mail",
+          "startSeconds": 0.4413,
+          "endSeconds": 0.5826
+        },
+        {
+          "text": "urgent",
+          "startSeconds": 0.5935,
+          "endSeconds": 0.9304
+        },
+        {
+          "text": "lui",
+          "startSeconds": 1.1696,
+          "endSeconds": 1.3544
+        },
+        {
+          "text": "passe",
+          "startSeconds": 1.637,
+          "endSeconds": 1.8109
+        },
+        {
+          "text": "sans",
+          "startSeconds": 1.8217,
+          "endSeconds": 1.9305
+        },
+        {
+          "text": "fausse",
+          "startSeconds": 1.9413,
+          "endSeconds": 2.1587
+        },
+        {
+          "text": "alerte",
+          "startSeconds": 2.1696,
+          "endSeconds": 2.5935
+        }
+      ]
+    },
+    {
+      "id": "demo-07-attacks",
+      "section": "demo",
+      "scene": "attack-summary",
+      "text": "Vingt-huit cas rejoués : vingt-six attaques sur vingt-six bloquées. Zéro fausse alerte.",
+      "file": "audio/voice/demo-07-attacks.mp3",
+      "durationSeconds": 5.352,
+      "wordBoundaries": [
+        {
+          "text": "Vingt-huit",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.5282
+        },
+        {
+          "text": "cas",
+          "startSeconds": 0.5391,
+          "endSeconds": 0.6478
+        },
+        {
+          "text": "rejoués",
+          "startSeconds": 0.6587,
+          "endSeconds": 1.05
+        },
+        {
+          "text": "vingt-six",
+          "startSeconds": 1.2565,
+          "endSeconds": 1.55
+        },
+        {
+          "text": "attaques",
+          "startSeconds": 1.5609,
+          "endSeconds": 1.8652
+        },
+        {
+          "text": "sur",
+          "startSeconds": 1.8761,
+          "endSeconds": 2.0065
+        },
+        {
+          "text": "vingt-six",
+          "startSeconds": 2.0174,
+          "endSeconds": 2.3543
+        },
+        {
+          "text": "bloquées",
+          "startSeconds": 2.3652,
+          "endSeconds": 2.8
+        },
+        {
+          "text": "Zéro",
+          "startSeconds": 3.5435,
+          "endSeconds": 3.8804
+        },
+        {
+          "text": "fausse",
+          "startSeconds": 3.8913,
+          "endSeconds": 4.1304
+        },
+        {
+          "text": "alerte",
+          "startSeconds": 4.1413,
+          "endSeconds": 4.587
+        }
+      ]
+    },
+    {
+      "id": "demo-08-lookalike",
+      "section": "demo",
+      "scene": "try-lookalike-example",
+      "text": "Même une adresse sosie est repérée.",
+      "file": "audio/voice/demo-08-lookalike.mp3",
+      "durationSeconds": 2.304,
+      "wordBoundaries": [
+        {
+          "text": "Même",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.3435
+        },
+        {
+          "text": "une",
+          "startSeconds": 0.3543,
+          "endSeconds": 0.4522
+        },
+        {
+          "text": "adresse",
+          "startSeconds": 0.463,
+          "endSeconds": 0.713
+        },
+        {
+          "text": "sosie",
+          "startSeconds": 0.7239,
+          "endSeconds": 1.0065
+        },
+        {
+          "text": "est",
+          "startSeconds": 1.0174,
+          "endSeconds": 1.05
+        },
+        {
+          "text": "repérée",
+          "startSeconds": 1.0609,
+          "endSeconds": 1.5391
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "section": "end",
+      "text": "Solen. On bloque l'arnaque par mail à la source.",
+      "file": "audio/voice/end.mp3",
+      "durationSeconds": 3.864,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0935,
+          "endSeconds": 0.6478
+        },
+        {
+          "text": "On",
+          "startSeconds": 1.3913,
+          "endSeconds": 1.5326
+        },
+        {
+          "text": "bloque",
+          "startSeconds": 1.5435,
+          "endSeconds": 1.7717
+        },
+        {
+          "text": "l'arnaque",
+          "startSeconds": 1.7826,
+          "endSeconds": 2.1196
+        },
+        {
+          "text": "par",
+          "startSeconds": 2.1304,
+          "endSeconds": 2.2826
+        },
+        {
+          "text": "mail",
+          "startSeconds": 2.2935,
+          "endSeconds": 2.4456
+        },
+        {
+          "text": "à",
+          "startSeconds": 2.4565,
+          "endSeconds": 2.4783
+        },
+        {
+          "text": "la",
+          "startSeconds": 2.4891,
+          "endSeconds": 2.587
+        },
+        {
+          "text": "source",
+          "startSeconds": 2.5978,
+          "endSeconds": 3.1087
+        }
+      ]
+    }
+  ]
+}

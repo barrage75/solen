@@ -1,0 +1,268 @@
+{
+  "language": "fr",
+  "durationSeconds": 45.8,
+  "output": {
+    "video": "demo-solen.mp4",
+    "gif": "demo-solen.gif",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "H.264",
+    "pixelFormat": "yuv420p",
+    "audio": false
+  },
+  "brand": {
+    "navy": "#0A0F20",
+    "yellow": "#FFCF33",
+    "cream": "#F2F1E9",
+    "display": "Archivo 800 / 125% width",
+    "body": "Manrope 400",
+    "labels": "JetBrains Mono 400"
+  },
+  "capture": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "deviceScaleFactor": 2,
+    "screencast": {
+      "width": 2880,
+      "height": 1800,
+      "format": "jpeg",
+      "quality": 90,
+      "everyNthFrame": 1
+    },
+    "output": {
+      "width": 1920,
+      "height": 1080
+    },
+    "averageFps": 13.41,
+    "motionFps": 22.21,
+    "motionFrameCount": 441,
+    "motionDurationSeconds": 19.86,
+    "clockMapping": {
+      "rate": 1.0001658,
+      "medianAbsoluteResidualMs": 7.14,
+      "p95AbsoluteResidualMs": 24.13
+    },
+    "zoom": false
+  },
+  "analysisSources": [
+    {
+      "mail": "nuvio",
+      "ai": "secours",
+      "verdict": "fraude"
+    },
+    {
+      "mail": "pdg",
+      "ai": "secours",
+      "verdict": "fraude"
+    },
+    {
+      "mail": "daf",
+      "ai": "secours",
+      "verdict": "fiable"
+    },
+    {
+      "mail": "essayer-domaine-sosie",
+      "ai": "secours",
+      "verdict": "fraude"
+    }
+  ],
+  "attackSummary": {
+    "totalCases": 28,
+    "stopped": "26/26",
+    "falseAlarms": "0",
+    "genuine": 2
+  },
+  "pdgTechniques": [
+    "autorité",
+    "secret",
+    "contournement de la hiérarchie"
+  ],
+  "editing": {
+    "sourceSeconds": 51.806,
+    "renderedAppSeconds": 40.345,
+    "maxInitialGapSeconds": 2,
+    "maxInterSceneGapSeconds": 1.7
+  },
+  "gif": {
+    "width": 800,
+    "fps": 10,
+    "colors": 128,
+    "sizeBytes": 8234358
+  },
+  "scenes": [
+    {
+      "id": "nuvio-infobar",
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "Un fournisseur change de RIB. Solen alerte **dès la lecture**.",
+      "start": 5.15,
+      "end": 8.601,
+      "appStart": 4.5,
+      "appEnd": 7.898,
+      "sourceStart": 4.82,
+      "sourceEnd": 8.218,
+      "box": {
+        "x": 1312,
+        "y": 568,
+        "width": 828,
+        "height": 148
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "nuvio-verdict-reasons",
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "L'IBAN ne correspond pas **au profil du fournisseur**.",
+      "start": 8.634,
+      "end": 12.339,
+      "appStart": 7.951,
+      "appEnd": 11.337,
+      "sourceStart": 8.271,
+      "sourceEnd": 11.657,
+      "box": {
+        "x": 2232,
+        "y": 602,
+        "width": 604,
+        "height": 691
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "nuvio-callback",
+      "chapter": "01 — FAUX RIB",
+      "activeChecklistIndex": 0,
+      "headline": "Appeler **le numéro connu**, jamais celui du mail.",
+      "start": 12.372,
+      "end": 14.853,
+      "appStart": 11.689,
+      "appEnd": 15.003,
+      "sourceStart": 12.009,
+      "sourceEnd": 15.323,
+      "box": {
+        "x": 2232,
+        "y": 906,
+        "width": 604,
+        "height": 257
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "pdg-mail-verdict",
+      "chapter": "02 — FAUX PRÉSIDENT",
+      "activeChecklistIndex": 2,
+      "headline": "Un PDG n'écrit pas **depuis Gmail** pour 35 000 €.",
+      "start": 17.353,
+      "end": 20.986,
+      "appStart": 16.703,
+      "appEnd": 20.3,
+      "sourceStart": 17.89,
+      "sourceEnd": 21.487,
+      "box": {
+        "x": 1272,
+        "y": 348,
+        "width": 1564,
+        "height": 974
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "pdg-techniques",
+      "chapter": "02 — FAUX PRÉSIDENT",
+      "activeChecklistIndex": 2,
+      "headline": "**Tout est expliqué** : autorité, secret, contournement de la hiérarchie.",
+      "start": 21.019,
+      "end": 23.615,
+      "appStart": 20.336,
+      "appEnd": 23.765,
+      "sourceStart": 21.523,
+      "sourceEnd": 24.952,
+      "box": {
+        "x": 2232,
+        "y": 1408,
+        "width": 604,
+        "height": 152
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "daf-verdict",
+      "chapter": "03 — VRAI MAIL",
+      "activeChecklistIndex": null,
+      "headline": "Un vrai mail urgent : **aucune fausse alerte**.",
+      "start": 26.115,
+      "end": 28.825,
+      "appStart": 25.465,
+      "appEnd": 28.975,
+      "sourceStart": 27.356,
+      "sourceEnd": 30.866,
+      "box": {
+        "x": 2232,
+        "y": 602,
+        "width": 604,
+        "height": 88
+      },
+      "zoom": 1.7
+    },
+    {
+      "id": "attack-summary",
+      "chapter": "04 — AUCUNE MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "Même avec une IA piégée, **26/26 attaques** bloquées.",
+      "start": 31.325,
+      "end": 35.474,
+      "appStart": 30.675,
+      "appEnd": 33.776,
+      "sourceStart": 35.464,
+      "sourceEnd": 38.565,
+      "box": {
+        "x": 288,
+        "y": 436,
+        "width": 2304,
+        "height": 148
+      },
+      "zoom": 1.25
+    },
+    {
+      "id": "attack-list",
+      "chapter": "04 — AUCUNE MANIPULATION",
+      "activeChecklistIndex": 1,
+      "headline": "**0 fausse alerte** sur 2 vrais mails.",
+      "start": 35.507,
+      "end": 37.618,
+      "appStart": 34.824,
+      "appEnd": 37.768,
+      "sourceStart": 39.613,
+      "sourceEnd": 42.557,
+      "box": {
+        "x": 288,
+        "y": 244,
+        "width": 2304,
+        "height": 190
+      },
+      "zoom": 1.25
+    },
+    {
+      "id": "try-lookalike-example",
+      "chapter": "05 — FAUSSE FACTURE",
+      "activeChecklistIndex": 0,
+      "headline": "Une adresse qui imite le fournisseur : **repérée**.",
+      "start": 40.118,
+      "end": 42.695,
+      "appStart": 39.468,
+      "appEnd": 42.845,
+      "sourceStart": 48.429,
+      "sourceEnd": 51.806,
+      "box": {
+        "x": 1820,
+        "y": 688,
+        "width": 664,
+        "height": 375
+      },
+      "zoom": 1.7
+    }
+  ]
+}
