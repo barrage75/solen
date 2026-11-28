@@ -8,6 +8,12 @@
 
 Solen est une extension de boîte mail qui détecte les arnaques par mail (faux changement de RIB, fraude au président, fraude à la paie, cartes cadeaux, faux conseiller bancaire, faux colis, faux remboursement d'impôt, fausses factures, pièces jointes et QR codes piégés, hameçonnage, domaines sosies) et explique la fraude à l'utilisateur en français. Le code décide dès que de l'argent est en jeu ; l'IA (Mistral) comprend et explique, ne voit jamais un IBAN et ne peut qu'aggraver le verdict.
 
+## Vidéo de pitch
+
+[![Vidéo de pitch Solen en anglais](solen/docs/solen-pitch-en-poster.png)](solen/docs/solen-pitch-en.mp4)
+
+[▶ Vidéo de pitch (anglais, principale · 116,2 s)](solen/docs/solen-pitch-en.mp4) · [Version française · 98,3 s](solen/docs/solen-pitch-fr.mp4)
+
 ![Démo Solen aux couleurs du pitch : faux RIB, fraude au président, vrais mails et fausse facture](solen/docs/demo-solen.gif)
 
 [▶ Regarder la vidéo en haute qualité (MP4, 45,8 s)](solen/docs/demo-solen.mp4)

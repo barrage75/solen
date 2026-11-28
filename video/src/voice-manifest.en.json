@@ -1,0 +1,1374 @@
+{
+  "voice": "en-US-ChristopherNeural",
+  "rate": "+10%",
+  "lines": [
+    {
+      "id": "hook-01",
+      "section": "story",
+      "text": "Thirty-five thousand euros. Gone in a single click.",
+      "file": "audio/voice-en/hook-01.mp3",
+      "durationSeconds": 4.512,
+      "wordBoundaries": [
+        {
+          "text": "Thirty-five",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.6636
+        },
+        {
+          "text": "thousand",
+          "startSeconds": 0.675,
+          "endSeconds": 1.0841
+        },
+        {
+          "text": "euros",
+          "startSeconds": 1.0955,
+          "endSeconds": 1.675
+        },
+        {
+          "text": "Gone",
+          "startSeconds": 2.4545,
+          "endSeconds": 2.75
+        },
+        {
+          "text": "in",
+          "startSeconds": 2.7614,
+          "endSeconds": 2.8523
+        },
+        {
+          "text": "a",
+          "startSeconds": 2.8636,
+          "endSeconds": 2.9205
+        },
+        {
+          "text": "single",
+          "startSeconds": 2.9318,
+          "endSeconds": 3.2955
+        },
+        {
+          "text": "click",
+          "startSeconds": 3.3068,
+          "endSeconds": 3.7273
+        }
+      ]
+    },
+    {
+      "id": "story-01-alarm",
+      "section": "story",
+      "text": "Monday, seven a.m. Claire, executive assistant at Arkos Systems.",
+      "file": "audio/voice-en/story-01-alarm.mp3",
+      "durationSeconds": 4.92,
+      "wordBoundaries": [
+        {
+          "text": "Monday",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.6182
+        },
+        {
+          "text": "seven",
+          "startSeconds": 0.8568,
+          "endSeconds": 1.175
+        },
+        {
+          "text": "a.m.",
+          "startSeconds": 1.1864,
+          "endSeconds": 1.4591
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 1.4705,
+          "endSeconds": 1.8455
+        },
+        {
+          "text": "executive",
+          "startSeconds": 2.05,
+          "endSeconds": 2.5159
+        },
+        {
+          "text": "assistant",
+          "startSeconds": 2.5273,
+          "endSeconds": 3.0159
+        },
+        {
+          "text": "at",
+          "startSeconds": 3.0273,
+          "endSeconds": 3.1409
+        },
+        {
+          "text": "Arkos",
+          "startSeconds": 3.1523,
+          "endSeconds": 3.5273
+        },
+        {
+          "text": "Systems",
+          "startSeconds": 3.5386,
+          "endSeconds": 4.1295
+        }
+      ]
+    },
+    {
+      "id": "story-02-routine",
+      "section": "story",
+      "text": "Coffee. Metro. Inbox.",
+      "file": "audio/voice-en/story-02-routine.mp3",
+      "durationSeconds": 4.344,
+      "wordBoundaries": [
+        {
+          "text": "Coffee",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.6636
+        },
+        {
+          "text": "Metro",
+          "startSeconds": 1.4318,
+          "endSeconds": 2.0341
+        },
+        {
+          "text": "Inbox",
+          "startSeconds": 2.8068,
+          "endSeconds": 3.5568
+        }
+      ]
+    },
+    {
+      "id": "story-03-mail",
+      "section": "story",
+      "text": "Nine thirty-one: the CEO emails her. Urgent transfer, thirty-five thousand euros. And not a word to anyone.",
+      "file": "audio/voice-en/story-03-mail.mp3",
+      "durationSeconds": 9.024,
+      "wordBoundaries": [
+        {
+          "text": "Nine",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.4477
+        },
+        {
+          "text": "thirty-one",
+          "startSeconds": 0.4591,
+          "endSeconds": 1.0159
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.2432,
+          "endSeconds": 1.3455
+        },
+        {
+          "text": "CEO",
+          "startSeconds": 1.3568,
+          "endSeconds": 1.9818
+        },
+        {
+          "text": "emails",
+          "startSeconds": 1.9932,
+          "endSeconds": 2.4363
+        },
+        {
+          "text": "her",
+          "startSeconds": 2.4477,
+          "endSeconds": 2.7091
+        },
+        {
+          "text": "Urgent",
+          "startSeconds": 3.4886,
+          "endSeconds": 3.8295
+        },
+        {
+          "text": "transfer",
+          "startSeconds": 3.8409,
+          "endSeconds": 4.3636
+        },
+        {
+          "text": "thirty-five",
+          "startSeconds": 4.5909,
+          "endSeconds": 5.1023
+        },
+        {
+          "text": "thousand",
+          "startSeconds": 5.1136,
+          "endSeconds": 5.5113
+        },
+        {
+          "text": "euros",
+          "startSeconds": 5.5227,
+          "endSeconds": 6.1022
+        },
+        {
+          "text": "And",
+          "startSeconds": 6.8864,
+          "endSeconds": 7.0568
+        },
+        {
+          "text": "not",
+          "startSeconds": 7.0682,
+          "endSeconds": 7.25
+        },
+        {
+          "text": "a",
+          "startSeconds": 7.2614,
+          "endSeconds": 7.3182
+        },
+        {
+          "text": "word",
+          "startSeconds": 7.3295,
+          "endSeconds": 7.6022
+        },
+        {
+          "text": "to",
+          "startSeconds": 7.6136,
+          "endSeconds": 7.7045
+        },
+        {
+          "text": "anyone",
+          "startSeconds": 7.7159,
+          "endSeconds": 8.2273
+        }
+      ]
+    },
+    {
+      "id": "story-04-click",
+      "section": "story",
+      "text": "No time to check. Claire approves.",
+      "file": "audio/voice-en/story-04-click.mp3",
+      "durationSeconds": 3.72,
+      "wordBoundaries": [
+        {
+          "text": "No",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.3227
+        },
+        {
+          "text": "time",
+          "startSeconds": 0.3341,
+          "endSeconds": 0.5955
+        },
+        {
+          "text": "to",
+          "startSeconds": 0.6068,
+          "endSeconds": 0.6864
+        },
+        {
+          "text": "check",
+          "startSeconds": 0.6977,
+          "endSeconds": 1.1409
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 1.9205,
+          "endSeconds": 2.2614
+        },
+        {
+          "text": "approves",
+          "startSeconds": 2.2727,
+          "endSeconds": 2.9204
+        }
+      ]
+    },
+    {
+      "id": "story-05-loss",
+      "section": "story",
+      "text": "The next day, the real CEO calls: “What transfer?”",
+      "file": "audio/voice-en/story-05-loss.mp3",
+      "durationSeconds": 4.32,
+      "wordBoundaries": [
+        {
+          "text": "The",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.2091
+        },
+        {
+          "text": "next",
+          "startSeconds": 0.2205,
+          "endSeconds": 0.4932
+        },
+        {
+          "text": "day",
+          "startSeconds": 0.5045,
+          "endSeconds": 0.7886
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.0045,
+          "endSeconds": 1.1182
+        },
+        {
+          "text": "real",
+          "startSeconds": 1.1295,
+          "endSeconds": 1.4022
+        },
+        {
+          "text": "CEO",
+          "startSeconds": 1.4136,
+          "endSeconds": 2.0272
+        },
+        {
+          "text": "calls",
+          "startSeconds": 2.0386,
+          "endSeconds": 2.5045
+        },
+        {
+          "text": "What",
+          "startSeconds": 2.7773,
+          "endSeconds": 2.9477
+        },
+        {
+          "text": "transfer",
+          "startSeconds": 2.9591,
+          "endSeconds": 3.5272
+        }
+      ]
+    },
+    {
+      "id": "story-06-cost",
+      "section": "story",
+      "text": "Thirty-five thousand euros lost. In France, this scam cost five hundred and sixteen million euros in 2025.",
+      "file": "audio/voice-en/story-06-cost.mp3",
+      "durationSeconds": 8.304,
+      "wordBoundaries": [
+        {
+          "text": "Thirty-five",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.6636
+        },
+        {
+          "text": "thousand",
+          "startSeconds": 0.675,
+          "endSeconds": 1.0841
+        },
+        {
+          "text": "euros",
+          "startSeconds": 1.0955,
+          "endSeconds": 1.4932
+        },
+        {
+          "text": "lost",
+          "startSeconds": 1.5045,
+          "endSeconds": 2.0045
+        },
+        {
+          "text": "In",
+          "startSeconds": 2.7841,
+          "endSeconds": 2.9545
+        },
+        {
+          "text": "France",
+          "startSeconds": 2.9659,
+          "endSeconds": 3.4886
+        },
+        {
+          "text": "this",
+          "startSeconds": 3.6591,
+          "endSeconds": 3.8409
+        },
+        {
+          "text": "scam",
+          "startSeconds": 3.8523,
+          "endSeconds": 4.1932
+        },
+        {
+          "text": "cost",
+          "startSeconds": 4.2045,
+          "endSeconds": 4.5568
+        },
+        {
+          "text": "five",
+          "startSeconds": 4.5682,
+          "endSeconds": 4.8182
+        },
+        {
+          "text": "hundred",
+          "startSeconds": 4.8295,
+          "endSeconds": 5.0227
+        },
+        {
+          "text": "and",
+          "startSeconds": 5.0341,
+          "endSeconds": 5.1136
+        },
+        {
+          "text": "sixteen",
+          "startSeconds": 5.125,
+          "endSeconds": 5.5909
+        },
+        {
+          "text": "million",
+          "startSeconds": 5.6023,
+          "endSeconds": 5.9432
+        },
+        {
+          "text": "euros",
+          "startSeconds": 5.9545,
+          "endSeconds": 6.3409
+        },
+        {
+          "text": "in 2025",
+          "startSeconds": 6.3523,
+          "endSeconds": 7.5
+        }
+      ]
+    },
+    {
+      "id": "story-07-rewind",
+      "section": "story",
+      "text": "What if Claire had Solen?",
+      "file": "audio/voice-en/story-07-rewind.mp3",
+      "durationSeconds": 2.136,
+      "wordBoundaries": [
+        {
+          "text": "What",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.2773
+        },
+        {
+          "text": "if",
+          "startSeconds": 0.2886,
+          "endSeconds": 0.3909
+        },
+        {
+          "text": "Claire",
+          "startSeconds": 0.4023,
+          "endSeconds": 0.6864
+        },
+        {
+          "text": "had",
+          "startSeconds": 0.6977,
+          "endSeconds": 0.8568
+        },
+        {
+          "text": "Solen",
+          "startSeconds": 0.8682,
+          "endSeconds": 1.3341
+        }
+      ]
+    },
+    {
+      "id": "how-01-profile",
+      "section": "how",
+      "text": "Solen knows every supplier: their IBAN, their phone number, their usual amounts.",
+      "file": "audio/voice-en/how-01-profile.mp3",
+      "durationSeconds": 5.472,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.5614
+        },
+        {
+          "text": "knows",
+          "startSeconds": 0.5727,
+          "endSeconds": 0.8568
+        },
+        {
+          "text": "every",
+          "startSeconds": 0.8682,
+          "endSeconds": 1.0841
+        },
+        {
+          "text": "supplier",
+          "startSeconds": 1.0955,
+          "endSeconds": 1.6409
+        },
+        {
+          "text": "their",
+          "startSeconds": 1.8682,
+          "endSeconds": 2.0841
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 2.0955,
+          "endSeconds": 2.4364
+        },
+        {
+          "text": "their",
+          "startSeconds": 2.6523,
+          "endSeconds": 2.8
+        },
+        {
+          "text": "phone",
+          "startSeconds": 2.8114,
+          "endSeconds": 3.0387
+        },
+        {
+          "text": "number",
+          "startSeconds": 3.05,
+          "endSeconds": 3.3568
+        },
+        {
+          "text": "their",
+          "startSeconds": 3.5727,
+          "endSeconds": 3.7432
+        },
+        {
+          "text": "usual",
+          "startSeconds": 3.7545,
+          "endSeconds": 4.1182
+        },
+        {
+          "text": "amounts",
+          "startSeconds": 4.1295,
+          "endSeconds": 4.675
+        }
+      ]
+    },
+    {
+      "id": "how-02-history",
+      "section": "how",
+      "text": "These profiles come from payment history, never from an email. Nuvio Cloud: twenty-two payments to the same IBAN since 2019.",
+      "file": "audio/voice-en/how-02-history.mp3",
+      "durationSeconds": 8.976,
+      "wordBoundaries": [
+        {
+          "text": "These",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.3341
+        },
+        {
+          "text": "profiles",
+          "startSeconds": 0.3455,
+          "endSeconds": 0.9136
+        },
+        {
+          "text": "come",
+          "startSeconds": 0.925,
+          "endSeconds": 1.1295
+        },
+        {
+          "text": "from",
+          "startSeconds": 1.1409,
+          "endSeconds": 1.2659
+        },
+        {
+          "text": "payment",
+          "startSeconds": 1.2773,
+          "endSeconds": 1.5841
+        },
+        {
+          "text": "history",
+          "startSeconds": 1.5955,
+          "endSeconds": 2.0386
+        },
+        {
+          "text": "never",
+          "startSeconds": 2.2432,
+          "endSeconds": 2.5045
+        },
+        {
+          "text": "from",
+          "startSeconds": 2.5159,
+          "endSeconds": 2.6523
+        },
+        {
+          "text": "an",
+          "startSeconds": 2.6636,
+          "endSeconds": 2.7432
+        },
+        {
+          "text": "email",
+          "startSeconds": 2.7545,
+          "endSeconds": 3.2318
+        },
+        {
+          "text": "Nuvio",
+          "startSeconds": 4.0114,
+          "endSeconds": 4.4545
+        },
+        {
+          "text": "Cloud",
+          "startSeconds": 4.4659,
+          "endSeconds": 4.875
+        },
+        {
+          "text": "twenty-two",
+          "startSeconds": 5.0795,
+          "endSeconds": 5.5227
+        },
+        {
+          "text": "payments",
+          "startSeconds": 5.5341,
+          "endSeconds": 5.9545
+        },
+        {
+          "text": "to",
+          "startSeconds": 5.9659,
+          "endSeconds": 6.0568
+        },
+        {
+          "text": "the",
+          "startSeconds": 6.0682,
+          "endSeconds": 6.1591
+        },
+        {
+          "text": "same",
+          "startSeconds": 6.1705,
+          "endSeconds": 6.4432
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 6.4545,
+          "endSeconds": 6.7955
+        },
+        {
+          "text": "since 2019",
+          "startSeconds": 6.8068,
+          "endSeconds": 8.1705
+        }
+      ]
+    },
+    {
+      "id": "how-03-code",
+      "section": "how",
+      "text": "On every email, the code checks the sender, the bank details and the amount.",
+      "file": "audio/voice-en/how-03-code.mp3",
+      "durationSeconds": 5.064,
+      "wordBoundaries": [
+        {
+          "text": "On",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.3227
+        },
+        {
+          "text": "every",
+          "startSeconds": 0.3341,
+          "endSeconds": 0.5841
+        },
+        {
+          "text": "email",
+          "startSeconds": 0.5955,
+          "endSeconds": 1.05
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.2659,
+          "endSeconds": 1.3568
+        },
+        {
+          "text": "code",
+          "startSeconds": 1.3682,
+          "endSeconds": 1.6522
+        },
+        {
+          "text": "checks",
+          "startSeconds": 1.6636,
+          "endSeconds": 1.9477
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.9591,
+          "endSeconds": 2.05
+        },
+        {
+          "text": "sender",
+          "startSeconds": 2.0614,
+          "endSeconds": 2.4478
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.6636,
+          "endSeconds": 2.7545
+        },
+        {
+          "text": "bank",
+          "startSeconds": 2.7659,
+          "endSeconds": 3.05
+        },
+        {
+          "text": "details",
+          "startSeconds": 3.0614,
+          "endSeconds": 3.6068
+        },
+        {
+          "text": "and",
+          "startSeconds": 3.6182,
+          "endSeconds": 3.7318
+        },
+        {
+          "text": "the",
+          "startSeconds": 3.7432,
+          "endSeconds": 3.8113
+        },
+        {
+          "text": "amount",
+          "startSeconds": 3.8227,
+          "endSeconds": 4.2659
+        }
+      ]
+    },
+    {
+      "id": "how-04-ai",
+      "section": "how",
+      "text": "Then the AI reads the request, without ever seeing the IBAN, and exposes the trap: a fake pretext, a deadline that's too short.",
+      "file": "audio/voice-en/how-04-ai.mp3",
+      "durationSeconds": 8.328,
+      "wordBoundaries": [
+        {
+          "text": "Then",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.3341
+        },
+        {
+          "text": "the",
+          "startSeconds": 0.3455,
+          "endSeconds": 0.4591
+        },
+        {
+          "text": "AI",
+          "startSeconds": 0.4705,
+          "endSeconds": 0.8909
+        },
+        {
+          "text": "reads",
+          "startSeconds": 0.9023,
+          "endSeconds": 1.175
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.1864,
+          "endSeconds": 1.2659
+        },
+        {
+          "text": "request",
+          "startSeconds": 1.2773,
+          "endSeconds": 1.8227
+        },
+        {
+          "text": "without",
+          "startSeconds": 2.0045,
+          "endSeconds": 2.3455
+        },
+        {
+          "text": "ever",
+          "startSeconds": 2.3568,
+          "endSeconds": 2.55
+        },
+        {
+          "text": "seeing",
+          "startSeconds": 2.5614,
+          "endSeconds": 2.8568
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.8682,
+          "endSeconds": 2.9591
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 2.9705,
+          "endSeconds": 3.3568
+        },
+        {
+          "text": "and",
+          "startSeconds": 3.55,
+          "endSeconds": 3.675
+        },
+        {
+          "text": "exposes",
+          "startSeconds": 3.6864,
+          "endSeconds": 4.2205
+        },
+        {
+          "text": "the",
+          "startSeconds": 4.2318,
+          "endSeconds": 4.3114
+        },
+        {
+          "text": "trap",
+          "startSeconds": 4.3227,
+          "endSeconds": 4.6977
+        },
+        {
+          "text": "a",
+          "startSeconds": 4.9591,
+          "endSeconds": 5.0159
+        },
+        {
+          "text": "fake",
+          "startSeconds": 5.0273,
+          "endSeconds": 5.3227
+        },
+        {
+          "text": "pretext",
+          "startSeconds": 5.3341,
+          "endSeconds": 5.9477
+        },
+        {
+          "text": "a",
+          "startSeconds": 6.1523,
+          "endSeconds": 6.2318
+        },
+        {
+          "text": "deadline",
+          "startSeconds": 6.2432,
+          "endSeconds": 6.6636
+        },
+        {
+          "text": "that's",
+          "startSeconds": 6.675,
+          "endSeconds": 6.8909
+        },
+        {
+          "text": "too",
+          "startSeconds": 6.9023,
+          "endSeconds": 7.0727
+        },
+        {
+          "text": "short",
+          "startSeconds": 7.0841,
+          "endSeconds": 7.5386
+        }
+      ]
+    },
+    {
+      "id": "how-05-rule",
+      "section": "how",
+      "text": "The AI can make the verdict stricter. Never softer.",
+      "file": "audio/voice-en/how-05-rule.mp3",
+      "durationSeconds": 4.536,
+      "wordBoundaries": [
+        {
+          "text": "The",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.2659
+        },
+        {
+          "text": "AI",
+          "startSeconds": 0.2773,
+          "endSeconds": 0.7432
+        },
+        {
+          "text": "can",
+          "startSeconds": 0.7545,
+          "endSeconds": 0.9136
+        },
+        {
+          "text": "make",
+          "startSeconds": 0.925,
+          "endSeconds": 1.0955
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.1068,
+          "endSeconds": 1.175
+        },
+        {
+          "text": "verdict",
+          "startSeconds": 1.1864,
+          "endSeconds": 1.5273
+        },
+        {
+          "text": "stricter",
+          "startSeconds": 1.5386,
+          "endSeconds": 2.05
+        },
+        {
+          "text": "Never",
+          "startSeconds": 2.8295,
+          "endSeconds": 3.1477
+        },
+        {
+          "text": "softer",
+          "startSeconds": 3.1591,
+          "endSeconds": 3.7386
+        }
+      ]
+    },
+    {
+      "id": "demo-01-nuvio-infobar",
+      "section": "demo",
+      "text": "Nuvio announces new bank details? Alert as soon as it's opened.",
+      "file": "audio/voice-en/demo-01-nuvio-infobar.mp3",
+      "durationSeconds": 5.16,
+      "wordBoundaries": [
+        {
+          "text": "Nuvio",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.5614
+        },
+        {
+          "text": "announces",
+          "startSeconds": 0.5727,
+          "endSeconds": 1.0386
+        },
+        {
+          "text": "new",
+          "startSeconds": 1.05,
+          "endSeconds": 1.2318
+        },
+        {
+          "text": "bank",
+          "startSeconds": 1.2432,
+          "endSeconds": 1.5159
+        },
+        {
+          "text": "details",
+          "startSeconds": 1.5273,
+          "endSeconds": 2.1409
+        },
+        {
+          "text": "Alert",
+          "startSeconds": 2.9205,
+          "endSeconds": 3.2614
+        },
+        {
+          "text": "as",
+          "startSeconds": 3.2727,
+          "endSeconds": 3.3863
+        },
+        {
+          "text": "soon",
+          "startSeconds": 3.3977,
+          "endSeconds": 3.6363
+        },
+        {
+          "text": "as",
+          "startSeconds": 3.6477,
+          "endSeconds": 3.7386
+        },
+        {
+          "text": "it's",
+          "startSeconds": 3.75,
+          "endSeconds": 3.8864
+        },
+        {
+          "text": "opened",
+          "startSeconds": 3.8977,
+          "endSeconds": 4.3636
+        }
+      ]
+    },
+    {
+      "id": "demo-02-iban",
+      "section": "demo",
+      "text": "The IBAN doesn't match the profile.",
+      "file": "audio/voice-en/demo-02-iban.mp3",
+      "durationSeconds": 2.712,
+      "wordBoundaries": [
+        {
+          "text": "The",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.2318
+        },
+        {
+          "text": "IBAN",
+          "startSeconds": 0.2432,
+          "endSeconds": 0.6068
+        },
+        {
+          "text": "doesn't",
+          "startSeconds": 0.6182,
+          "endSeconds": 0.8795
+        },
+        {
+          "text": "match",
+          "startSeconds": 0.8909,
+          "endSeconds": 1.175
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.1864,
+          "endSeconds": 1.2773
+        },
+        {
+          "text": "profile",
+          "startSeconds": 1.2886,
+          "endSeconds": 1.9136
+        }
+      ]
+    },
+    {
+      "id": "demo-03-callback",
+      "section": "demo",
+      "text": "Solen has you call back the known number, never the one in the email.",
+      "file": "audio/voice-en/demo-03-callback.mp3",
+      "durationSeconds": 4.152,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.5614
+        },
+        {
+          "text": "has",
+          "startSeconds": 0.5727,
+          "endSeconds": 0.7545
+        },
+        {
+          "text": "you",
+          "startSeconds": 0.7659,
+          "endSeconds": 0.8568
+        },
+        {
+          "text": "call",
+          "startSeconds": 0.8682,
+          "endSeconds": 1.0955
+        },
+        {
+          "text": "back",
+          "startSeconds": 1.1068,
+          "endSeconds": 1.3227
+        },
+        {
+          "text": "the",
+          "startSeconds": 1.3341,
+          "endSeconds": 1.4022
+        },
+        {
+          "text": "known",
+          "startSeconds": 1.4136,
+          "endSeconds": 1.6522
+        },
+        {
+          "text": "number",
+          "startSeconds": 1.6636,
+          "endSeconds": 1.9477
+        },
+        {
+          "text": "never",
+          "startSeconds": 2.1864,
+          "endSeconds": 2.3909
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.4023,
+          "endSeconds": 2.4932
+        },
+        {
+          "text": "one",
+          "startSeconds": 2.5045,
+          "endSeconds": 2.6864
+        },
+        {
+          "text": "in",
+          "startSeconds": 2.6977,
+          "endSeconds": 2.7659
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.7773,
+          "endSeconds": 2.8227
+        },
+        {
+          "text": "email",
+          "startSeconds": 2.8341,
+          "endSeconds": 3.3568
+        }
+      ]
+    },
+    {
+      "id": "demo-04-pdg",
+      "section": "demo",
+      "text": "Claire's fake CEO? Blocked. A CEO doesn't email from Gmail.",
+      "file": "audio/voice-en/demo-04-pdg.mp3",
+      "durationSeconds": 6.504,
+      "wordBoundaries": [
+        {
+          "text": "Claire's",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.4705
+        },
+        {
+          "text": "fake",
+          "startSeconds": 0.4818,
+          "endSeconds": 0.7091
+        },
+        {
+          "text": "CEO",
+          "startSeconds": 0.7205,
+          "endSeconds": 1.425
+        },
+        {
+          "text": "Blocked",
+          "startSeconds": 2.2045,
+          "endSeconds": 2.75
+        },
+        {
+          "text": "A",
+          "startSeconds": 3.5227,
+          "endSeconds": 3.625
+        },
+        {
+          "text": "CEO",
+          "startSeconds": 3.6364,
+          "endSeconds": 4.3295
+        },
+        {
+          "text": "doesn't",
+          "startSeconds": 4.3409,
+          "endSeconds": 4.6477
+        },
+        {
+          "text": "email",
+          "startSeconds": 4.6591,
+          "endSeconds": 4.9886
+        },
+        {
+          "text": "from",
+          "startSeconds": 5.0,
+          "endSeconds": 5.1818
+        },
+        {
+          "text": "Gmail",
+          "startSeconds": 5.1932,
+          "endSeconds": 5.7159
+        }
+      ]
+    },
+    {
+      "id": "demo-05-techniques",
+      "section": "demo",
+      "text": "Authority, secrecy, bypassing the hierarchy: everything is explained.",
+      "file": "audio/voice-en/demo-05-techniques.mp3",
+      "durationSeconds": 5.232,
+      "wordBoundaries": [
+        {
+          "text": "Authority",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.6636
+        },
+        {
+          "text": "secrecy",
+          "startSeconds": 0.8909,
+          "endSeconds": 1.5045
+        },
+        {
+          "text": "bypassing",
+          "startSeconds": 1.6977,
+          "endSeconds": 2.2659
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.2773,
+          "endSeconds": 2.3341
+        },
+        {
+          "text": "hierarchy",
+          "startSeconds": 2.3455,
+          "endSeconds": 3.0273
+        },
+        {
+          "text": "everything",
+          "startSeconds": 3.2205,
+          "endSeconds": 3.675
+        },
+        {
+          "text": "is",
+          "startSeconds": 3.6864,
+          "endSeconds": 3.7887
+        },
+        {
+          "text": "explained",
+          "startSeconds": 3.8,
+          "endSeconds": 4.4477
+        }
+      ]
+    },
+    {
+      "id": "demo-06-daf",
+      "section": "demo",
+      "text": "A genuine urgent email gets through, with no false alarm.",
+      "file": "audio/voice-en/demo-06-daf.mp3",
+      "durationSeconds": 4.032,
+      "wordBoundaries": [
+        {
+          "text": "A",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.2318
+        },
+        {
+          "text": "genuine",
+          "startSeconds": 0.2432,
+          "endSeconds": 0.675
+        },
+        {
+          "text": "urgent",
+          "startSeconds": 0.6864,
+          "endSeconds": 0.9932
+        },
+        {
+          "text": "email",
+          "startSeconds": 1.0045,
+          "endSeconds": 1.3568
+        },
+        {
+          "text": "gets",
+          "startSeconds": 1.3682,
+          "endSeconds": 1.6182
+        },
+        {
+          "text": "through",
+          "startSeconds": 1.6295,
+          "endSeconds": 1.925
+        },
+        {
+          "text": "with",
+          "startSeconds": 2.0841,
+          "endSeconds": 2.2318
+        },
+        {
+          "text": "no",
+          "startSeconds": 2.2432,
+          "endSeconds": 2.4591
+        },
+        {
+          "text": "false",
+          "startSeconds": 2.4705,
+          "endSeconds": 2.7659
+        },
+        {
+          "text": "alarm",
+          "startSeconds": 2.7773,
+          "endSeconds": 3.2432
+        }
+      ]
+    },
+    {
+      "id": "demo-07-attacks",
+      "section": "demo",
+      "text": "Twenty-eight cases replayed: twenty-six out of twenty-six attacks blocked. Zero false alarms.",
+      "file": "audio/voice-en/demo-07-attacks.mp3",
+      "durationSeconds": 6.84,
+      "wordBoundaries": [
+        {
+          "text": "Twenty-eight",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.5614
+        },
+        {
+          "text": "cases",
+          "startSeconds": 0.5727,
+          "endSeconds": 0.9818
+        },
+        {
+          "text": "replayed",
+          "startSeconds": 0.9932,
+          "endSeconds": 1.4591
+        },
+        {
+          "text": "twenty-six",
+          "startSeconds": 1.6295,
+          "endSeconds": 2.175
+        },
+        {
+          "text": "out",
+          "startSeconds": 2.1864,
+          "endSeconds": 2.3341
+        },
+        {
+          "text": "of",
+          "startSeconds": 2.3455,
+          "endSeconds": 2.4364
+        },
+        {
+          "text": "twenty-six",
+          "startSeconds": 2.4477,
+          "endSeconds": 2.9704
+        },
+        {
+          "text": "attacks",
+          "startSeconds": 2.9818,
+          "endSeconds": 3.3795
+        },
+        {
+          "text": "blocked",
+          "startSeconds": 3.3909,
+          "endSeconds": 3.8909
+        },
+        {
+          "text": "Zero",
+          "startSeconds": 4.6705,
+          "endSeconds": 5.0909
+        },
+        {
+          "text": "false",
+          "startSeconds": 5.1023,
+          "endSeconds": 5.3977
+        },
+        {
+          "text": "alarms",
+          "startSeconds": 5.4091,
+          "endSeconds": 6.0455
+        }
+      ]
+    },
+    {
+      "id": "demo-08-lookalike",
+      "section": "demo",
+      "text": "Even a lookalike address is caught.",
+      "file": "audio/voice-en/demo-08-lookalike.mp3",
+      "durationSeconds": 2.592,
+      "wordBoundaries": [
+        {
+          "text": "Even",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.3341
+        },
+        {
+          "text": "a",
+          "startSeconds": 0.3455,
+          "endSeconds": 0.4023
+        },
+        {
+          "text": "lookalike",
+          "startSeconds": 0.4136,
+          "endSeconds": 0.8795
+        },
+        {
+          "text": "address",
+          "startSeconds": 0.8909,
+          "endSeconds": 1.2318
+        },
+        {
+          "text": "is",
+          "startSeconds": 1.2432,
+          "endSeconds": 1.3682
+        },
+        {
+          "text": "caught",
+          "startSeconds": 1.3795,
+          "endSeconds": 1.8
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "section": "end",
+      "text": "Solen. Stopping email scams at the source.",
+      "file": "audio/voice-en/end.mp3",
+      "durationSeconds": 4.296,
+      "wordBoundaries": [
+        {
+          "text": "Solen",
+          "startSeconds": 0.0955,
+          "endSeconds": 0.7318
+        },
+        {
+          "text": "Stopping",
+          "startSeconds": 1.5,
+          "endSeconds": 2.0341
+        },
+        {
+          "text": "email",
+          "startSeconds": 2.0455,
+          "endSeconds": 2.3636
+        },
+        {
+          "text": "scams",
+          "startSeconds": 2.375,
+          "endSeconds": 2.8068
+        },
+        {
+          "text": "at",
+          "startSeconds": 2.8182,
+          "endSeconds": 2.8863
+        },
+        {
+          "text": "the",
+          "startSeconds": 2.8977,
+          "endSeconds": 2.9659
+        },
+        {
+          "text": "source",
+          "startSeconds": 2.9773,
+          "endSeconds": 3.4887
+        }
+      ]
+    }
+  ]
+}

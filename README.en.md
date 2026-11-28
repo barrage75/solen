@@ -8,6 +8,12 @@
 
 Solen is a mailbox add-in that catches email scams: fake bank detail changes, CEO fraud, payroll diversion, gift card scams, fake bank advisers, fake parcel fees, fake tax refunds, fake invoices, booby-trapped attachments and QR codes, phishing and lookalike domains. It explains each fraud to the user in plain French. Deterministic code makes the call whenever money is at stake. The AI (Mistral) reads and explains the request, never sees an IBAN, and can only make the verdict stricter.
 
+## Pitch video
+
+[![Solen pitch video in English](solen/docs/solen-pitch-en-poster.png)](solen/docs/solen-pitch-en.mp4)
+
+[▶ English pitch (main · 116.2 s)](solen/docs/solen-pitch-en.mp4) · [French version · 98.3 s](solen/docs/solen-pitch-fr.mp4)
+
 ![Solen demo in the pitch deck style: fake bank details, CEO fraud, genuine emails and a fake invoice](solen/docs/demo-solen-en.gif)
 
 [▶ Watch the high-quality video (MP4, 45.4 s)](solen/docs/demo-solen-en.mp4)

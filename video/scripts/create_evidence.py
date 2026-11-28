@@ -1,3 +1,4 @@
+import argparse
 import json
 import math
 import subprocess
@@ -72,7 +73,7 @@ def safe_area_audit(out):
             np.abs(pixels.astype(np.int16) - background.astype(np.int16)), axis=2
         ) > 8
         top_edge = foreground[:edge, :]
-        if frame_index / AUDIT_FPS <= 3.0:
+        if frame_index / AUDIT_FPS <= 4.0:
             top_edge = top_edge.copy()
             top_edge[:, 238:345] = False
         checks = (
@@ -105,7 +106,7 @@ def safe_area_audit(out):
         "sampleIntervalSeconds": 1 / AUDIT_FPS,
         "edgeWidthPixelsAt1920x1080": edge * 4,
         "backgroundReference": "median of the four 20x20 frame corners",
-        "excludedRegion": "right edge below y=520 px for intentional concentric arcs; hook backdrop at x=952–1380 px and y=0–56 px",
+        "excludedRegion": "right edge below y=520 px for intentional concentric arcs; hook backdrop at x=952–1380 px and y=0–56 px through 4.0 seconds",
         "hits": hits,
     }
     path = out / "safe-area-audit.json"
@@ -118,8 +119,8 @@ def safe_area_audit(out):
         )
 
 
-def frames(seconds):
-    return math.ceil(seconds * FPS)
+def frames(seconds, lang="en"):
+    return math.ceil(seconds * FPS) if lang == "fr" else round(seconds * FPS)
 
 
 def extract_frame(frame, path):
@@ -147,8 +148,16 @@ def extract_frame(frame, path):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--lang", choices=("fr", "en"), default="fr")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    global OUTPUT_VIDEO, VOICE_MANIFEST_PATH
+    suffix = ".en" if args.lang == "en" else ""
+    OUTPUT_VIDEO = REPO / "solen" / "docs" / f"solen-pitch-{args.lang}.mp4"
+    VOICE_MANIFEST_PATH = ROOT / "src" / f"voice-manifest{suffix}.json"
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch9"
+    out = args.output.expanduser() if args.output else Path.home() / "profil" / "video-check" / f"pitch-{args.lang}1"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -158,7 +167,7 @@ def main():
     cursor = 0
     section_frames = {}
     for index, line in enumerate(manifest["lines"]):
-        voice_frames = frames(line["durationSeconds"])
+        voice_frames = frames(line["durationSeconds"], args.lang)
         start = cursor
         end = start + voice_frames
         frame_by_id[line["id"]] = (start, end)

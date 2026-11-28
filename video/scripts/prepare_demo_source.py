@@ -11,13 +11,14 @@ DEFAULT_WORK = Path.home() / "profil" / "solen-video-work"
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--work", type=Path, default=DEFAULT_WORK)
-    parser.add_argument(
-        "--output", type=Path, default=ROOT / "public" / "demo-solen-fr-clean.mp4"
-    )
+    parser.add_argument("--lang", choices=("fr", "en"), default="fr")
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    timeline = json.loads((args.work / "demo-solen-fr.timeline.json").read_text())
+    prefix = f"demo-solen-{args.lang}"
+    output = args.output or ROOT / "public" / f"{prefix}-clean.mp4"
+    timeline = json.loads((args.work / f"{prefix}.timeline.json").read_text())
     duration = timeline["sourceDurationSeconds"] - timeline["trimStartSeconds"]
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    output.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
         [
             "ffmpeg",
@@ -28,7 +29,7 @@ def main():
             "-safe",
             "0",
             "-i",
-            str(args.work / "demo-solen-fr.ffconcat"),
+            str(args.work / f"{prefix}.ffconcat"),
             "-ss",
             str(timeline["trimStartSeconds"]),
             "-t",
@@ -48,7 +49,7 @@ def main():
             "yuv420p",
             "-movflags",
             "+faststart",
-            str(args.output),
+            str(output),
         ],
         check=True,
     )

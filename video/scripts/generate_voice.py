@@ -1,4 +1,5 @@
 import asyncio
+import argparse
 import json
 import subprocess
 from pathlib import Path
@@ -9,6 +10,16 @@ ROOT = Path(__file__).resolve().parents[1]
 LINES = ROOT / "src" / "voice-lines.json"
 MANIFEST = ROOT / "src" / "voice-manifest.json"
 OUTPUT = ROOT / "public" / "audio" / "voice"
+
+
+def paths_for_language(language):
+    suffix = ".en" if language == "en" else ""
+    output_name = "voice-en" if language == "en" else "voice"
+    return (
+        ROOT / "src" / f"voice-lines{suffix}.json",
+        ROOT / "src" / f"voice-manifest{suffix}.json",
+        ROOT / "public" / "audio" / output_name,
+    )
 
 
 def duration_seconds(path):
@@ -29,11 +40,15 @@ def duration_seconds(path):
 
 
 async def main():
-    config = json.loads(LINES.read_text(encoding="utf-8"))
-    OUTPUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--lang", choices=("fr", "en"), default="fr")
+    language = parser.parse_args().lang
+    lines_path, manifest_path, output_dir = paths_for_language(language)
+    config = json.loads(lines_path.read_text(encoding="utf-8"))
+    output_dir.mkdir(parents=True, exist_ok=True)
     lines = []
     for line in config["lines"]:
-        path = OUTPUT / f'{line["id"]}.mp3'
+        path = output_dir / f'{line["id"]}.mp3'
         for attempt in range(3):
             try:
                 communicate = edge_tts.Communicate(
@@ -78,7 +93,7 @@ async def main():
             }
         )
         print(f'{line["id"]}: {lines[-1]["durationSeconds"]:.3f}s')
-    MANIFEST.write_text(
+    manifest_path.write_text(
         json.dumps(
             {
                 "voice": config["voice"],

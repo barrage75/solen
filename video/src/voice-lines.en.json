@@ -1,0 +1,28 @@
+{
+  "voice": "en-US-ChristopherNeural",
+  "rate": "+10%",
+  "lines": [
+    {"id": "hook-01", "section": "story", "text": "Thirty-five thousand euros. Gone in a single click."},
+    {"id": "story-01-alarm", "section": "story", "text": "Monday, seven a.m. Claire, executive assistant at Arkos Systems."},
+    {"id": "story-02-routine", "section": "story", "text": "Coffee. Metro. Inbox."},
+    {"id": "story-03-mail", "section": "story", "text": "Nine thirty-one: the CEO emails her. Urgent transfer, thirty-five thousand euros. And not a word to anyone."},
+    {"id": "story-04-click", "section": "story", "text": "No time to check. Claire approves."},
+    {"id": "story-05-loss", "section": "story", "text": "The next day, the real CEO calls: \u201cWhat transfer?\u201d"},
+    {"id": "story-06-cost", "section": "story", "text": "Thirty-five thousand euros lost. In France, this scam cost five hundred and sixteen million euros in 2025."},
+    {"id": "story-07-rewind", "section": "story", "text": "What if Claire had Solen?"},
+    {"id": "how-01-profile", "section": "how", "text": "Solen knows every supplier: their IBAN, their phone number, their usual amounts."},
+    {"id": "how-02-history", "section": "how", "text": "These profiles come from payment history, never from an email. Nuvio Cloud: twenty-two payments to the same IBAN since 2019."},
+    {"id": "how-03-code", "section": "how", "text": "On every email, the code checks the sender, the bank details and the amount."},
+    {"id": "how-04-ai", "section": "how", "text": "Then the AI reads the request, without ever seeing the IBAN, and exposes the trap: a fake pretext, a deadline that's too short."},
+    {"id": "how-05-rule", "section": "how", "text": "The AI can make the verdict stricter. Never softer."},
+    {"id": "demo-01-nuvio-infobar", "section": "demo", "text": "Nuvio announces new bank details? Alert as soon as it's opened."},
+    {"id": "demo-02-iban", "section": "demo", "text": "The IBAN doesn't match the profile."},
+    {"id": "demo-03-callback", "section": "demo", "text": "Solen has you call back the known number, never the one in the email."},
+    {"id": "demo-04-pdg", "section": "demo", "text": "Claire's fake CEO? Blocked. A CEO doesn't email from Gmail."},
+    {"id": "demo-05-techniques", "section": "demo", "text": "Authority, secrecy, bypassing the hierarchy: everything is explained."},
+    {"id": "demo-06-daf", "section": "demo", "text": "A genuine urgent email gets through, with no false alarm."},
+    {"id": "demo-07-attacks", "section": "demo", "text": "Twenty-eight cases replayed: twenty-six out of twenty-six attacks blocked. Zero false alarms."},
+    {"id": "demo-08-lookalike", "section": "demo", "text": "Even a lookalike address is caught."},
+    {"id": "end", "section": "end", "text": "Solen. Stopping email scams at the source."}
+  ]
+}

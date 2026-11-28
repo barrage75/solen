@@ -12,19 +12,40 @@ BPM = 122
 
 
 def main():
-    manifest = json.loads((ROOT / "src" / "voice-manifest.json").read_text())
-    cursor = 0
-    ranges = {}
-    for line in manifest["lines"]:
-        frames = int(np.ceil(line["durationSeconds"] * FPS))
-        ranges[line["id"]] = (cursor / FPS, (cursor + frames) / FPS)
-        cursor += frames
-    duration = cursor / FPS + 1.1
+    ranges_by_language = {}
+    word_ranges_by_language = {}
+    duration_frames = 0
+    for language in ("fr", "en"):
+        suffix = ".en" if language == "en" else ""
+        manifest = json.loads((ROOT / "src" / f"voice-manifest{suffix}.json").read_text())
+        cursor = 0
+        ranges = {}
+        word_ranges = []
+        for line in manifest["lines"]:
+            frames = int(np.ceil(line["durationSeconds"] * FPS))
+            ranges[line["id"]] = (cursor / FPS, (cursor + frames) / FPS)
+            line_start = cursor / FPS
+            boundaries = line.get("wordBoundaries", [])
+            if boundaries:
+                word_ranges.extend(
+                    (
+                        max(0, line_start + word["startSeconds"] - 0.04),
+                        line_start + word["endSeconds"] + 0.06,
+                    )
+                    for word in boundaries
+                )
+            else:
+                word_ranges.append((line_start, line_start + line["durationSeconds"]))
+            cursor += frames
+        ranges_by_language[language] = ranges
+        word_ranges_by_language[language] = word_ranges
+        duration_frames = max(duration_frames, cursor)
+    duration = duration_frames / FPS + 1.1
     samples = int(duration * RATE)
     t = np.arange(samples, dtype=np.float32) / RATE
     music = np.zeros(samples, dtype=np.float32)
     beat = 60 / BPM
-    reveal = ranges["story-07-rewind"][0] + 1.0
+    reveal = max(ranges["story-07-rewind"][0] for ranges in ranges_by_language.values()) + 1.0
 
     for n in range(int(duration / beat) + 1):
         start = n * beat
@@ -60,21 +81,25 @@ def main():
         rt = np.linspace(0, 1, swell_end - swell_start, dtype=np.float32)
         music[swell_start:swell_end] += np.sin(2 * np.pi * (95 + rt * 1200) * rt) * rt**2 * 0.09
 
-    hit_start = int(ranges["end"][0] * RATE)
-    hit_length = min(int(0.65 * RATE), samples - hit_start)
-    hit_t = np.arange(hit_length, dtype=np.float32) / RATE
-    hit = sum(np.sin(2 * np.pi * f * hit_t) for f in (261.63, 329.63, 392.0))
-    music[hit_start:hit_start + hit_length] += hit * np.exp(-hit_t * 4.2) * 0.12
+    for ranges in ranges_by_language.values():
+        hit_start = int(ranges["end"][0] * RATE)
+        hit_length = min(int(0.65 * RATE), samples - hit_start)
+        hit_t = np.arange(hit_length, dtype=np.float32) / RATE
+        hit = sum(np.sin(2 * np.pi * f * hit_t) for f in (261.63, 329.63, 392.0))
+        music[hit_start:hit_start + hit_length] += hit * np.exp(-hit_t * 4.2) * 0.12
 
+    time = np.arange(samples, dtype=np.float32) / RATE
+    music += 0.008 * (
+        np.sin(2 * np.pi * 55 * time)
+        + np.sin(2 * np.pi * 110 * time)
+        + np.sin(2 * np.pi * 165 * time)
+    )
     envelope = np.full(samples, 10 ** (-14 / 20), dtype=np.float32)
     voiced = np.zeros(samples, dtype=bool)
-    for start, end in ranges.values():
-        voiced[int(start * RATE):min(samples, int(end * RATE))] = True
+    for word_ranges in word_ranges_by_language.values():
+        for start, end in word_ranges:
+            voiced[int(start * RATE):min(samples, int(end * RATE))] = True
     envelope[~voiced] = 10 ** (-8 / 20)
-    click_end = ranges["story-04-click"][1]
-    blackout_start = max(0, int((click_end - 0.17) * RATE))
-    blackout_end = min(samples, int((click_end + 0.33) * RATE))
-    envelope[blackout_start:blackout_end] = 0
     music *= envelope
     music *= np.minimum(1, np.arange(samples, dtype=np.float32) / (RATE * 0.12))
     music *= np.minimum(1, np.arange(samples - 1, -1, -1, dtype=np.float32) / (RATE * 1.0))

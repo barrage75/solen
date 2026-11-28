@@ -1,10 +1,12 @@
 import {Img, staticFile, useCurrentFrame, useVideoConfig, interpolate, spring} from "remotion";
 import type {CSSProperties, ReactNode} from "react";
 import {COLORS, BrandArcs, DeckLogo, StoryLabel} from "./brand";
+import {COPY, type PitchLang} from "./copy";
 
 type StorySceneProps = {
   id: string;
   durationFrames: number;
+  lang: PitchLang;
 };
 
 const shellStyle: CSSProperties = {
@@ -59,7 +61,8 @@ const ClaireArt = ({name, style}: {name: ClaireAsset; style: CSSProperties}) => 
   <Img src={staticFile(`images/claire/${name}.png`)} alt="" style={{display: "block", ...style}} />
 );
 
-const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const AlarmScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
+  const copy = COPY[lang].story.alarm;
   const fps = useVideoConfig().fps;
   const stretchFrame = 22;
   const stretching = frame >= stretchFrame;
@@ -79,7 +82,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   const whipX = interpolate(frame, [stretchFrame - 3, stretchFrame + 3], [-650, 1920], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>01 — RÉVEIL</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div
         style={{
           position: "absolute",
@@ -91,9 +94,9 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           ...enterStyle(frame, fps),
         }}
       >
-        Lundi,
+        {copy.day}
         <br />
-        <span style={{color: COLORS.yellow}}>7 h 02.</span>
+        <span style={{color: COLORS.yellow}}>{copy.time}</span>
       </div>
       <div
         style={{
@@ -106,13 +109,13 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           letterSpacing: 1,
         }}
       >
-        ASSISTANTE DE DIRECTION
+        {copy.job}
         <br />
-        ARKOS SYSTEMS
+        {copy.company}
       </div>
       <svg
         viewBox="0 0 1000 830"
-        style={{position: "absolute", width: 1000, height: 830, right: 80, top: 110}}
+        style={{position: "absolute", width: 1000, height: 830, right: 80, top: 135}}
         aria-hidden
       >
         <rect x="132" y="47" width="697" height="364" rx="22" fill={COLORS.panel} stroke="#2C3443" strokeWidth="3" />
@@ -128,7 +131,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
         <g transform={`translate(${alarmShake} 0) translate(194 678) scale(${alarmPulse}) translate(-194 -678)`}>
           <rect x="102" y="628" width="186" height="108" rx="12" fill="#60493A" />
           <rect x="140" y="650" width="108" height="68" rx="14" fill="#0A0F20" stroke={COLORS.yellow} strokeWidth="4" />
-          <text x="194" y="678" textAnchor="middle" fill={COLORS.cream} fontFamily="JetBrainsDeck, monospace" fontSize="15">LUNDI</text>
+          <text x="194" y="678" textAnchor="middle" fill={COLORS.cream} fontFamily="JetBrainsDeck, monospace" fontSize="15">{copy.clockDay}</text>
           <text x="194" y="705" textAnchor="middle" fill={COLORS.yellow} fontFamily="JetBrainsDeck, monospace" fontSize="25" fontWeight="700">7:02</text>
           <path d="M129 645c-24-17-26-43-8-60m140 60c24-17 26-43 8-60" fill="none" stroke={COLORS.yellow} strokeWidth="4" strokeLinecap="round" opacity=".8" />
         </g>
@@ -189,21 +192,18 @@ const RoutineVisual = ({kind}: {kind: number}) => {
   );
 };
 
-const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const RoutineScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
   const fps = useVideoConfig().fps;
+  const copy = COPY[lang].story.routine;
   const cutFrames = Math.min(Math.round(fps), Math.floor(durationFrames / 3));
   const index = Math.min(2, Math.floor(frame / cutFrames));
-  const items = [
-    {number: "01", title: "Café", label: "LE RÉVEIL"},
-    {number: "02", title: "Métro", label: "LE TRAJET"},
-    {number: "03", title: "Boîte mail", label: "AU BUREAU"},
-  ];
+  const items = copy.items.map((item, itemIndex) => ({number: `0${itemIndex + 1}`, ...item}));
   const current = items[index];
   const localFrame = frame - cutFrames * index;
   const portraitIn = spring({frame: localFrame - 3, fps, config: {mass: 0.65, damping: 16, stiffness: 150}});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>02 — ROUTINE</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div
         style={{
           position: "absolute",
@@ -275,40 +275,37 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
           opacity: 0.74,
         }}
       >
-        Café <span style={{color: COLORS.yellow}}>→</span> métro{" "}
-        <span style={{color: COLORS.yellow}}>→</span> ordinateur
+        {copy.footer[0]} <span style={{color: COLORS.yellow}}>→</span> {copy.footer[1]}{" "}
+        <span style={{color: COLORS.yellow}}>→</span> {copy.footer[2]}
       </div>
     </Shell>
   );
 };
 
-const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const MailScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
   const fps = useVideoConfig().fps;
+  const copy = COPY[lang].story.mail;
   const glitchX = frame < 22 ? Math.sin(frame * 3.1) * (22 - frame) * 1.2 : 0;
   const appear = spring({
     frame: frame - 9,
     fps,
     config: {damping: 18, stiffness: 110},
   });
-  const bodyLines = [
-    "Je suis en réunion avec nos avocats",
-    "j'ai besoin que tu passes un virement de 35 000 € aujourd'hui",
-    "n'en parle à personne, même pas à Marc",
-  ];
+  const bodyLines = copy.body;
   const lineStart = durationFrames * 0.2;
   const lineStep = durationFrames * 0.17;
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>03 — LE MESSAGE · 9:31</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div style={{position: "absolute", left: 160, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
-        L'urgence.
+        {copy.headlines[0]}
         <br />
-        Le secret.
+        {copy.headlines[1]}
         <br />
-        <span style={{color: COLORS.yellow}}>35 000 €.</span>
+        <span style={{color: COLORS.yellow}}>{copy.headlines[2]}</span>
       </div>
       <div style={{position: "absolute", left: 160, top: 558, width: 475, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
-        Un mail qui semble venir du PDG.
+        {copy.subheading}
       </div>
       <div
         style={{
@@ -329,41 +326,43 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
         <div style={{height: 82, backgroundColor: "#E6E7E2", display: "flex", alignItems: "center", padding: "0 34px", gap: 20}}>
           <div style={{width: 24, height: 24, borderRadius: 7, backgroundColor: "#1676D2"}} />
           <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 29, fontWeight: 700}}>Outlook</div>
-          <div style={{marginLeft: "auto", fontFamily: "JetBrainsDeck, monospace", fontSize: 20, color: "#4A5260"}}>LUNDI · 9:31</div>
+          <div style={{marginLeft: "auto", fontFamily: "JetBrainsDeck, monospace", fontSize: 20, color: "#4A5260"}}>{copy.dayAndTime}</div>
         </div>
         <div style={{padding: "38px 50px"}}>
           <div style={{display: "flex", alignItems: "center", gap: 20, marginBottom: 26}}>
             <div style={{width: 56, height: 56, borderRadius: "50%", backgroundColor: "#203D60", color: COLORS.cream, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "ManropeDeck, sans-serif", fontSize: 24, fontWeight: 800}}>JD</div>
             <div>
-              <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 27, fontWeight: 800}}>Jean-Pierre Durand</div>
-              <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 21, color: "#4F5967"}}>&lt;jp.durand.pdg@gmail.com&gt;</div>
+              <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 27, fontWeight: 800}}>{copy.sender}</div>
+              <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 21, color: "#4F5967"}}>&lt;{copy.email}&gt;</div>
             </div>
             <div style={{marginLeft: "auto", color: "#657080", fontFamily: "JetBrainsDeck, monospace", fontSize: 18}}>9:31</div>
           </div>
-          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800, letterSpacing: -0.5, marginBottom: 26}}>Virement confidentiel</div>
+          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800, letterSpacing: -0.5, marginBottom: 26}}>{copy.subject}</div>
           <div style={{height: 1, backgroundColor: "#C8CBD0", marginBottom: 25}} />
           {bodyLines.map((line, index) => {
             const revealAt = lineStart + lineStep * index;
             const opacity = interpolate(frame, [revealAt, revealAt + 12], [0, 1], {extrapolateRight: "clamp"});
             return (
               <div
-                key={line}
+                key={"text" in line ? line.text : line.emphasis}
                 style={{
                   opacity,
                   transform: `translateY(${(1 - opacity) * 16}px)`,
                   fontFamily: "ManropeDeck, sans-serif",
-                  fontSize: index === 1 ? 30 : 29,
-                  lineHeight: 1.35,
-                  marginBottom: 24,
+                  fontSize: lang === "en" ? 25 : index === 1 ? 30 : 29,
+                  lineHeight: 1.3,
+                  marginBottom: 18,
                   fontWeight: index === 1 ? 700 : 500,
                 }}
               >
-                {index === 1 ? <>j'ai besoin que tu passes un virement de <mark style={{background:COLORS.yellow,color:COLORS.navy,padding:"0 4px"}}>35 000 €</mark> aujourd'hui</> : index === 2 ? <><mark style={{background:COLORS.yellow,color:COLORS.navy,padding:"0 4px"}}>n'en parle à personne</mark>, même pas à Marc</> : line}
+                {"text" in line
+                  ? line.text
+                  : <>{line.before}<mark style={{background:COLORS.yellow,color:COLORS.navy,padding:"0 4px"}}>{line.emphasis}</mark>{line.after}</>}
               </div>
             );
           })}
           <div style={{marginTop: 10, paddingTop: 18, borderTop: "1px solid #C8CBD0", fontFamily: "JetBrainsDeck, monospace", fontSize: 16, letterSpacing: 1, color: "#77808C"}}>
-            CONFIDENTIEL · ACTION REQUISE AUJOURD'HUI
+            {copy.footer}
           </div>
         </div>
       </div>
@@ -383,14 +382,15 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           transform: `translateY(${interpolate(frame, [8, 18], [-18, 0], {extrapolateRight: "clamp"})}px)`,
         }}
       >
-        Nouveau message · 9:31
+        {copy.notification}
       </div>
     </Shell>
   );
 };
 
-const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const ClickScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
   const fps = useVideoConfig().fps;
+  const copy = COPY[lang].story.click;
   const clickFrame = Math.round(durationFrames * 0.68);
   const clicked = frame >= clickFrame;
   const clickShake = frame >= clickFrame && frame < clickFrame + 12
@@ -401,23 +401,23 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   const pointerY = interpolate(frame, [0, clickFrame - 8, clickFrame], [782, 680, 680], {extrapolateRight: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>04 — LE CLIC</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div style={{position: "absolute", left: 160, top: 202, width: 950, ...displayStyle, fontSize: 58, ...enterStyle(frame, fps)}}>
-        Le patron est pressé.
+        {copy.headline}
         <br />
-        <span style={{color: COLORS.yellow}}>Claire valide.</span>
+        <span style={{color: COLORS.yellow}}>{copy.approve}</span>
       </div>
       <ClaireArt name="desk" style={{position: "absolute", left: 150, top: 390, width: 900, height: 600, objectFit: "contain", transform: `translateX(${clickShake}px) scale(${deskZoom})`, transformOrigin: "bottom left", filter: "drop-shadow(0 16px 20px rgba(0,0,0,.22))"}} />
       <div style={{position: "absolute", right: 230, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40, transform: `translateX(${clickShake}px)`}}>
-        <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 1.5}}>VIREMENT À EXÉCUTER</div>
-        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 33, marginTop: 24}}>Bénéficiaire : compte inconnu</div>
-        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted, marginTop: 12}}>Objet : acquisition confidentielle</div>
-        <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: COLORS.muted, marginTop: 13}}>IBAN · FR76 •••• •••• 4417</div>
+        <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 1.5}}>{copy.transfer}</div>
+        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: lang === "en" ? 30 : 33, marginTop: 24}}>{copy.beneficiary}</div>
+        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted, marginTop: 12}}>{copy.purpose}</div>
+        <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: COLORS.muted, marginTop: 13}}>{copy.iban}</div>
         <div style={{height: 1, backgroundColor: "#384153", margin: "24px 0"}} />
-        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted}}>MONTANT</div>
-        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 76, fontWeight: 800, color: COLORS.cream, marginTop: 5}}>35 000 €</div>
+        <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted}}>{copy.amountLabel}</div>
+        <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 76, fontWeight: 800, color: COLORS.cream, marginTop: 5}}>{copy.amount}</div>
         <div style={{display: "flex", gap: 14, marginTop: 32}}>
-          <div style={{height: 66, padding: "0 25px", display: "flex", alignItems: "center", border: "1px solid #525C6D", borderRadius: 12, color: COLORS.cream, fontFamily: "ManropeDeck, sans-serif", fontSize: 21}}>Annuler</div>
+          <div style={{height: 66, padding: "0 25px", display: "flex", alignItems: "center", border: "1px solid #525C6D", borderRadius: 12, color: COLORS.cream, fontFamily: "ManropeDeck, sans-serif", fontSize: 21}}>{copy.cancel}</div>
           <div
             style={{
               height: 66,
@@ -435,10 +435,10 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
               transform: clicked ? "scale(.98)" : "scale(1)",
             }}
           >
-            {clicked ? "Virement envoyé ✓" : "Valider le virement"}
+            {clicked ? copy.sent : copy.action}
           </div>
         </div>
-        <div style={{position: "absolute", bottom: 26, right: 35, fontFamily: "JetBrainsDeck, monospace", color: COLORS.muted, fontSize: 16}}>ACTION IRRÉVERSIBLE</div>
+        <div style={{position: "absolute", bottom: 26, right: 35, fontFamily: "JetBrainsDeck, monospace", color: COLORS.muted, fontSize: 16}}>{copy.irreversible}</div>
       </div>
       <svg
         viewBox="0 0 55 72"
@@ -473,12 +473,13 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   );
 };
 
-const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const LossScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
   const fps = useVideoConfig().fps;
+  const copy = COPY[lang].story.loss;
   const countEndFrame = Math.max(1, durationFrames - Math.round(fps * 1.5));
   const moneyProgress = interpolate(frame, [durationFrames * 0.08, countEndFrame], [0, 35000], {extrapolateRight: "clamp"});
   const money = Math.floor(moneyProgress / 250) * 250;
-  const formatted = money.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
+  const formatted = money.toLocaleString(lang === "en" ? "en-US" : "fr-FR").replace(/\u202f/g, "\u00a0");
   const callRevealFrame = Math.round(durationFrames * 0.52);
   const questionFrame = Math.round(durationFrames * 0.61);
   const callOpacity = interpolate(frame, [callRevealFrame, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
@@ -501,14 +502,14 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   });
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>05 — LE LENDEMAIN</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div style={{position: "absolute", left: 150, top: 188, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
-        LE VRAI PDG APPELLE
+        {copy.eyebrow}
       </div>
       <div style={{position: "absolute", left: 150, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
-        <span style={{color: COLORS.red}}>35 000 €</span> sont partis.
+        <span style={{color: COLORS.red}}>{lang === "en" ? `€${formatted}` : `${formatted} €`}</span>{copy.headline(formatted)}
       </div>
-      <div style={{position: "absolute", left: 150, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
+      <div style={{position: "absolute", left: 150, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>{copy.subheading}</div>
       {bills.map((bill, index) => (
         <div
           key={index}
@@ -530,12 +531,12 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
             justifyContent: "center",
           }}
         >
-          50 €
+          {copy.billAmount}
         </div>
       ))}
       <ClaireArt name="phone" style={{position: "absolute", right: 240, top: 150, width: 420, height: 420, objectFit: "contain", opacity: callOpacity, transform: `translateX(${phoneShake}px) scale(${0.96 + callPop * 0.04 + interpolate(frame, [callRevealFrame, durationFrames], [0, 0.025], {extrapolateRight: "clamp"})})`, transformOrigin: "center"}} />
       <div style={{position: "absolute", left: 150 + questionShake, top: 635, width: 790, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 112, letterSpacing: -4}}>
-        −{formatted} €
+        {copy.counter(formatted)}
       </div>
       <div
         style={{
@@ -556,137 +557,141 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
         <div style={{display: "flex", alignItems: "center", gap: 19}}>
           <div style={{width: 58, height: 58, borderRadius: "50%", backgroundColor: "#213B5B", color: COLORS.cream, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "ManropeDeck, sans-serif", fontSize: 21, fontWeight: 800}}>JP</div>
           <div>
-            <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 24, fontWeight: 800}}>Jean-Pierre Durand</div>
-            <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: "#687080"}}>APPEL ENTRANT</div>
+            <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 24, fontWeight: 800}}>{copy.caller}</div>
+            <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: "#687080"}}>{copy.callState}</div>
           </div>
         </div>
-        <div style={{marginTop: 20, fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800, transform: `scale(${1 + questionPop * 0.12})`, transformOrigin: "left center"}}>« Quel virement ? »</div>
+        <div style={{marginTop: 20, fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800, transform: `scale(${1 + questionPop * 0.12})`, transformOrigin: "left center"}}>{copy.question}</div>
       </div>
     </Shell>
   );
 };
 
-const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const CostScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
   const fps = useVideoConfig().fps;
+  const copy = COPY[lang].story.cost;
   const amount = Math.round(interpolate(frame, [6, 48], [0, 516], {extrapolateRight: "clamp"}));
   const growth = interpolate(frame, [34, 64], [0, 1], {extrapolateRight: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>06 — LE COÛT</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       <div style={{position: "absolute", left: 160, top: 193, ...displayStyle, fontSize: 130, color: COLORS.yellow, ...enterStyle(frame, fps)}}>
-        35 000 €
+        {copy.amount}
       </div>
       <div style={{position: "absolute", left: 160, top: 345, color: COLORS.cream, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
-        COÛT POUR ARKOS SYSTEMS
+        {copy.label}
       </div>
       <div style={{position: "absolute", left: 190, top: 420, width: 730, height: 2, backgroundColor: "#485162"}} />
       <div style={{position: "absolute", left: 190, top: 489, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.35}}>
-        En France, la fraude par
+        {copy.explanation[0]}
         <br />
-        manipulation explose.
+        {copy.explanation[1]}
       </div>
       <div style={{position: "absolute", right: 210, top: 220, width: 780, height: 540, padding: 50, borderRadius: 24, backgroundColor: COLORS.panel, opacity: growth, transform: `translateY(${(1 - growth) * 40}px)`}}>
-        <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 2}}>FRANCE · 2025</div>
+        <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 2}}>{copy.regionAndYear}</div>
         <div style={{marginTop: 34, display: "flex", alignItems: "baseline", gap: 18}}>
-          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 105, fontWeight: 800, color: COLORS.cream}}>{amount} M€</div>
-          <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 26, color: COLORS.muted}}>fraude par manipulation</div>
+          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: lang === "en" ? 92 : 105, fontWeight: 800, color: COLORS.cream}}>{copy.nationalAmount(amount)}</div>
+          <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 26, color: COLORS.muted}}>{copy.nationalLabel}</div>
         </div>
         <div style={{height: 1, width: "100%", backgroundColor: "#465064", margin: "35px 0"}} />
         <div style={{display: "flex", alignItems: "center", gap: 28}}>
-          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, color: COLORS.yellow, fontSize: 84}}>+34 %</div>
-          <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 28, color: COLORS.cream}}>en un an</div>
+          <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, color: COLORS.yellow, fontSize: 84}}>{copy.growth}</div>
+          <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 28, color: COLORS.cream}}>{copy.growthLabel}</div>
         </div>
         <div style={{position: "absolute", bottom: 32, right: 44, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 17, letterSpacing: 0.7}}>
-          SOURCE : BANQUE DE FRANCE, RAPPORT OSMP 2025
+          {copy.source}
         </div>
       </div>
     </Shell>
   );
 };
 
-const RewindScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const RewindScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
+  const copy = COPY[lang].story.rewind;
+  const mail = COPY[lang].story.mail;
   const fps = useVideoConfig().fps;
   const revealAt = 30;
   const reveal = interpolate(frame, [revealAt, revealAt + 22], [0, 1], {extrapolateRight: "clamp"});
   const flicker = frame < revealAt ? 0.55 + (frame % 4) * 0.035 : 0.2;
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
-      <StoryLabel>07 — LA BONNE DÉCISION</StoryLabel>
+      <StoryLabel>{copy.chapter}</StoryLabel>
       {frame < revealAt && (
         <>
           <div style={{position: "absolute", left: 344, top: 180, width: 1232, height: 590, border: `2px solid ${COLORS.yellow}`, borderRadius: 18, backgroundColor: COLORS.panel, overflow: "hidden", transform: `scaleX(${frame % 8 < 4 ? -1 : 1})`, opacity: flicker}}>
             <div style={{height: 68, backgroundColor: "#20293B", padding: "22px 34px", fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 19}}>↶ REWIND · 09:31</div>
             <div style={{padding: "45px 68px", fontFamily: "ArchivoDeck, sans-serif", color: COLORS.cream, fontSize: 48, fontWeight: 800}}>
-              Virement confidentiel
+              {mail.subject}
               <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 27, fontWeight: 500, marginTop: 35, lineHeight: 1.5}}>
-                Jean-Pierre Durand &lt;jp.durand.pdg@gmail.com&gt;
+                {mail.sender} &lt;{mail.email}&gt;
                 <br />
-                Je suis en réunion avec nos avocats…
+                {mail.preview}
               </div>
             </div>
             <div style={{position: "absolute", inset: 0, background: "repeating-linear-gradient(to bottom, rgba(0,0,0,.10) 0px, rgba(0,0,0,.10) 2px, transparent 2px, transparent 6px)", pointerEvents: "none"}} />
           </div>
-          <div style={{position: "absolute", left: 835, bottom: 142, fontFamily: "JetBrainsDeck, monospace", fontSize: 23, color: COLORS.yellow, letterSpacing: 2}}>REMBOBINER…</div>
+          <div style={{position: "absolute", left: 835, bottom: 142, fontFamily: "JetBrainsDeck, monospace", fontSize: 23, color: COLORS.yellow, letterSpacing: 2}}>{copy.rewind}</div>
           <div style={{position: "absolute", left: 900, bottom: 96, width: 120, height: 4, backgroundColor: COLORS.yellow, transform: `scaleX(${1 - frame / revealAt})`, transformOrigin: "right"}} />
         </>
       )}
       <div style={{position: "absolute", left: 0, right: 0, top: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", opacity: reveal, transform: `scale(${0.92 + reveal * 0.08})`}}>
         <DeckLogo page={1} style={{width: 560, height: 210, marginBottom: 35}} />
         <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontStretch: "125%", fontSize: 58, lineHeight: 1.05, color: COLORS.cream, textAlign: "center", maxWidth: 1200, ...enterStyle(Math.max(0, frame - revealAt), fps)}}>
-          On bloque l'arnaque par mail
+          {copy.headline}
           <br />
-          à la <span style={{color: COLORS.yellow}}>source.</span>
+          <span style={{color: COLORS.yellow}}>{copy.tagline}</span>
         </div>
-        <div style={{marginTop: 34, color: COLORS.yellow, fontFamily: "JetBrainsDeck, monospace", fontSize: 18, letterSpacing: 2}}>LE MAIL EST BLOQUÉ AVANT LE CLIC</div>
+        <div style={{marginTop: 34, color: COLORS.yellow, fontFamily: "JetBrainsDeck, monospace", fontSize: 18, letterSpacing: 2}}>{copy.footer}</div>
       </div>
       <div style={{position: "absolute", inset: 0, background: "repeating-linear-gradient(to bottom, rgba(0,0,0,.035) 0px, rgba(0,0,0,.035) 1px, transparent 1px, transparent 5px)", pointerEvents: "none", opacity: frame < revealAt ? 0.8 : 0}} />
     </Shell>
   );
 };
 
-const HookScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
+const HookScene = ({frame, durationFrames, lang}: {frame: number; durationFrames: number; lang: PitchLang}) => {
+  const copy = COPY[lang].story.hook;
   const shake = frame < 18 ? Math.sin(frame * 2.7) * (18 - frame) * 0.9 : 0;
   const slam = spring({frame: frame - 3, fps: 30, config: {damping: 10, stiffness: 170}});
   const rewind = interpolate(frame, [durationFrames - 23, durationFrames - 1], [0, 1], {extrapolateLeft: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <div style={{position:"absolute",inset:0,background:`linear-gradient(112deg, ${COLORS.navy} 0 53%, #151F32 53% 100%)`,transform:`translateX(${rewind*180}px)`}} />
-      <div style={{position:"absolute",left:160,top:170,color:COLORS.red,fontFamily:"JetBrainsDeck, monospace",fontSize:24,letterSpacing:4,opacity:.8}}>VIREMENT · ARKOS SYSTEMS</div>
+      <div style={{position:"absolute",left:160,top:170,color:COLORS.red,fontFamily:"JetBrainsDeck, monospace",fontSize:24,letterSpacing:4,opacity:.8}}>{copy.eyebrow}</div>
       <div style={{position:"absolute",left:142,top:300,width:1200,fontFamily:"ArchivoDeck, sans-serif",fontWeight:800,fontSize:154,color:COLORS.cream,letterSpacing:-7,transform:`translate(${shake}px,${(1-slam)*90}px) scale(${.72+slam*.28}) rotate(${shake*.025}deg)`,textShadow:frame<18?"5px 0 #EE6D6A, -5px 0 #58B8E5":"none"}}>
-        −35 000 €
+        {copy.amount}
       </div>
-      <div style={{position:"absolute",left:160,top:520,fontFamily:"ArchivoDeck, sans-serif",fontSize:58,fontWeight:800,color:COLORS.yellow,opacity:interpolate(frame,[18,30],[0,1],{extrapolateRight:"clamp"})}}>PARTIS EN UN SEUL CLIC.</div>
+      <div style={{position:"absolute",left:160,top:520,fontFamily:"ArchivoDeck, sans-serif",fontSize:58,fontWeight:800,color:COLORS.yellow,opacity:interpolate(frame,[18,30],[0,1],{extrapolateRight:"clamp"})}}>{copy.headline}</div>
       <div style={{position:"absolute",right:155,top:710,width:430,height:170,borderRadius:24,background:COLORS.cream,color:COLORS.navy,padding:28,transform:`translateX(${interpolate(frame,[20,45],[600,0],{extrapolateRight:"clamp"})}px)`}}>
-        <div style={{fontFamily:"JetBrainsDeck, monospace",fontSize:18}}>VIREMENT CONFIDENTIEL</div>
-        <div style={{marginTop:25,height:58,borderRadius:12,background:COLORS.yellow,display:"grid",placeItems:"center",fontFamily:"ManropeDeck, sans-serif",fontSize:22,fontWeight:800}}>VALIDER LE VIREMENT</div>
+        <div style={{fontFamily:"JetBrainsDeck, monospace",fontSize:18}}>{copy.transfer}</div>
+        <div style={{marginTop:25,height:58,borderRadius:12,background:COLORS.yellow,display:"grid",placeItems:"center",fontFamily:"ManropeDeck, sans-serif",fontSize:22,fontWeight:800}}>{copy.action}</div>
       </div>
       <div style={{position:"absolute",left:0,right:0,bottom:0,height:150,background:COLORS.yellow,transform:`translateY(${(1-rewind)*180}px) skewY(-5deg)`,display:"flex",alignItems:"center",paddingLeft:140,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:28,letterSpacing:3}}>
-        RETOUR AU DÉBUT · LUNDI, 7 H 02
+        {copy.rewind}
       </div>
       <div style={{position:"absolute",inset:0,pointerEvents:"none",opacity:frame<18?.17:0,background:"repeating-linear-gradient(to bottom, transparent 0 5px, rgba(255,255,255,.55) 6px 7px)"}}/>
     </Shell>
   );
 };
 
-export const StoryScene = ({id, durationFrames}: StorySceneProps) => {
+export const StoryScene = ({id, durationFrames, lang}: StorySceneProps) => {
   const frame = useCurrentFrame();
   switch (id) {
     case "hook-01":
-      return <HookScene frame={frame} durationFrames={durationFrames} />;
+      return <HookScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-01-alarm":
-      return <AlarmScene frame={frame} durationFrames={durationFrames} />;
+      return <AlarmScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-02-routine":
-      return <RoutineScene frame={frame} durationFrames={durationFrames} />;
+      return <RoutineScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-03-mail":
-      return <MailScene frame={frame} durationFrames={durationFrames} />;
+      return <MailScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-04-click":
-      return <ClickScene frame={frame} durationFrames={durationFrames} />;
+      return <ClickScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-05-loss":
-      return <LossScene frame={frame} durationFrames={durationFrames} />;
+      return <LossScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-06-cost":
-      return <CostScene frame={frame} durationFrames={durationFrames} />;
+      return <CostScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     case "story-07-rewind":
-      return <RewindScene frame={frame} durationFrames={durationFrames} />;
+      return <RewindScene frame={frame} durationFrames={durationFrames} lang={lang} />;
     default:
       return null;
   }
