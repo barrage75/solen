@@ -73,7 +73,7 @@ const demoFocus:Record<string,DemoFocus>={
  "pdg-mail-verdict":{center:[.71,.45],zoom:1.8,regions:[{x:.48,y:.20,w:.20,h:.09},{x:.77,y:.29,w:.21,h:.43}],label:"FAUX PDG · FRAUDE PROBABLE",labelRegion:1},
  "pdg-techniques":{center:[.70,.72],zoom:2.1,regions:[{x:.77,y:.812,w:.05,h:.03},{x:.815,y:.812,w:.045,h:.03},{x:.77,y:.84,w:.14,h:.03}],label:""},
  "daf-verdict":{center:[.88,.37],zoom:2,regions:[{x:.775,y:.325,w:.21,h:.09}],label:"AUCUNE ANOMALIE"},
- "attack-summary":{center:[.50,.287],zoom:1.8,regions:[{x:.06,y:.235,w:.85,h:.105}],label:"26/26 · 0 · 19 MS"},
+ "attack-summary":{center:[.50,.287],zoom:1.22,regions:[{x:.099,y:.242,w:.263,h:.085},{x:.382,y:.242,w:.249,h:.085},{x:.638,y:.242,w:.262,h:.085}],label:""},
  "try-lookalike-example":{center:[.75,.56],zoom:2,regions:[{x:.625,y:.52,w:.25,h:.09}],label:"ADRESSE SOSIE · REPÉRÉE"},
 };
 const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
@@ -81,19 +81,31 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
  const {fps}=useVideoConfig();
  const focus=demoFocus[scene.sceneId];
  const techniques=scene.sceneId==="pdg-techniques";
+ const attacks=scene.sceneId==="attack-summary";
  const focusCenterX=techniques?interpolate(frame,[3,28,48,60,104],[.70,.735,.76,.75,.70],{extrapolateRight:"clamp"}):focus.center[0];
- const focusCenterY=techniques?interpolate(frame,[3,28,48,60,104],[.70,.72,.74,.73,.70],{extrapolateRight:"clamp"}):focus.center[1];
+ const focusCenterY=techniques?interpolate(frame,[3,28,48,60,104],[.70,.72,.74,.73,.70],{extrapolateRight:"clamp"}):attacks?.55:focus.center[1];
  const width=1450;
  const height=906;
  const zoom=spring({frame:frame-12,fps,config:{mass:.65,damping:24,stiffness:300}});
  const scale=1.06+(focus.zoom-1.06)*zoom;
  const driftProgress=interpolate(frame,[24,scene.sceneFrames-8],[0,1],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});
- const driftX=(focusCenterX<.5?-1:1)*80*driftProgress;
- const driftY=(focusCenterY<.5?-1:1)*50*driftProgress;
- const whip=interpolate(frame,[0,8,scene.sceneFrames-8,scene.sceneFrames-1],[72,0,0,-86],{extrapolateRight:"clamp"});
+ const driftX=attacks?0:(focusCenterX<.5?-1:1)*80*driftProgress;
+ const driftY=attacks?140*driftProgress:(focusCenterY<.5?-1:1)*50*driftProgress;
+ const whip=attacks?0:interpolate(frame,[0,8,scene.sceneFrames-8,scene.sceneFrames-1],[72,0,0,-86],{extrapolateRight:"clamp"});
  const clamp=(value:number,min:number,max:number)=>Math.min(max,Math.max(min,value));
- const translateX=clamp(width/2-focusCenterX*width*scale+driftX+whip,width*(1-scale),0);
- const translateY=clamp(height/2-focusCenterY*height*scale+driftY,height*(1-scale),0);
+ const bounds=focus.regions.reduce((result,region)=>({
+  left:Math.min(result.left,region.x),
+  top:Math.min(result.top,region.y),
+  right:Math.max(result.right,region.x+region.w),
+  bottom:Math.max(result.bottom,region.y+region.h),
+ }),{left:1,top:1,right:0,bottom:0});
+ const inset=.005;
+ const minX=Math.max(width*(1-scale),-Math.max(0,bounds.left-inset)*width*scale);
+ const maxX=Math.min(0,width*(1-Math.min(1,bounds.right+inset)*scale));
+ const minY=Math.max(height*(1-scale),-Math.max(0,bounds.top-inset)*height*scale);
+ const maxY=Math.min(0,height*(1-Math.min(1,bounds.bottom+inset)*scale));
+ const translateX=clamp(width/2-focusCenterX*width*scale+driftX+whip,minX,maxX);
+ const translateY=clamp(height/2-focusCenterY*height*scale+driftY,minY,maxY);
  const projected=focus.regions.map((region)=>({
   left:region.x*width*scale+translateX,
   top:region.y*height*scale+translateY,
@@ -113,8 +125,16 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
     {focus.regions.map((region,index)=>{
       const start=[3,28,48][index]??0;
       const end=[21,40,74][index]??scene.sceneFrames;
-      const opacity=techniques?interpolate(frame,[start,start+2,end-2,end],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"}):1;
-      return <div key={index} style={{position:"absolute",left:`${region.x*100}%`,top:`${region.y*100}%`,width:`${region.w*100}%`,height:`${region.h*100}%`,opacity,border:`2px solid ${COLORS.yellow}`,background:techniques?"rgba(255,207,51,.18)":"transparent",boxShadow:"0 0 22px rgba(255,207,51,.58)",borderRadius:6,pointerEvents:"none"}}/>;
+      const attackStart=index===0?38:106;
+      const attackEnd=index===0?84:138;
+      const attackPulse=.65+.35*Math.sin((frame-attackStart)*Math.PI/24)**2;
+      const opacity=techniques
+        ?interpolate(frame,[start,start+2,end-2,end],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"})
+        :attacks&&index<2
+          ?interpolate(frame,[attackStart,attackStart+3,attackEnd,attackEnd+6],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"})*attackPulse
+          :attacks?0:1;
+      const pop=attacks&&index<2?spring({frame:frame-attackStart,fps,config:{mass:.45,damping:12,stiffness:220}}):1;
+      return <div key={index} style={{position:"absolute",left:`${region.x*100}%`,top:`${region.y*100}%`,width:`${region.w*100}%`,height:`${region.h*100}%`,opacity,border:`2px solid ${COLORS.yellow}`,background:techniques||attacks?"rgba(255,207,51,.18)":"transparent",boxShadow:"0 0 22px rgba(255,207,51,.58)",borderRadius:6,pointerEvents:"none",transform:attacks&&index<2?`scale(${.9+.1*pop})`:undefined,transformOrigin:"center"}}/>;
     })}
     </div>
     {focus.label&&<div style={{position:"absolute",left:labelLeft,top:labelY,maxWidth:340,padding:"8px 12px",background:COLORS.yellow,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:15,fontWeight:700,letterSpacing:.3}}>{focus.label}</div>}

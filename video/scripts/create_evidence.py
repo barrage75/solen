@@ -144,7 +144,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch6"
+    out = Path.home() / "profil" / "video-check" / "pitch7"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -166,12 +166,14 @@ def main():
             )
         )
         if line["id"].startswith("demo-"):
-            line_frames.append(
-                (
-                    f"demo-70-{line['id']}.png",
-                    min(end - 1, start + round(voice_frames * 0.7)),
+            demo_index = int(line["id"].split("-")[1])
+            for percentage in (30, 50, 70, 90):
+                line_frames.append(
+                    (
+                        f"demo-{demo_index:02d}-{line['id']}-p{percentage:02d}.png",
+                        min(end - 1, start + round(voice_frames * percentage / 100)),
+                    )
                 )
-            )
         boundaries = [
             {
                 "text": word["text"],
@@ -252,6 +254,30 @@ def main():
             "-frames:v",
             "1",
             str(contact_sheet),
+        ],
+        check=True,
+    )
+
+    demo_contact_sheet = out / "demo-samples-contact-sheet.png"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-nostdin",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-framerate",
+            "1",
+            "-pattern_type",
+            "glob",
+            "-i",
+            str(frames_dir / "demo-*-p*.png"),
+            "-vf",
+            "scale=480:270,tile=4x8:padding=12:margin=12:color=0x0A0F20",
+            "-frames:v",
+            "1",
+            str(demo_contact_sheet),
         ],
         check=True,
     )
