@@ -48,7 +48,7 @@ export const DEMO_SOURCE_SCENES = [
   ["pdg-mail-verdict", 17.89, 21.487],
   ["pdg-techniques", 21.523, 24.952],
   ["daf-verdict", 27.356, 30.866],
-  ["attack-summary", 35.464, 42.557],
+  ["attack-summary", 35.464, 38.565],
   ["try-lookalike-example", 48.429, 51.806],
 ] as const;
 

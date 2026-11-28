@@ -3,11 +3,115 @@ import math
 import subprocess
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
 OUTPUT_VIDEO = REPO / "solen" / "docs" / "solen-pitch-fr.mp4"
 VOICE_MANIFEST_PATH = ROOT / "src" / "voice-manifest.json"
 FPS = 30
+AUDIT_FPS = 2
+AUDIT_WIDTH = 480
+AUDIT_HEIGHT = 270
+
+
+def safe_area_audit(out):
+    command = [
+        "ffmpeg",
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-i",
+        str(OUTPUT_VIDEO),
+        "-vf",
+        f"fps={AUDIT_FPS},scale={AUDIT_WIDTH}:{AUDIT_HEIGHT},format=rgb24",
+        "-an",
+        "-f",
+        "rawvideo",
+        "pipe:1",
+    ]
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    frame_bytes = AUDIT_WIDTH * AUDIT_HEIGHT * 3
+    edge = 10
+    hits = []
+    frame_index = 0
+    while True:
+        raw = bytearray()
+        while len(raw) < frame_bytes:
+            chunk = process.stdout.read(frame_bytes - len(raw))
+            if not chunk:
+                break
+            raw.extend(chunk)
+        if not raw:
+            break
+        if len(raw) != frame_bytes:
+            raise RuntimeError("Incomplete frame from safe-area sample stream")
+        pixels = np.frombuffer(raw, dtype=np.uint8).reshape(
+            AUDIT_HEIGHT, AUDIT_WIDTH, 3
+        )
+        corners = np.stack(
+            (
+                pixels[:20, :20],
+                pixels[:20, -20:],
+                pixels[-20:, :20],
+                pixels[-20:, -20:],
+            )
+        )
+        background = np.empty_like(pixels, dtype=np.float32)
+        middle_x = AUDIT_WIDTH // 2
+        middle_y = AUDIT_HEIGHT // 2
+        for y_slice, x_slice, corner in (
+            (slice(0, middle_y), slice(0, middle_x), corners[0]),
+            (slice(0, middle_y), slice(middle_x, AUDIT_WIDTH), corners[1]),
+            (slice(middle_y, AUDIT_HEIGHT), slice(0, middle_x), corners[2]),
+            (slice(middle_y, AUDIT_HEIGHT), slice(middle_x, AUDIT_WIDTH), corners[3]),
+        ):
+            background[y_slice, x_slice] = np.median(corner.reshape(-1, 3), axis=0)
+        foreground = np.max(
+            np.abs(pixels.astype(np.int16) - background.astype(np.int16)), axis=2
+        ) > 8
+        checks = (
+            ("top", foreground[:edge, :], 0, 0),
+            ("left", foreground[:, :edge], 0, 0),
+            # The concentric brand arcs intentionally touch the lower-right edge.
+            ("right", foreground[:140, -edge:], AUDIT_WIDTH - edge, 0),
+        )
+        for name, region, x_offset, y_offset in checks:
+            ys, xs = np.nonzero(region)
+            if len(xs):
+                hits.append(
+                    {
+                        "timeSeconds": round(frame_index / AUDIT_FPS, 2),
+                        "edge": name,
+                        "pixelCount": int(len(xs)),
+                        "bboxAt480x270": [
+                            int(xs.min() + x_offset),
+                            int(ys.min() + y_offset),
+                            int(xs.max() + x_offset),
+                            int(ys.max() + y_offset),
+                        ],
+                    }
+                )
+        frame_index += 1
+    stderr = process.stderr.read()
+    if process.wait() != 0:
+        raise RuntimeError(stderr.decode("utf-8", errors="replace"))
+    report = {
+        "sampleIntervalSeconds": 1 / AUDIT_FPS,
+        "edgeWidthPixelsAt1920x1080": edge * 4,
+        "backgroundReference": "median of the four 20x20 frame corners",
+        "excludedRegion": "right edge below y=600 px for intentional concentric arcs",
+        "hits": hits,
+    }
+    path = out / "safe-area-audit.json"
+    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    print(f"Safe-area audit: {len(hits)} hits → {path}")
+    for hit in hits:
+        print(
+            f"{hit['timeSeconds']:.2f}s {hit['edge']}: "
+            f"{hit['pixelCount']} pixels at {hit['bboxAt480x270']}"
+        )
 
 
 def frames(seconds):
@@ -40,7 +144,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch4"
+    out = Path.home() / "profil" / "video-check" / "pitch5"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -151,6 +255,8 @@ def main():
         ],
         check=True,
     )
+
+    safe_area_audit(out)
 
     subprocess.run(
         [

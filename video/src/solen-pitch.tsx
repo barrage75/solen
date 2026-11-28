@@ -73,7 +73,7 @@ const demoFocus:Record<string,DemoFocus>={
  "pdg-mail-verdict":{center:[.71,.45],zoom:1.8,regions:[{x:.48,y:.20,w:.20,h:.09},{x:.77,y:.29,w:.21,h:.43}],label:"FAUX PDG · FRAUDE PROBABLE",labelRegion:1},
  "pdg-techniques":{center:[.87,.84],zoom:2.1,regions:[{x:.775,y:.79,w:.21,h:.105}],label:"AUTORITÉ · SECRET · HIÉRARCHIE"},
  "daf-verdict":{center:[.88,.37],zoom:2,regions:[{x:.775,y:.325,w:.21,h:.09}],label:"AUCUNE ANOMALIE"},
- "attack-summary":{center:[.50,.10],zoom:1.8,regions:[{x:.095,y:.015,w:.82,h:.105}],label:"26/26 ATTAQUES · 0 FAUSSE ALERTE"},
+ "attack-summary":{center:[.50,.287],zoom:1.8,regions:[{x:.06,y:.235,w:.85,h:.105}],label:"26/26 · 0 · 19 MS"},
  "try-lookalike-example":{center:[.75,.56],zoom:2,regions:[{x:.625,y:.52,w:.25,h:.09}],label:"ADRESSE SOSIE · REPÉRÉE"},
 };
 const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
@@ -83,11 +83,14 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
  const width=1450;
  const height=906;
  const zoom=spring({frame:frame-12,fps,config:{mass:.65,damping:24,stiffness:300}});
- const scale=1+(focus.zoom-1)*zoom;
- const drift=interpolate(frame,[24,scene.sceneFrames-8],[0,18],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});
+ const scale=1.06+(focus.zoom-1.06)*zoom;
+ const driftProgress=interpolate(frame,[24,scene.sceneFrames-8],[0,1],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});
+ const driftX=(focus.center[0]<.5?-1:1)*80*driftProgress;
+ const driftY=(focus.center[1]<.5?-1:1)*50*driftProgress;
  const whip=interpolate(frame,[0,8,scene.sceneFrames-8,scene.sceneFrames-1],[72,0,0,-86],{extrapolateRight:"clamp"});
- const translateX=width/2-focus.center[0]*width*scale+drift+whip;
- const translateY=height/2-focus.center[1]*height*scale;
+ const clamp=(value:number,min:number,max:number)=>Math.min(max,Math.max(min,value));
+ const translateX=clamp(width/2-focus.center[0]*width*scale+driftX+whip,width*(1-scale),0);
+ const translateY=clamp(height/2-focus.center[1]*height*scale+driftY,height*(1-scale),0);
  const projected=focus.regions.map((region)=>({
   left:region.x*width*scale+translateX,
   top:region.y*height*scale+translateY,
@@ -108,7 +111,7 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
     </div>
     <div style={{position:"absolute",left:labelLeft,top:labelY,maxWidth:340,padding:"8px 12px",background:COLORS.yellow,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:15,fontWeight:700,letterSpacing:.3}}>{focus.label}</div>
    </div>
-   <div style={{position:"absolute",left:74,top:96,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
+   <div style={{position:"absolute",left:278,top:36,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
   </div>
  </Sequence>;
 };
@@ -116,7 +119,24 @@ const Demo=()=> <Sequence from={DEMO_START_FRAME} durationInFrames={DEMO_SCHEDUL
 
 const EndTagline=()=>{const frame=useCurrentFrame();return <div style={{position:"absolute",left:110,top:590,fontFamily:"ManropeDeck, sans-serif",fontSize:43,fontWeight:700,color:COLORS.cream}}>{(END_CARD_LINE.wordBoundaries??[]).map((word,i)=>{const start=Math.round(word.startSeconds*30);const progress=interpolate(frame,[start,start+5],[0,1],{extrapolateRight:"clamp"});const focus=word.text.toLocaleLowerCase("fr").replace(/[.,!?;:]/g,"")==="source";return <span key={`${word.text}-${i}`} style={{display:"inline-block",marginRight:"0.2em",opacity:progress,color:focus?COLORS.yellow:COLORS.cream,transform:`translateY(${(1-progress)*12}px) scale(${.9+progress*.1})`}}>{word.text.trim()}</span>})}</div>};
 
-const EndCard=()=>{const frame=useCurrentFrame();const fps=useVideoConfig().fps;const opacity=interpolate(frame,[END_CARD_DURATION_FRAMES-END_CARD_FADE_FRAMES,END_CARD_DURATION_FRAMES-1],[1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});const reveal=spring({frame:frame-6,fps,config:{damping:14,stiffness:140}});const push=interpolate(frame,[0,END_CARD_DURATION_FRAMES],[1,1.05],{extrapolateRight:"clamp"});const drift=interpolate(frame,[0,END_CARD_DURATION_FRAMES],[20,8],{extrapolateRight:"clamp"});return <div style={{position:"absolute",inset:0,opacity,background:COLORS.navy,color:COLORS.cream,overflow:"hidden",transform:`translateX(${drift}px) scale(${push})`,transformOrigin:"center"}}><BrandArcs opacity={.35}/><div style={{position:"absolute",left:100,top:80,opacity:reveal,transform:`translateY(${(1-reveal)*24}px)`}}><DeckLogo page={1} style={{width:380,height:150}}/></div><div style={{position:"absolute",left:110,top:320,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:25,letterSpacing:3,opacity:reveal}}>ESSAYEZ-LA</div><div style={{position:"absolute",left:100,top:410,fontFamily:"ArchivoDeck, sans-serif",fontSize:108,fontWeight:800,whiteSpace:"nowrap",opacity:reveal,transform:`translateY(${(1-reveal)*30}px)`}}>solen-demo.vercel.app</div><EndTagline/><div style={{position:"absolute",left:110,bottom:80,fontFamily:"JetBrainsDeck, monospace",fontSize:20,color:COLORS.muted}}>HACKATHON FINAXYS · BUILD WHAT’S NEXT</div><Voice line={END_CARD_LINE}/></div>};
+const EndCard=()=>{
+ const frame=useCurrentFrame();const fps=useVideoConfig().fps;
+ const opacity=interpolate(frame,[END_CARD_DURATION_FRAMES-END_CARD_FADE_FRAMES,END_CARD_DURATION_FRAMES-1],[1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});
+ const reveal=spring({frame:frame-6,fps,config:{damping:14,stiffness:140}});
+ const push=interpolate(frame,[0,END_CARD_DURATION_FRAMES],[1,1.05],{extrapolateRight:"clamp"});
+ const drift=interpolate(frame,[0,END_CARD_DURATION_FRAMES],[20,8],{extrapolateRight:"clamp"});
+ return <div style={{position:"absolute",inset:0,opacity,background:COLORS.navy,overflow:"hidden"}}>
+  <div style={{position:"absolute",inset:0,color:COLORS.cream,overflow:"hidden",transform:`translateX(${drift}px) scale(${push})`,transformOrigin:"center"}}>
+   <BrandArcs opacity={.35}/>
+   <div style={{position:"absolute",left:100,top:80,opacity:reveal,transform:`translateY(${(1-reveal)*24}px)`}}><DeckLogo page={1} style={{width:380,height:150}}/></div>
+   <div style={{position:"absolute",left:110,top:320,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:25,letterSpacing:3,opacity:reveal}}>ESSAYEZ-LA</div>
+   <div style={{position:"absolute",left:100,top:410,fontFamily:"ArchivoDeck, sans-serif",fontSize:108,fontWeight:800,whiteSpace:"nowrap",opacity:reveal,transform:`translateY(${(1-reveal)*30}px)`}}>solen-demo.vercel.app</div>
+   <EndTagline/>
+   <div style={{position:"absolute",left:110,bottom:80,fontFamily:"JetBrainsDeck, monospace",fontSize:20,color:COLORS.muted}}>HACKATHON FINAXYS · BUILD WHAT’S NEXT</div>
+   <Voice line={END_CARD_LINE}/>
+  </div>
+ </div>;
+};
 
 const Music=()=>{const frame=useCurrentFrame();const click=STORY_SCHEDULE.find(x=>x.line.id==="story-04-click");const loss=STORY_SCHEDULE.find(x=>x.line.id==="story-05-loss");const blackout=click&&loss&&frame>=click.startFrame+click.voiceFrames-5&&frame<loss.startFrame+10;return <Audio src={staticFile("audio/music-bed.wav")} volume={blackout?0:1}/>};
 

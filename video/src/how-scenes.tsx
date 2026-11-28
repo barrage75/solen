@@ -24,7 +24,7 @@ const Profile = ({frame}: {frame: number}) => {
   return (
     <>
       <StoryLabel>PROFIL FOURNISSEUR · NUVIO CLOUD</StoryLabel>
-      <div style={{...panel, left: 90, top: 190, width: 950, height: 232, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
+      <div style={{...panel, left: 150, top: 190, width: 950, height: 232, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
         <div style={{position:"relative",width:950,height:160,overflow:"hidden"}}>
           <div style={{position:"absolute",inset:0,transform:`scale(${zoom})`,transformOrigin:"center 112px"}}>
             <img alt="Capture réelle du profil fournisseur Nuvio Cloud" src={staticFile("images/supplier-nuvio-table.png")} style={{position:"absolute",inset:0,width:950,height:160,objectFit:"fill"}} />
@@ -35,7 +35,7 @@ const Profile = ({frame}: {frame: number}) => {
           {["nuvio-cloud.fr", "FR03 •••• •••• 5530", "04 72 18 52 30"].map((value, i) => <Pop key={value} frame={frame-i*8}><span style={{display:"block",padding:"12px 14px",background:COLORS.navy,border:`1px solid ${COLORS.yellow}`,borderRadius:12,fontFamily:"JetBrainsDeck, monospace",fontSize:16,color:COLORS.cream}}>{value}</span></Pop>)}
         </div>
       </div>
-      <div style={{position:"absolute",right:110,top:260,width:660,...panel,padding:34}}>
+      <div style={{position:"absolute",right:220,top:260,width:660,...panel,padding:34}}>
         <div style={{color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:20}}>UN PROFIL CONSTRUIT PAR LES PAIEMENTS</div>
         <div style={{fontFamily:"ArchivoDeck, sans-serif",fontSize:54,fontWeight:800,marginTop:24}}>Nuvio Cloud</div>
         <div style={{fontFamily:"ManropeDeck, sans-serif",fontSize:23,lineHeight:1.8,marginTop:24,whiteSpace:"nowrap"}}><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>IBAN de référence</span><b style={{color:COLORS.yellow}}>FR03 •••• •••• 5530</b></div><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>Téléphone</span><b>04 72 18 52 30</b></div><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>Habituel</span><b>15 000 €–20 000 €</b></div></div>

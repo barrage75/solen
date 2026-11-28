@@ -116,7 +116,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
       <div
         style={{
           position: "absolute",
-          left: 96,
+          left: 160,
           top: 190,
           width: 640,
           ...displayStyle,
@@ -131,7 +131,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
       <div
         style={{
           position: "absolute",
-          left: 100,
+          left: 160,
           top: 510,
           color: COLORS.muted,
           fontFamily: "ManropeDeck, sans-serif",
@@ -250,7 +250,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
       <div
         style={{
           position: "absolute",
-          left: 104,
+          left: 180,
           top: 202,
           color: COLORS.yellow,
           fontFamily: "ArchivoDeck, sans-serif",
@@ -264,7 +264,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
       <div
         style={{
           position: "absolute",
-          left: 116,
+          left: 180,
           top: 445,
           ...displayStyle,
           fontSize: 88,
@@ -277,7 +277,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
       <div
         style={{
           position: "absolute",
-          left: 120,
+          left: 180,
           top: 555,
           color: COLORS.muted,
           fontFamily: "JetBrainsDeck, monospace",
@@ -308,7 +308,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
         style={{
           position: "absolute",
           bottom: 82,
-          left: 118,
+          left: 180,
           color: COLORS.cream,
           fontFamily: "ManropeDeck, sans-serif",
           fontSize: 27,
@@ -340,21 +340,21 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>03 — LE MESSAGE · 9:31</StoryLabel>
-      <div style={{position: "absolute", left: 103, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 160, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
         L'urgence.
         <br />
         Le secret.
         <br />
         <span style={{color: COLORS.yellow}}>35 000 €.</span>
       </div>
-      <div style={{position: "absolute", left: 107, top: 558, width: 475, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
+      <div style={{position: "absolute", left: 160, top: 558, width: 475, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
         Un mail qui semble venir du PDG.
       </div>
       <div
         style={{
           position: "absolute",
           left: 704,
-          top: 160,
+          top: 200,
           width: 1100,
           height: 640,
           backgroundColor: COLORS.cream,
@@ -410,8 +410,8 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
       <div
         style={{
           position: "absolute",
-          top: 70,
-          right: 114,
+          top: 130,
+          right: 220,
           padding: "13px 22px",
           borderRadius: 14,
           backgroundColor: COLORS.yellow,
@@ -438,13 +438,13 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>04 — LE CLIC</StoryLabel>
-      <div style={{position: "absolute", left: 100, top: 202, width: 560, ...displayStyle, fontSize: 66, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 160, top: 202, width: 560, ...displayStyle, fontSize: 66, ...enterStyle(frame, fps)}}>
         Le patron est pressé.
         <br />
         <span style={{color: COLORS.yellow}}>Claire valide.</span>
       </div>
       <Claire style={{position: "absolute", left: 610, top: 415, width: 360, height: 440}} />
-      <div style={{position: "absolute", right: 126, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40}}>
+      <div style={{position: "absolute", right: 190, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40}}>
         <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 1.5}}>VIREMENT À EXÉCUTER</div>
         <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 33, marginTop: 24}}>Bénéficiaire : compte inconnu</div>
         <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted, marginTop: 12}}>Objet : acquisition confidentielle</div>
@@ -528,13 +528,13 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>05 — LE LENDEMAIN</StoryLabel>
-      <div style={{position: "absolute", left: 104, top: 188, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
+      <div style={{position: "absolute", left: 150, top: 188, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         LE VRAI PDG APPELLE
       </div>
-      <div style={{position: "absolute", left: 100, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 150, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
         <span style={{color: COLORS.red}}>35 000 €</span> sont partis.
       </div>
-      <div style={{position: "absolute", left: 105, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
+      <div style={{position: "absolute", left: 150, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>Il n'a jamais envoyé ce mail.</div>
       {bills.map((bill, index) => (
         <div
           key={index}
@@ -559,15 +559,15 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           50 €
         </div>
       ))}
-      <div style={{position: "absolute", left: 128, top: 490, width: 910, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 146, letterSpacing: -5}}>
+      <div style={{position: "absolute", left: 160, top: 600, width: 910, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 146, letterSpacing: -5}}>
         −{formatted} €
       </div>
       <div
         style={{
           position: "absolute",
-          right: 105,
-          top: 454,
-          width: 690,
+          right: 240,
+          top: 600,
+          width: 620,
           padding: "26px 30px",
           borderRadius: 20,
           backgroundColor: COLORS.cream,
@@ -597,10 +597,10 @@ const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>06 — LE COÛT</StoryLabel>
-      <div style={{position: "absolute", left: 102, top: 193, ...displayStyle, fontSize: 130, color: COLORS.yellow, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 160, top: 193, ...displayStyle, fontSize: 130, color: COLORS.yellow, ...enterStyle(frame, fps)}}>
         35 000 €
       </div>
-      <div style={{position: "absolute", left: 108, top: 345, color: COLORS.cream, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
+      <div style={{position: "absolute", left: 160, top: 345, color: COLORS.cream, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         COÛT POUR ARKOS SYSTEMS
       </div>
       <div style={{position: "absolute", left: 104, top: 420, width: 730, height: 2, backgroundColor: "#485162"}} />
@@ -609,7 +609,7 @@ const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
         <br />
         manipulation explose.
       </div>
-      <div style={{position: "absolute", right: 130, top: 220, width: 780, height: 540, padding: 50, borderRadius: 24, backgroundColor: COLORS.panel, opacity: growth, transform: `translateY(${(1 - growth) * 40}px)`}}>
+      <div style={{position: "absolute", right: 210, top: 220, width: 780, height: 540, padding: 50, borderRadius: 24, backgroundColor: COLORS.panel, opacity: growth, transform: `translateY(${(1 - growth) * 40}px)`}}>
         <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 2}}>FRANCE · 2025</div>
         <div style={{marginTop: 34, display: "flex", alignItems: "baseline", gap: 18}}>
           <div style={{fontFamily: "ArchivoDeck, sans-serif", fontSize: 105, fontWeight: 800, color: COLORS.cream}}>{amount} M€</div>
