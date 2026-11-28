@@ -144,7 +144,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch7"
+    out = Path.home() / "profil" / "video-check" / "pitch8"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -167,7 +167,7 @@ def main():
         )
         if line["id"].startswith("demo-"):
             demo_index = int(line["id"].split("-")[1])
-            for percentage in (30, 50, 70, 90):
+            for percentage in (30, 70):
                 line_frames.append(
                     (
                         f"demo-{demo_index:02d}-{line['id']}-p{percentage:02d}.png",
@@ -201,9 +201,15 @@ def main():
         line_frames.append((f"key-{filename}.png", frame))
 
     moment("hook-01", 12, "cold-open-slam")
-    moment("story-01-alarm", 54, "claire-wakes")
+    moment("story-01-alarm", 8, "claire-wake-rest")
+    moment("story-01-alarm", 32, "claire-wake-stretch")
+    moment("story-01-alarm", 54, "claire-wake-mid-motion")
+    moment("story-01-alarm", 92, "claire-wake-seated")
     moment("story-03-mail", 70, "fake-mail-arrives")
-    moment("story-04-click", frames(2.2), "transfer-click")
+    moment("story-04-click", 8, "claire-click-start")
+    moment("story-04-click", 40, "claire-click-hesitation")
+    moment("story-04-click", 66, "claire-click-hand-on-mouse")
+    moment("story-04-click", 78, "claire-click-submit")
     moment("story-05-loss", frames(4.0), "loss-counter-hold")
     moment("story-06-cost", frames(3.2), "national-cost-stat")
     moment("story-07-rewind", 54, "solen-reveal")
@@ -258,6 +264,30 @@ def main():
         check=True,
     )
 
+    claire_contact_sheet = out / "claire-contact-sheet.png"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-nostdin",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-framerate",
+            "1",
+            "-pattern_type",
+            "glob",
+            "-i",
+            str(frames_dir / "key-claire-*.png"),
+            "-vf",
+            "scale=480:270,tile=4x2:padding=12:margin=12:color=0x0A0F20",
+            "-frames:v",
+            "1",
+            str(claire_contact_sheet),
+        ],
+        check=True,
+    )
+
     demo_contact_sheet = out / "demo-samples-contact-sheet.png"
     subprocess.run(
         [
@@ -274,7 +304,7 @@ def main():
             "-i",
             str(frames_dir / "demo-*-p*.png"),
             "-vf",
-            "scale=480:270,tile=4x8:padding=12:margin=12:color=0x0A0F20",
+            "scale=480:270,tile=4x4:padding=12:margin=12:color=0x0A0F20",
             "-frames:v",
             "1",
             str(demo_contact_sheet),

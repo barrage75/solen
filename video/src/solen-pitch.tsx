@@ -65,16 +65,16 @@ const Story=()=> <>{STORY_SCHEDULE.map(x=><Sequence key={x.line.id} from={x.star
 const How=()=> <>{HOW_SCHEDULE.map(x=><Sequence key={x.line.id} from={HOW_START_FRAME+x.startFrame} durationInFrames={x.sceneFrames}><HowScene line={x.line} durationFrames={x.sceneFrames}/><Voice line={x.line}/></Sequence>)}</>;
 
 type FocusBox = {x:number;y:number;w:number;h:number};
-type DemoFocus = {center:[number,number];zoom:number;regions:FocusBox[];label:string;labelRegion?:number};
+type DemoFocus = {center:[number,number];zoom:number;regions:FocusBox[]};
 const demoFocus:Record<string,DemoFocus>={
- "nuvio-infobar":{center:[.60,.36],zoom:2,regions:[{x:.455,y:.315,w:.295,h:.09}],label:"ALERTE · NOUVEAU RIB"},
- "nuvio-verdict-reasons":{center:[.88,.62],zoom:2.05,regions:[{x:.775,y:.585,w:.21,h:.075}],label:"IBAN · 22 UTILISATIONS"},
- "nuvio-callback":{center:[.87,.59],zoom:2.05,regions:[{x:.775,y:.52,w:.21,h:.135}],label:"APPELER · NUMÉRO CONNU"},
- "pdg-mail-verdict":{center:[.71,.45],zoom:1.8,regions:[{x:.48,y:.20,w:.20,h:.09},{x:.77,y:.29,w:.21,h:.43}],label:"FAUX PDG · FRAUDE PROBABLE",labelRegion:1},
- "pdg-techniques":{center:[.70,.72],zoom:2.1,regions:[{x:.77,y:.812,w:.05,h:.03},{x:.815,y:.812,w:.045,h:.03},{x:.77,y:.84,w:.14,h:.03}],label:""},
- "daf-verdict":{center:[.88,.37],zoom:2,regions:[{x:.775,y:.325,w:.21,h:.09}],label:"AUCUNE ANOMALIE"},
- "attack-summary":{center:[.50,.287],zoom:1.22,regions:[{x:.099,y:.242,w:.263,h:.085},{x:.382,y:.242,w:.249,h:.085},{x:.638,y:.242,w:.262,h:.085}],label:""},
- "try-lookalike-example":{center:[.75,.56],zoom:2,regions:[{x:.625,y:.52,w:.25,h:.09}],label:"ADRESSE SOSIE · REPÉRÉE"},
+ "nuvio-infobar":{center:[.60,.36],zoom:2,regions:[{x:.455,y:.315,w:.295,h:.09}]},
+ "nuvio-verdict-reasons":{center:[.88,.62],zoom:2.05,regions:[{x:.775,y:.585,w:.21,h:.075}]},
+ "nuvio-callback":{center:[.87,.59],zoom:2.05,regions:[{x:.775,y:.52,w:.21,h:.135}]},
+ "pdg-mail-verdict":{center:[.71,.45],zoom:1.8,regions:[{x:.48,y:.20,w:.20,h:.09},{x:.77,y:.29,w:.21,h:.43}]},
+ "pdg-techniques":{center:[.70,.72],zoom:2.1,regions:[{x:.77,y:.812,w:.05,h:.03},{x:.815,y:.812,w:.045,h:.03},{x:.77,y:.84,w:.14,h:.03}]},
+ "daf-verdict":{center:[.88,.37],zoom:2,regions:[{x:.775,y:.325,w:.21,h:.09}]},
+ "attack-summary":{center:[.50,.287],zoom:1.22,regions:[{x:.099,y:.242,w:.263,h:.085},{x:.382,y:.242,w:.249,h:.085},{x:.638,y:.242,w:.262,h:.085}]},
+ "try-lookalike-example":{center:[.75,.56],zoom:2,regions:[{x:.625,y:.52,w:.25,h:.09}]},
 };
 const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
  const frame=useCurrentFrame();
@@ -106,38 +106,13 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
  const maxY=Math.min(0,height*(1-Math.min(1,bounds.bottom+inset)*scale));
  const translateX=clamp(width/2-focusCenterX*width*scale+driftX+whip,minX,maxX);
  const translateY=clamp(height/2-focusCenterY*height*scale+driftY,minY,maxY);
- const projected=focus.regions.map((region)=>({
-  left:region.x*width*scale+translateX,
-  top:region.y*height*scale+translateY,
-  width:region.w*width*scale,
-  height:region.h*height*scale,
- }));
- const labelBox=projected[focus.labelRegion??0];
- const labelTop=labelBox.top>=130?labelBox.top-42:labelBox.top+labelBox.height+8;
- const labelLeft=Math.max(12,Math.min(width-360,labelBox.left));
- const labelY=Math.max(88,Math.min(height-42,labelTop));
  return <Sequence durationInFrames={scene.sceneFrames}>
   <div style={{position:"absolute",inset:0,background:COLORS.navy,overflow:"hidden"}}>
    <BrandArcs opacity={.17}/>
-   <div style={{position:"absolute",left:278,top:84,width,height,borderRadius:22,background:"#11192B",border:`3px solid ${COLORS.yellow}`,overflow:"hidden",boxShadow:"0 28px 80px rgba(0,0,0,.48)"}}>
+   <div style={{position:"absolute",left:278,top:84,width,height,borderRadius:22,background:"#11192B",border:"2px solid #30384A",overflow:"hidden",boxShadow:"0 28px 80px rgba(0,0,0,.48)"}}>
     <div style={{position:"absolute",inset:0,overflow:"hidden",transform:`translate(${translateX}px,${translateY}px) scale(${scale})`,transformOrigin:"0 0"}}>
      <OffthreadVideo src={staticFile(DEMO_VIDEO)} startFrom={scene.sourceStartFrame} endAt={scene.sourceEndFrame} playbackRate={scene.playbackRate} volume={0} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"fill"}}/>
-    {focus.regions.map((region,index)=>{
-      const start=[3,28,48][index]??0;
-      const end=[21,40,74][index]??scene.sceneFrames;
-      const attackStart=index===0?38:106;
-      const attackEnd=index===0?84:138;
-      const attackPulse=.65+.35*Math.sin((frame-attackStart)*Math.PI/24)**2;
-      const opacity=techniques
-        ?interpolate(frame,[start,start+2,end-2,end],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"})
-        :attacks&&index<2
-          ?interpolate(frame,[attackStart,attackStart+3,attackEnd,attackEnd+6],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"})*attackPulse
-          :attacks?0:1;
-      const pop=attacks&&index<2?spring({frame:frame-attackStart,fps,config:{mass:.45,damping:12,stiffness:220}}):1;
-      return <div key={index} style={{position:"absolute",left:`${region.x*100}%`,top:`${region.y*100}%`,width:`${region.w*100}%`,height:`${region.h*100}%`,opacity,border:`2px solid ${COLORS.yellow}`,background:techniques||attacks?"rgba(255,207,51,.18)":"transparent",boxShadow:"0 0 22px rgba(255,207,51,.58)",borderRadius:6,pointerEvents:"none",transform:attacks&&index<2?`scale(${.9+.1*pop})`:undefined,transformOrigin:"center"}}/>;
-    })}
     </div>
-    {focus.label&&<div style={{position:"absolute",left:labelLeft,top:labelY,maxWidth:340,padding:"8px 12px",background:COLORS.yellow,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:15,fontWeight:700,letterSpacing:.3}}>{focus.label}</div>}
    </div>
    <div style={{position:"absolute",left:278,top:36,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
   </div>
