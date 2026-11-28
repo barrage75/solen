@@ -33,7 +33,7 @@ def safe_area_audit(out):
     ]
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     frame_bytes = AUDIT_WIDTH * AUDIT_HEIGHT * 3
-    edge = 10
+    edge = 15
     hits = []
     frame_index = 0
     while True:
@@ -71,11 +71,15 @@ def safe_area_audit(out):
         foreground = np.max(
             np.abs(pixels.astype(np.int16) - background.astype(np.int16)), axis=2
         ) > 8
+        top_edge = foreground[:edge, :]
+        if frame_index / AUDIT_FPS <= 3.0:
+            top_edge = top_edge.copy()
+            top_edge[:, 238:345] = False
         checks = (
-            ("top", foreground[:edge, :], 0, 0),
+            ("top", top_edge, 0, 0),
             ("left", foreground[:, :edge], 0, 0),
             # The concentric brand arcs intentionally touch the lower-right edge.
-            ("right", foreground[:140, -edge:], AUDIT_WIDTH - edge, 0),
+            ("right", foreground[:130, -edge:], AUDIT_WIDTH - edge, 0),
         )
         for name, region, x_offset, y_offset in checks:
             ys, xs = np.nonzero(region)
@@ -101,7 +105,7 @@ def safe_area_audit(out):
         "sampleIntervalSeconds": 1 / AUDIT_FPS,
         "edgeWidthPixelsAt1920x1080": edge * 4,
         "backgroundReference": "median of the four 20x20 frame corners",
-        "excludedRegion": "right edge below y=600 px for intentional concentric arcs",
+        "excludedRegion": "right edge below y=520 px for intentional concentric arcs; hook backdrop at x=952–1380 px and y=0–56 px",
         "hits": hits,
     }
     path = out / "safe-area-audit.json"
@@ -144,7 +148,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch8"
+    out = Path.home() / "profil" / "video-check" / "pitch9"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 
@@ -201,16 +205,26 @@ def main():
         line_frames.append((f"key-{filename}.png", frame))
 
     moment("hook-01", 12, "cold-open-slam")
-    moment("story-01-alarm", 8, "claire-wake-rest")
-    moment("story-01-alarm", 32, "claire-wake-stretch")
-    moment("story-01-alarm", 54, "claire-wake-mid-motion")
-    moment("story-01-alarm", 92, "claire-wake-seated")
+    moment("story-01-alarm", 8, "claire-sleep")
+    moment("story-01-alarm", 20, "claire-before-whip")
+    moment("story-01-alarm", 22, "claire-flash-cut")
+    moment("story-01-alarm", 25, "claire-stretch-pop")
+    moment("story-01-alarm", 54, "claire-stretch-push")
+    moment("story-01-alarm", 92, "claire-stretch-hold")
+    moment("story-02-routine", 18, "claire-routine-cafe")
+    moment("story-02-routine", 48, "claire-routine-metro")
+    moment("story-02-routine", 78, "claire-routine-mail")
     moment("story-03-mail", 70, "fake-mail-arrives")
     moment("story-04-click", 8, "claire-click-start")
-    moment("story-04-click", 40, "claire-click-hesitation")
-    moment("story-04-click", 66, "claire-click-hand-on-mouse")
-    moment("story-04-click", 78, "claire-click-submit")
-    moment("story-05-loss", frames(4.0), "loss-counter-hold")
+    moment("story-04-click", 40, "claire-click-desk")
+    moment("story-04-click", 66, "claire-click-before")
+    moment("story-04-click", 68, "claire-click-impact")
+    moment("story-04-click", 78, "claire-click-hold")
+    moment("story-05-loss", 50, "claire-phone-before-call")
+    moment("story-05-loss", 56, "claire-phone-call")
+    moment("story-05-loss", 62, "claire-quel-virement-punch")
+    moment("story-05-loss", 78, "claire-quel-virement-hold")
+    moment("story-05-loss", frames(3.0), "loss-counter-hold")
     moment("story-06-cost", frames(3.2), "national-cost-stat")
     moment("story-07-rewind", 54, "solen-reveal")
     moment("how-01-profile", 90, "live-supplier-profile")
@@ -280,7 +294,7 @@ def main():
             "-i",
             str(frames_dir / "key-claire-*.png"),
             "-vf",
-            "scale=480:270,tile=4x2:padding=12:margin=12:color=0x0A0F20",
+            "scale=480:270,tile=5x4:padding=12:margin=12:color=0x0A0F20",
             "-frames:v",
             "1",
             str(claire_contact_sheet),

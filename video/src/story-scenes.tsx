@@ -1,4 +1,4 @@
-import {useCurrentFrame, useVideoConfig, interpolate, spring} from "remotion";
+import {Img, staticFile, useCurrentFrame, useVideoConfig, interpolate, spring} from "remotion";
 import type {CSSProperties, ReactNode} from "react";
 import {COLORS, BrandArcs, DeckLogo, StoryLabel} from "./brand";
 
@@ -53,124 +53,30 @@ const Shell = ({children, frame, durationFrames}: {children: ReactNode; frame: n
   );
 };
 
-type ClairePose = "wake" | "concerned" | "neutral";
+type ClaireAsset = "sleep" | "stretch" | "desk" | "phone" | "base";
 
-const Claire = ({style, pose = "neutral"}: {style?: CSSProperties; pose?: ClairePose}) => {
-  const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const waking = pose === "wake";
-  const concerned = pose === "concerned";
-  const rise = waking
-    ? spring({frame: frame - 28, fps, config: {mass: 0.9, damping: 22, stiffness: 100}})
-    : 1;
-  const stretchIn = waking
-    ? spring({frame: frame - 12, fps, config: {mass: 0.55, damping: 17, stiffness: 140}})
-    : 0;
-  const stretchOut = waking
-    ? spring({frame: frame - 52, fps, config: {mass: 0.7, damping: 20, stiffness: 100}})
-    : 0;
-  const stretch = Math.max(0, Math.min(1, stretchIn * (1 - stretchOut)));
-  const lean = concerned
-    ? spring({frame: frame - 10, fps, config: {mass: 0.7, damping: 18, stiffness: 130}})
-    : 0;
-  const torsoRotation = waking ? -8 * (1 - rise) : -2.5 * lean;
-  const torsoLift = waking ? -180 * rise : 0;
-  const leftMix = waking ? stretch : 0;
-  const rightMix = waking ? stretch : concerned ? lean : 0;
-  const armMix = (from: number, to: number, progress: number) => from + (to - from) * progress;
-  const leftElbow = {x: armMix(210, 145, leftMix), y: armMix(580, 365, leftMix)};
-  const leftWrist = {x: armMix(260, 230, leftMix), y: armMix(650, 246, leftMix)};
-  const rightElbow = concerned
-    ? {x: armMix(512, 568, rightMix), y: armMix(570, 548, rightMix)}
-    : {x: armMix(490, 555, rightMix), y: armMix(580, 365, rightMix)};
-  const rightWrist = concerned
-    ? {x: armMix(522, 648, rightMix), y: armMix(657, 615, rightMix)}
-    : {x: armMix(440, 470, rightMix), y: armMix(650, 246, rightMix)};
-  const leftUpper = `M225 505 Q${(225 + leftElbow.x) / 2 - 20} ${(505 + leftElbow.y) / 2} ${leftElbow.x} ${leftElbow.y}`;
-  const leftForearm = `M${leftElbow.x} ${leftElbow.y} Q${(leftElbow.x + leftWrist.x) / 2 - 12} ${(leftElbow.y + leftWrist.y) / 2} ${leftWrist.x} ${leftWrist.y}`;
-  const rightUpper = `M475 505 Q${(475 + rightElbow.x) / 2 + 20} ${(505 + rightElbow.y) / 2} ${rightElbow.x} ${rightElbow.y}`;
-  const rightForearm = `M${rightElbow.x} ${rightElbow.y} Q${(rightElbow.x + rightWrist.x) / 2 + 12} ${(rightElbow.y + rightWrist.y) / 2} ${rightWrist.x} ${rightWrist.y}`;
-  const eyeOpenBase = waking
-    ? interpolate(frame, [0, 16, 29], [0.03, 0.03, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})
-    : 1;
-  const blink = (waking && frame >= 61 && frame <= 63) || (concerned && frame >= 47 && frame <= 49) ? 0.08 : 1;
-  const eyeOpen = eyeOpenBase * blink;
-  const headRotation = waking ? -torsoRotation : -4 * lean;
-  const headShiftY = waking ? 0 : 1.5 * lean;
-  const leftBrow = concerned ? "M288 220 Q316 202 344 220" : "M288 223 Q316 208 344 223";
-  const rightBrow = concerned ? "M357 220 Q384 202 412 220" : "M357 223 Q384 208 412 223";
-  const mouth = concerned ? "M326 346 Q350 339 374 346" : "M326 341 Q350 360 374 341";
-  const hand = (x: number, y: number, side: "left" | "right") => (
-    <g key={side} transform={`translate(${x} ${y}) rotate(${side === "left" ? -18 : 18})`}>
-      <ellipse rx="20" ry="15" fill="#E4AD8E" />
-      <path d="M-12-9l-7-12m13 10-3-15m9 15 2-15m5 17 7-12" fill="none" stroke="#E4AD8E" strokeWidth="6" strokeLinecap="round" />
-    </g>
-  );
-  const leftArmRotation = waking ? -8 * stretch : 0;
-  const rightArmRotation = waking ? 8 * stretch : concerned ? -5 * lean : 0;
-  return (
-    <svg viewBox="0 0 700 760" style={{display: "block", overflow: "visible", ...style}} aria-hidden>
-      <g transform={`translate(0 ${torsoLift}) rotate(${torsoRotation} 400 650)`}>
-        <g transform={`rotate(${leftArmRotation} 225 505)`}>
-          <path d={leftUpper} fill="none" stroke="#294563" strokeWidth="50" strokeLinecap="round" />
-          <path d={leftForearm} fill="none" stroke="#E4AD8E" strokeWidth="29" strokeLinecap="round" />
-        </g>
-        <g transform={`rotate(${rightArmRotation} 475 505)`}>
-          <path d={rightUpper} fill="none" stroke="#294563" strokeWidth="50" strokeLinecap="round" />
-          <path d={rightForearm} fill="none" stroke="#E4AD8E" strokeWidth="29" strokeLinecap="round" />
-        </g>
-        <path d="M155 760c8-135 37-238 137-278l58 42 58-42c102 40 129 143 137 278H155Z" fill="#213B5B" />
-        <path d="M302 476l48 48 48-48 42 53-28 231H286l-28-231Z" fill={COLORS.cream} />
-        <path d="m302 476 48 48-57 62-30-57Zm96 0-48 48 57 62 30-57Z" fill="#D8D7D0" />
-        <path d="M212 565c21 13 43 21 67 24m142-24c-21 13-43 21-67 24" fill="none" stroke="#38577A" strokeWidth="5" strokeLinecap="round" />
-        <circle cx="422" cy="635" r="9" fill={COLORS.yellow} />
-        <g transform={`translate(0 ${headShiftY}) rotate(${headRotation} 350 265)`}>
-          <path d="M244 240c-27-101 6-174 75-200 77-29 165 4 191 83 18 56 2 130-4 199-5 54-33 103-66 120l-16-136H270l-9 136c-37-15-57-61-56-110 1-42 24-69 39-92Z" fill="#593B31" />
-          <path d="M314 382h72v108q-36 33-72 0Z" fill="#D99F80" />
-          <path d="M350 111c-62 0-100 44-100 118v37c0 78 41 138 100 138s100-60 100-138v-37c0-74-38-118-100-118Z" fill="#E9B89A" />
-          <path d="M250 243c1-101 47-155 123-160 58-4 100 27 113 80-45-19-83-21-118-5-35 17-68 54-118 85Z" fill="#593B31" />
-          <path d="M250 242c-18 29-20 76-6 110 13 32 29 48 44 52l-6-141Zm200 0c18 29 20 76 6 110-13 32-29 48-44 52l6-141Z" fill="#593B31" />
-          <path d="M270 282c22-20 52-19 75 1-22 26-52 26-75-1Zm85 1c23-20 53-21 76-1-23 27-53 27-76 1Z" fill="#FFF8F0" />
-          <g transform={`translate(0 282) scale(1 ${eyeOpen}) translate(0 -282)`}>
-            <ellipse cx="307" cy="282" rx="11" ry="14" fill="#76513F" />
-            <ellipse cx="389" cy="282" rx="11" ry="14" fill="#76513F" />
-            <ellipse cx={concerned ? 313 : 307} cy="283" rx="5.5" ry="8" fill="#20202A" />
-            <ellipse cx={concerned ? 395 : 389} cy="283" rx="5.5" ry="8" fill="#20202A" />
-            <circle cx={concerned ? 315 : 309} cy="279" r="2.4" fill="#FFF8F0" />
-            <circle cx={concerned ? 397 : 391} cy="279" r="2.4" fill="#FFF8F0" />
-          </g>
-          <g opacity={1 - eyeOpen}>
-            <path d="M278 283q29 13 58 0m24 0q29 13 58 0" fill="none" stroke="#392A2B" strokeWidth="5" strokeLinecap="round" />
-          </g>
-          <path d="M270 282q37-31 76 0m9 0q37-31 76 0" fill="none" stroke="#392A2B" strokeWidth="5" strokeLinecap="round" />
-          <path d="m280 265-8-7m18 1-3-10m118 16 8-7m-18 1 3-10" fill="none" stroke="#392A2B" strokeWidth="3" strokeLinecap="round" />
-          <path d={leftBrow} fill="none" stroke="#51352E" strokeWidth="7" strokeLinecap="round" />
-          <path d={rightBrow} fill="none" stroke="#51352E" strokeWidth="7" strokeLinecap="round" />
-          <circle cx="278" cy="326" r="16" fill="#D98980" opacity=".19" />
-          <circle cx="422" cy="326" r="16" fill="#D98980" opacity=".19" />
-          <path d="M350 292c-5 15-10 27-4 33 4 4 10 5 15 2" fill="none" stroke="#C7896D" strokeWidth="4" strokeLinecap="round" />
-          <path d={mouth} fill="none" stroke="#985C5A" strokeWidth="5" strokeLinecap="round" />
-          <path d="M248 226c17-77 72-132 134-141-26 22-41 52-52 75-21 29-48 51-82 66Z" fill="#68483A" />
-          <path d="M265 115c27-32 61-49 96-54" fill="none" stroke="#9B7258" strokeWidth="8" strokeLinecap="round" opacity=".72" />
-          <path d="M462 159c22 54 16 115 7 163" fill="none" stroke="#8D644D" strokeWidth="7" strokeLinecap="round" opacity=".58" />
-        </g>
-        {(!waking || stretch > 0.08) && (
-          <>
-            <g transform={`rotate(${leftArmRotation} 225 505)`}>{hand(leftWrist.x, leftWrist.y, "left")}</g>
-            <g transform={`rotate(${rightArmRotation} 475 505)`}>{hand(rightWrist.x, rightWrist.y, "right")}</g>
-          </>
-        )}
-      </g>
-    </svg>
-  );
-};
+const ClaireArt = ({name, style}: {name: ClaireAsset; style: CSSProperties}) => (
+  <Img src={staticFile(`images/claire/${name}.png`)} alt="" style={{display: "block", ...style}} />
+);
 
 const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: number}) => {
   const fps = useVideoConfig().fps;
+  const stretchFrame = 22;
+  const stretching = frame >= stretchFrame;
+  const stretchPop = spring({frame: frame - stretchFrame, fps, config: {mass: 0.55, damping: 14, stiffness: 170}});
+  const cameraPush = interpolate(frame, [stretchFrame + 6, durationFrames], [0, 0.035], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const imageScale = stretching
+    ? (0.94 + 0.06 * stretchPop) * (1 + cameraPush)
+    : 1 + 0.005 * (1 + Math.sin(frame * 0.32));
+  const imageY = stretching ? 20 * (1 - stretchPop) - 4 * Math.sin((frame - stretchFrame) * 0.45) * (1 - stretchPop) : 0;
   const sunrise = interpolate(frame, [0, durationFrames * 0.85], [174, 116], {
     extrapolateRight: "clamp",
   });
-  const alarmPulse = 0.92 + 0.08 * Math.sin(frame * 0.75);
+  const alarmShake = frame >= 7 && frame < stretchFrame ? Math.sin(frame * 2.4) * 5 : 0;
+  const alarmPulse = 0.98 + 0.02 * Math.sin(frame * 0.75);
+  const flashOpacity = interpolate(frame, [stretchFrame - 2, stretchFrame, stretchFrame + 2], [0, 0.5, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const whipOpacity = interpolate(frame, [stretchFrame - 3, stretchFrame, stretchFrame + 3], [0, 0.9, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const whipX = interpolate(frame, [stretchFrame - 3, stretchFrame + 3], [-650, 1920], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>01 — RÉVEIL</StoryLabel>
@@ -206,7 +112,7 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
       </div>
       <svg
         viewBox="0 0 1000 830"
-        style={{position: "absolute", width: 1000, height: 830, right: 10, top: 110}}
+        style={{position: "absolute", width: 1000, height: 830, right: 80, top: 110}}
         aria-hidden
       >
         <rect x="132" y="47" width="697" height="364" rx="22" fill={COLORS.panel} stroke="#2C3443" strokeWidth="3" />
@@ -218,11 +124,8 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
         <rect x="800" y="102" width="4" height="276" fill="#4A5668" />
         <rect x="478" y="74" width="5" height="310" fill="#4A5668" />
         <rect x="186" y="408" width="590" height="17" rx="8" fill="#313B4C" />
-        <rect x="0" y="670" width="998" height="165" rx="20" fill="#182034" />
-        <rect x="350" y="480" width="300" height="74" rx="34" fill={COLORS.cream} opacity=".95" />
-        <path d="M345 524q128-54 310 0v69H345Z" fill="#D4D3D0" opacity=".7" />
         <rect x="82" y="606" width="224" height="142" rx="18" fill="#4A3A32" />
-        <g transform={`translate(194 678) scale(${alarmPulse}) translate(-194 -678)`}>
+        <g transform={`translate(${alarmShake} 0) translate(194 678) scale(${alarmPulse}) translate(-194 -678)`}>
           <rect x="102" y="628" width="186" height="108" rx="12" fill="#60493A" />
           <rect x="140" y="650" width="108" height="68" rx="14" fill="#0A0F20" stroke={COLORS.yellow} strokeWidth="4" />
           <text x="194" y="678" textAnchor="middle" fill={COLORS.cream} fontFamily="JetBrainsDeck, monospace" fontSize="15">LUNDI</text>
@@ -230,11 +133,15 @@ const AlarmScene = ({frame, durationFrames}: {frame: number; durationFrames: num
           <path d="M129 645c-24-17-26-43-8-60m140 60c24-17 26-43 8-60" fill="none" stroke={COLORS.yellow} strokeWidth="4" strokeLinecap="round" opacity=".8" />
         </g>
       </svg>
-      <Claire pose="wake" style={{position: "absolute", left: 1100, top: 280, width: 700, height: 760}} />
-      <svg viewBox="0 0 1000 830" style={{position: "absolute", width: 1000, height: 830, right: 10, top: 110, pointerEvents: "none"}} aria-hidden>
-        <path d="M300 704c94-64 195-61 292-20 108-49 238-32 406 17v134H300Z" fill="#E1DED6" />
-        <path d="M305 706c100-53 184-46 284-5 112-43 230-29 399 18" fill="none" stroke="#C8C6C0" strokeWidth="5" opacity=".72" />
-      </svg>
+      <div style={{position: "absolute", right: 240, top: 200, width: 720, height: 480, overflow: "hidden", borderRadius: 28, backgroundColor: COLORS.navy, border: "1px solid #2C3443", boxShadow: "0 24px 70px rgba(0,0,0,.32)"}}>
+        <ClaireArt
+          key={stretching ? "stretch" : "sleep"}
+          name={stretching ? "stretch" : "sleep"}
+          style={{position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: `translateY(${imageY}px) scale(${imageScale})`, transformOrigin: "50% 75%"}}
+        />
+      </div>
+      {whipOpacity > 0 && <div style={{position: "absolute", top: -110, bottom: -110, left: whipX, width: 520, transform: "skewX(-17deg)", background: `linear-gradient(90deg, transparent, ${COLORS.yellow}, ${COLORS.cream}, transparent)`, opacity: whipOpacity, zIndex: 9, pointerEvents: "none"}} />}
+      {flashOpacity > 0 && <div style={{position: "absolute", inset: 0, backgroundColor: COLORS.cream, opacity: flashOpacity, zIndex: 10, pointerEvents: "none"}} />}
     </Shell>
   );
 };
@@ -293,6 +200,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
   ];
   const current = items[index];
   const localFrame = frame - cutFrames * index;
+  const portraitIn = spring({frame: localFrame - 3, fps, config: {mass: 0.65, damping: 16, stiffness: 150}});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>02 — ROUTINE</StoryLabel>
@@ -339,7 +247,7 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
       <div
         style={{
           position: "absolute",
-          right: 150,
+          right: 220,
           top: 230,
           width: 760,
           height: 600,
@@ -352,6 +260,9 @@ const RoutineScene = ({frame, durationFrames}: {frame: number; durationFrames: n
         }}
       >
         <RoutineVisual kind={index} />
+      </div>
+      <div style={{position: "absolute", left: 790, top: 640, width: 180, height: 180, overflow: "hidden", borderRadius: "50%", border: `3px solid ${COLORS.yellow}`, backgroundColor: COLORS.panel, boxShadow: "0 16px 36px rgba(0,0,0,.3)", opacity: interpolate(localFrame, [0, 8], [0, 1], {extrapolateRight: "clamp"}), transform: `translateX(${(1 - portraitIn) * 54}px) scale(${0.92 + portraitIn * 0.08})`}}>
+        <ClaireArt name="base" style={{width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 32%"}} />
       </div>
       <div
         style={{
@@ -402,7 +313,7 @@ const MailScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
       <div
         style={{
           position: "absolute",
-          left: 704,
+          left: 694,
           top: 200,
           width: 1100,
           height: 640,
@@ -482,23 +393,22 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
   const fps = useVideoConfig().fps;
   const clickFrame = Math.round(durationFrames * 0.68);
   const clicked = frame >= clickFrame;
+  const clickShake = frame >= clickFrame && frame < clickFrame + 12
+    ? Math.sin((frame - clickFrame) * 2.4) * 5 * (1 - (frame - clickFrame) / 12)
+    : 0;
+  const deskZoom = interpolate(frame, [0, durationFrames], [1, 1.035], {extrapolateRight: "clamp"});
   const pointerX = interpolate(frame, [0, clickFrame - 8, clickFrame], [966, 1330, 1330], {extrapolateRight: "clamp"});
   const pointerY = interpolate(frame, [0, clickFrame - 8, clickFrame], [782, 680, 680], {extrapolateRight: "clamp"});
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>04 — LE CLIC</StoryLabel>
-      <div style={{position: "absolute", left: 160, top: 202, width: 560, ...displayStyle, fontSize: 66, ...enterStyle(frame, fps)}}>
+      <div style={{position: "absolute", left: 160, top: 202, width: 950, ...displayStyle, fontSize: 58, ...enterStyle(frame, fps)}}>
         Le patron est pressé.
         <br />
         <span style={{color: COLORS.yellow}}>Claire valide.</span>
       </div>
-      <div style={{position: "absolute", left: 620, top: 807, width: 420, height: 12, borderRadius: 8, backgroundColor: "#293346", boxShadow: "0 10px 24px rgba(0,0,0,.22)"}} />
-      <svg viewBox="0 0 96 56" width={72} height={42} style={{position: "absolute", left: 930, top: 762}} aria-hidden>
-        <path d="M48 4C24 4 12 18 12 34c0 12 12 18 36 18s36-6 36-18C84 18 72 4 48 4Z" fill="#D8DDE4" stroke="#707B8A" strokeWidth="3" />
-        <path d="M48 5v18m0-14c0-4 7-5 7 0" fill="none" stroke="#707B8A" strokeWidth="3" strokeLinecap="round" />
-      </svg>
-      <Claire pose="concerned" style={{position: "absolute", left: 560, top: 395, width: 440, height: 478}} />
-      <div style={{position: "absolute", right: 190, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40}}>
+      <ClaireArt name="desk" style={{position: "absolute", left: 150, top: 390, width: 900, height: 600, objectFit: "contain", transform: `translateX(${clickShake}px) scale(${deskZoom})`, transformOrigin: "bottom left", filter: "drop-shadow(0 16px 20px rgba(0,0,0,.22))"}} />
+      <div style={{position: "absolute", right: 230, top: 180, width: 690, height: 670, borderRadius: 24, backgroundColor: COLORS.panel, boxShadow: "0 24px 70px rgba(0,0,0,.28)", padding: 40, transform: `translateX(${clickShake}px)`}}>
         <div style={{fontFamily: "JetBrainsDeck, monospace", color: COLORS.yellow, fontSize: 18, letterSpacing: 1.5}}>VIREMENT À EXÉCUTER</div>
         <div style={{fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 33, marginTop: 24}}>Bénéficiaire : compte inconnu</div>
         <div style={{fontFamily: "ManropeDeck, sans-serif", fontSize: 20, color: COLORS.muted, marginTop: 12}}>Objet : acquisition confidentielle</div>
@@ -536,7 +446,7 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
         height={58}
         style={{
           position: "absolute",
-          left: pointerX,
+          left: pointerX + clickShake,
           top: pointerY,
           filter: "drop-shadow(0 2px 2px rgba(0,0,0,.7))",
           transform: `scale(${clicked ? 0.9 : 1})`,
@@ -549,7 +459,7 @@ const ClickScene = ({frame, durationFrames}: {frame: number; durationFrames: num
         <div
           style={{
             position: "absolute",
-            left: pointerX - 28,
+            left: pointerX + clickShake - 28,
             top: pointerY - 24,
             width: 88,
             height: 88,
@@ -569,12 +479,22 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
   const moneyProgress = interpolate(frame, [durationFrames * 0.08, countEndFrame], [0, 35000], {extrapolateRight: "clamp"});
   const money = Math.floor(moneyProgress / 250) * 250;
   const formatted = money.toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0");
-  const callOpacity = interpolate(frame, [durationFrames * 0.52, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
+  const callRevealFrame = Math.round(durationFrames * 0.52);
+  const questionFrame = Math.round(durationFrames * 0.61);
+  const callOpacity = interpolate(frame, [callRevealFrame, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
+  const callPop = spring({frame: frame - callRevealFrame, fps, config: {mass: 0.6, damping: 15, stiffness: 150}});
+  const questionPop = spring({frame: frame - questionFrame, fps, config: {mass: 0.48, damping: 13, stiffness: 180}});
+  const questionShake = frame >= questionFrame && frame < questionFrame + 10
+    ? Math.sin((frame - questionFrame) * 2.8) * 5 * (1 - (frame - questionFrame) / 10)
+    : 0;
+  const phoneShake = frame >= callRevealFrame && frame < callRevealFrame + 12
+    ? Math.sin((frame - callRevealFrame) * 2.2) * 4 * (1 - (frame - callRevealFrame) / 12)
+    : 0;
   const bills = Array.from({length: 9}, (_, index) => {
     const start = (index * 37) % durationFrames;
     const t = (frame + start) / Math.max(durationFrames, 1);
     return {
-      x: 1120 + ((index * 101) % 650) + (frame / Math.max(durationFrames, 1)) * 210,
+      x: 975 + ((index * 97) % 560) + (frame / Math.max(durationFrames, 1)) * 80,
       y: 300 + ((index * 47) % 110) + Math.sin(t * Math.PI * 2) * 24,
       rotate: Math.sin(t * Math.PI * 2) * 26 + (index % 2 ? 16 : -16),
     };
@@ -613,7 +533,8 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           50 €
         </div>
       ))}
-      <div style={{position: "absolute", left: 160, top: 600, width: 910, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 146, letterSpacing: -5}}>
+      <ClaireArt name="phone" style={{position: "absolute", right: 240, top: 150, width: 420, height: 420, objectFit: "contain", opacity: callOpacity, transform: `translateX(${phoneShake}px) scale(${0.96 + callPop * 0.04 + interpolate(frame, [callRevealFrame, durationFrames], [0, 0.025], {extrapolateRight: "clamp"})})`, transformOrigin: "center"}} />
+      <div style={{position: "absolute", left: 150 + questionShake, top: 635, width: 790, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 112, letterSpacing: -4}}>
         −{formatted} €
       </div>
       <div
@@ -621,13 +542,14 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
           position: "absolute",
           right: 240,
           top: 600,
-          width: 620,
+          width: 780,
           padding: "26px 30px",
           borderRadius: 20,
           backgroundColor: COLORS.cream,
           color: COLORS.navy,
           opacity: callOpacity,
-          transform: `translateY(${(1 - callOpacity) * 26}px)`,
+          transform: `translate(${questionShake}px, ${(1 - callOpacity) * 26}px) scale(${0.96 + callPop * 0.04})`,
+          transformOrigin: "left center",
           boxShadow: "0 20px 60px rgba(0,0,0,.3)",
         }}
       >
@@ -638,7 +560,7 @@ const LossScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
             <div style={{fontFamily: "JetBrainsDeck, monospace", fontSize: 16, color: "#687080"}}>APPEL ENTRANT</div>
           </div>
         </div>
-        <div style={{marginTop: 20, fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800}}>« Quel virement ? »</div>
+        <div style={{marginTop: 20, fontFamily: "ArchivoDeck, sans-serif", fontSize: 39, fontWeight: 800, transform: `scale(${1 + questionPop * 0.12})`, transformOrigin: "left center"}}>« Quel virement ? »</div>
       </div>
     </Shell>
   );

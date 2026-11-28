@@ -8,6 +8,7 @@ Standalone Remotion composition for the French Solen story, supplier/AI explaine
 - `public/images/supplier-nuvio-live.png` is the DPR2 screenshot of the live `/fournisseurs` page; `supplier-nuvio-table.png` is its table crop used for the animated profile card.
 - `src/voice-lines.json` is the narration source. `scripts/generate_voice.py` uses `fr-FR-HenriNeural` at +15% and stores Edge TTS word boundaries with each clip in `src/voice-manifest.json`.
 - Supplier values and fallback analysis come from the Solen app data. The Nuvio attachment IBAN is read from `solen/public/attachments/Nouveau_RIB_Nuvio_Cloud.pdf`; only its app-style mask appears in the video.
+- `public/images/claire/` contains AI-generated Claire illustrations with transparent cutouts for the story scenes.
 
 ## Rebuild assets
 
@@ -29,4 +30,4 @@ The generated source intermediate and audio assets are committed so the composit
 
 `npm run render` writes `../solen/docs/solen-pitch-fr.mp4` as 1920×1080 H.264 with AAC at 192 kb/s, then normalizes the mix to −16 LUFS / −1.5 dBTP. It does not alter the README demo MP4/GIFs or Next.js source.
 
-The evidence script writes mid-line stills, several wake-up and click-gesture stills with a Claire contact sheet, 30/70%-through demo stills and their contact sheet, a stills grid sampled every two seconds, VO timings, and a 0.5-second edge safe-area audit to `~/profil/video-check/pitch8/`. The audit reports non-background pixels within 40 px of the top and side edges; the intentional concentric arcs at the lower-right edge are excluded.
+The evidence script writes mid-line stills, wake-up, routine, click, and phone-reveal stills with a Claire contact sheet, 30/70%-through demo stills and their contact sheet, a stills grid sampled every two seconds, VO timings, and a 0.5-second edge safe-area audit to `~/profil/video-check/pitch9/`. The audit reports non-background pixels within 60 px of the top and side edges, excluding the intentional hook backdrop and lower-right concentric arcs.

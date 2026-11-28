@@ -114,7 +114,7 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
      <OffthreadVideo src={staticFile(DEMO_VIDEO)} startFrom={scene.sourceStartFrame} endAt={scene.sourceEndFrame} playbackRate={scene.playbackRate} volume={0} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"fill"}}/>
     </div>
    </div>
-   <div style={{position:"absolute",left:278,top:36,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
+   <div style={{position:"absolute",left:278,top:60,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
   </div>
  </Sequence>;
 };

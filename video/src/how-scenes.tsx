@@ -24,18 +24,18 @@ const Profile = ({frame}: {frame: number}) => {
   return (
     <>
       <StoryLabel>PROFIL FOURNISSEUR · NUVIO CLOUD</StoryLabel>
-      <div style={{...panel, left: 150, top: 190, width: 950, height: 232, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
-        <div style={{position:"relative",width:950,height:160,overflow:"hidden"}}>
-          <div style={{position:"absolute",inset:0,transform:`scale(${zoom})`,transformOrigin:"center 112px"}}>
-            <img alt="Capture réelle du profil fournisseur Nuvio Cloud" src={staticFile("images/supplier-nuvio-table.png")} style={{position:"absolute",inset:0,width:950,height:160,objectFit:"fill"}} />
-            <div style={{position:"absolute",left:4,top:97,width:942,height:58,border:`3px solid ${COLORS.yellow}`,borderRadius:8,boxShadow:"0 0 22px rgba(255,207,51,.56)",background:"rgba(255,207,51,.06)",opacity:rowOpacity}}/>
+      <div style={{...panel, left: 180, top: 190, width: 920, height: 232, overflow: "hidden", transform: `translateY(${y}px) scale(1.04)`}}>
+        <div style={{position:"relative",width:920,height:160,overflow:"hidden"}}>
+          <div style={{position:"absolute",inset:0,transform:`scale(${zoom})`,transformOrigin:"left 112px"}}>
+            <img alt="Capture réelle du profil fournisseur Nuvio Cloud" src={staticFile("images/supplier-nuvio-table.png")} style={{position:"absolute",inset:0,width:920,height:160,objectFit:"fill"}} />
+            <div style={{position:"absolute",left:4,top:97,width:912,height:58,border:`3px solid ${COLORS.yellow}`,borderRadius:8,boxShadow:"0 0 22px rgba(255,207,51,.56)",background:"rgba(255,207,51,.06)",opacity:rowOpacity}}/>
           </div>
         </div>
         <div style={{position: "absolute", left: 16, right: 16, bottom: 12, display: "flex", gap: 10}}>
           {["nuvio-cloud.fr", "FR03 •••• •••• 5530", "04 72 18 52 30"].map((value, i) => <Pop key={value} frame={frame-i*8}><span style={{display:"block",padding:"12px 14px",background:COLORS.navy,border:`1px solid ${COLORS.yellow}`,borderRadius:12,fontFamily:"JetBrainsDeck, monospace",fontSize:16,color:COLORS.cream}}>{value}</span></Pop>)}
         </div>
       </div>
-      <div style={{position:"absolute",right:220,top:260,width:660,...panel,padding:34}}>
+      <div style={{position:"absolute",right:210,top:260,width:660,...panel,padding:34}}>
         <div style={{color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:20}}>UN PROFIL CONSTRUIT PAR LES PAIEMENTS</div>
         <div style={{fontFamily:"ArchivoDeck, sans-serif",fontSize:54,fontWeight:800,marginTop:24}}>Nuvio Cloud</div>
         <div style={{fontFamily:"ManropeDeck, sans-serif",fontSize:23,lineHeight:1.8,marginTop:24,whiteSpace:"nowrap"}}><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>IBAN de référence</span><b style={{color:COLORS.yellow}}>FR03 •••• •••• 5530</b></div><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>Téléphone</span><b>04 72 18 52 30</b></div><div style={{display:"flex",justifyContent:"space-between",gap:12}}><span>Habituel</span><b>15 000 €–20 000 €</b></div></div>
@@ -49,14 +49,14 @@ const Profile = ({frame}: {frame: number}) => {
 const History = ({frame}: {frame: number}) => (
   <>
     <StoryLabel>HISTORIQUE · 2019—2026</StoryLabel>
-    <div style={{position:"absolute",left:120,top:210,width:1680,...panel,padding:34}}>
+    <div style={{position:"absolute",left:180,top:210,width:1610,...panel,padding:34,boxShadow:"0 18px 34px rgba(0,0,0,.26)"}}>
       <div style={{display:"flex",justifyContent:"space-between",fontFamily:"JetBrainsDeck, monospace",fontSize:21,color:COLORS.yellow}}>{Array.from({length:8},(_,i)=><span key={i}>{2019+i}</span>)}</div>
       <div style={{height:8,background:"#3A4558",margin:"34px 6px",position:"relative"}}>{Array.from({length:22},(_,i)=><span key={i} style={{position:"absolute",left:`${(i/21)*100}%`,top:-8,width:22,height:22,borderRadius:"50%",background:i<Math.floor(frame/4)?COLORS.yellow:"#657186",boxShadow:i<Math.floor(frame/4)?`0 0 22px ${COLORS.yellow}`:"none"}}/>)}</div>
       <div style={{fontFamily:"ArchivoDeck, sans-serif",fontSize:52,fontWeight:800}}>22 paiements <span style={{color:COLORS.yellow}}>depuis 2019</span></div>
       <div style={{fontFamily:"JetBrainsDeck, monospace",fontSize:25,marginTop:16}}>FR03 •••• •••• 5530 · UN SEUL IBAN DE RÉFÉRENCE</div>
     </div>
     <div style={{position:"absolute",left:145,top:525,fontFamily:"ArchivoDeck, sans-serif",fontSize:48,fontWeight:800,color:COLORS.cream}}>Un mail ne peut jamais modifier un profil.</div>
-    <div style={{...panel,right:112,top:660,width:780,padding:28,transform:`translateX(${interpolate(frame,[88,108],[900,0],{extrapolateRight:"clamp"})}px)`,borderColor:frame>108?COLORS.red:COLORS.yellow,boxShadow:frame>108?"0 0 32px rgba(239,93,93,.75)":panel.boxShadow}}>
+    <div style={{...panel,right:240,top:660,width:780,padding:28,transform:`translateX(${interpolate(frame,[88,108],[900,0],{extrapolateRight:"clamp"})}px)`,borderColor:frame>108?COLORS.red:COLORS.yellow,boxShadow:frame>108?"0 0 32px rgba(239,93,93,.75)":panel.boxShadow}}>
       <div style={{fontFamily:"JetBrainsDeck, monospace",fontSize:18,color:COLORS.red}}>NOUVEAU RIB · PIÈCE JOINTE</div>
       <div style={{fontFamily:"ManropeDeck, sans-serif",fontSize:24,marginTop:10}}>Changement de coordonnées bancaires</div>
       <div style={{fontFamily:"ManropeDeck, sans-serif",fontSize:30,marginTop:18}}>FR78 •••• •••• 8213</div>
