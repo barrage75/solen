@@ -12,7 +12,7 @@ Solen est une extension de boîte mail qui détecte les arnaques par mail (faux 
 
 [![Vidéo de pitch Solen en anglais](solen/docs/solen-pitch-en-poster.png)](solen/docs/solen-pitch-en.mp4)
 
-[▶ Vidéo de pitch (anglais, principale · 116,2 s)](solen/docs/solen-pitch-en.mp4) · [Version française · 98,3 s](solen/docs/solen-pitch-fr.mp4)
+[▶ Vidéo de pitch (anglais, principale · 106,6 s)](solen/docs/solen-pitch-en.mp4) · [Version française · 98,3 s](solen/docs/solen-pitch-fr.mp4)
 
 ![Démo Solen aux couleurs du pitch : faux RIB, fraude au président, vrais mails et fausse facture](solen/docs/demo-solen.gif)
 

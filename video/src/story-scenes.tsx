@@ -294,19 +294,39 @@ const MailScene = ({frame, durationFrames, lang}: {frame: number; durationFrames
   const bodyLines = copy.body;
   const lineStart = durationFrames * 0.2;
   const lineStep = durationFrames * 0.17;
+  const mailHeadline = (
+    <>
+      {copy.headlines.map((headline, index) => (
+        <div key={headline} style={{whiteSpace: "nowrap", color: index === 2 ? COLORS.yellow : COLORS.cream}}>
+          {headline}
+        </div>
+      ))}
+    </>
+  );
   return (
     <Shell frame={frame} durationFrames={durationFrames}>
       <StoryLabel>{copy.chapter}</StoryLabel>
-      <div style={{position: "absolute", left: 160, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
-        {copy.headlines[0]}
-        <br />
-        {copy.headlines[1]}
-        <br />
-        <span style={{color: COLORS.yellow}}>{copy.headlines[2]}</span>
-      </div>
-      <div style={{position: "absolute", left: 160, top: 558, width: 475, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
-        {copy.subheading}
-      </div>
+      {lang === "en" ? (
+        <div style={{position: "absolute", left: 160, top: 238, width: 520, display: "flex", flexDirection: "column", gap: 24, ...enterStyle(frame, fps)}}>
+          <div style={{...displayStyle, fontSize: 58, lineHeight: 1.02}}>{mailHeadline}</div>
+          <div style={{width: 500, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
+            {copy.subheading}
+          </div>
+        </div>
+      ) : (
+        <>
+          <div style={{position: "absolute", left: 160, top: 238, width: 520, ...displayStyle, fontSize: 70, ...enterStyle(frame, fps)}}>
+            {copy.headlines[0]}
+            <br />
+            {copy.headlines[1]}
+            <br />
+            <span style={{color: COLORS.yellow}}>{copy.headlines[2]}</span>
+          </div>
+          <div style={{position: "absolute", left: 160, top: 558, width: 475, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.4}}>
+            {copy.subheading}
+          </div>
+        </>
+      )}
       <div
         style={{
           position: "absolute",
@@ -480,9 +500,11 @@ const LossScene = ({frame, durationFrames, lang}: {frame: number; durationFrames
   const moneyProgress = interpolate(frame, [durationFrames * 0.08, countEndFrame], [0, 35000], {extrapolateRight: "clamp"});
   const money = Math.floor(moneyProgress / 250) * 250;
   const formatted = money.toLocaleString(lang === "en" ? "en-US" : "fr-FR").replace(/\u202f/g, "\u00a0");
-  const callRevealFrame = Math.round(durationFrames * 0.52);
-  const questionFrame = Math.round(durationFrames * 0.61);
-  const callOpacity = interpolate(frame, [callRevealFrame, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
+  const callRevealFrame = Math.round(durationFrames * (lang === "en" ? 0.1 : 0.52));
+  const questionFrame = Math.round(durationFrames * (lang === "en" ? 0.64 : 0.61));
+  const callOpacity = lang === "en"
+    ? interpolate(frame, [callRevealFrame, callRevealFrame + 12], [0, 1], {extrapolateRight: "clamp"})
+    : interpolate(frame, [callRevealFrame, durationFrames * 0.63], [0, 1], {extrapolateRight: "clamp"});
   const callPop = spring({frame: frame - callRevealFrame, fps, config: {mass: 0.6, damping: 15, stiffness: 150}});
   const questionPop = spring({frame: frame - questionFrame, fps, config: {mass: 0.48, damping: 13, stiffness: 180}});
   const questionShake = frame >= questionFrame && frame < questionFrame + 10
@@ -506,10 +528,19 @@ const LossScene = ({frame, durationFrames, lang}: {frame: number; durationFrames
       <div style={{position: "absolute", left: 150, top: 188, color: COLORS.muted, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         {copy.eyebrow}
       </div>
-      <div style={{position: "absolute", left: 150, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
-        <span style={{color: COLORS.red}}>{lang === "en" ? `€${formatted}` : `${formatted} €`}</span>{copy.headline(formatted)}
-      </div>
-      <div style={{position: "absolute", left: 150, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>{copy.subheading}</div>
+      {lang === "en" ? (
+        <div style={{position: "absolute", left: 150, top: 248, display: "flex", flexDirection: "column", gap: 24, ...enterStyle(frame, fps)}}>
+          <div style={{...displayStyle, fontSize: 58, color: COLORS.red}}>{typeof copy.headline === "string" ? copy.headline : copy.headline(formatted)}</div>
+          <div style={{width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>{copy.subheading}</div>
+        </div>
+      ) : (
+        <>
+          <div style={{position: "absolute", left: 150, top: 248, ...displayStyle, fontSize: 58, width: 1000, ...enterStyle(frame, fps)}}>
+            <span style={{color: COLORS.red}}>{`${formatted} €`}</span>{typeof copy.headline === "function" ? copy.headline(formatted) : copy.headline}
+          </div>
+          <div style={{position: "absolute", left: 150, top: 358, width: 950, fontFamily: "ManropeDeck, sans-serif", color: COLORS.muted, fontSize: 24}}>{copy.subheading}</div>
+        </>
+      )}
       {bills.map((bill, index) => (
         <div
           key={index}
@@ -535,7 +566,7 @@ const LossScene = ({frame, durationFrames, lang}: {frame: number; durationFrames
         </div>
       ))}
       <ClaireArt name="phone" style={{position: "absolute", right: 240, top: 150, width: 420, height: 420, objectFit: "contain", opacity: callOpacity, transform: `translateX(${phoneShake}px) scale(${0.96 + callPop * 0.04 + interpolate(frame, [callRevealFrame, durationFrames], [0, 0.025], {extrapolateRight: "clamp"})})`, transformOrigin: "center"}} />
-      <div style={{position: "absolute", left: 150 + questionShake, top: 635, width: 790, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 112, letterSpacing: -4}}>
+      <div style={{position: "absolute", left: 150 + questionShake, top: 635, width: 790, color: COLORS.red, fontFamily: "ArchivoDeck, sans-serif", fontWeight: 800, fontSize: 112, letterSpacing: lang === "en" ? 0 : -4}}>
         {copy.counter(formatted)}
       </div>
       <div

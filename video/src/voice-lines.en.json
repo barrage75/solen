@@ -1,6 +1,6 @@
 {
   "voice": "en-US-ChristopherNeural",
-  "rate": "+10%",
+  "rate": "+20%",
   "lines": [
     {"id": "hook-01", "section": "story", "text": "Thirty-five thousand euros. Gone in a single click."},
     {"id": "story-01-alarm", "section": "story", "text": "Monday, seven a.m. Claire, executive assistant at Arkos Systems."},

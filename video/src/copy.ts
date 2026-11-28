@@ -58,7 +58,7 @@ type PitchCopy = {
     loss: {
       chapter: string;
       eyebrow: string;
-      headline: (amount: string) => string;
+      headline: string | ((amount: string) => string);
       subheading: string;
       billAmount: string;
       caller: string;
@@ -362,13 +362,13 @@ export const COPY: Record<PitchLang, PitchCopy> = {
       loss: {
         chapter: "05 — THE NEXT DAY",
         eyebrow: "THE REAL CEO CALLS",
-        headline: () => " is gone.",
+        headline: "€35,000 is gone.",
         subheading: "He never sent that email.",
         billAmount: "€50",
         caller: "Jean-Pierre Durand",
         callState: "INCOMING CALL",
         question: "“What transfer?”",
-        counter: (amount) => `−€${amount}`,
+        counter: (amount) => `−\u2009€${amount}`,
       },
       cost: {
         chapter: "06 — THE COST",

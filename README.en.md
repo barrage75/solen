@@ -12,7 +12,7 @@ Solen is a mailbox add-in that catches email scams: fake bank detail changes, CE
 
 [![Solen pitch video in English](solen/docs/solen-pitch-en-poster.png)](solen/docs/solen-pitch-en.mp4)
 
-[▶ English pitch (main · 116.2 s)](solen/docs/solen-pitch-en.mp4) · [French version · 98.3 s](solen/docs/solen-pitch-fr.mp4)
+[▶ English pitch (main · 106.6 s)](solen/docs/solen-pitch-en.mp4) · [French version · 98.3 s](solen/docs/solen-pitch-fr.mp4)
 
 ![Solen demo in the pitch deck style: fake bank details, CEO fraud, genuine emails and a fake invoice](solen/docs/demo-solen-en.gif)
 
