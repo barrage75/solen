@@ -603,8 +603,8 @@ const CostScene = ({frame, durationFrames}: {frame: number; durationFrames: numb
       <div style={{position: "absolute", left: 160, top: 345, color: COLORS.cream, fontFamily: "JetBrainsDeck, monospace", fontSize: 21, letterSpacing: 2}}>
         COÛT POUR ARKOS SYSTEMS
       </div>
-      <div style={{position: "absolute", left: 104, top: 420, width: 730, height: 2, backgroundColor: "#485162"}} />
-      <div style={{position: "absolute", left: 104, top: 489, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.35}}>
+      <div style={{position: "absolute", left: 190, top: 420, width: 730, height: 2, backgroundColor: "#485162"}} />
+      <div style={{position: "absolute", left: 190, top: 489, color: COLORS.muted, fontFamily: "ManropeDeck, sans-serif", fontSize: 27, lineHeight: 1.35}}>
         En France, la fraude par
         <br />
         manipulation explose.

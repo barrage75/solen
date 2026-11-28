@@ -144,7 +144,7 @@ def extract_frame(frame, path):
 
 def main():
     manifest = json.loads(VOICE_MANIFEST_PATH.read_text(encoding="utf-8"))
-    out = Path.home() / "profil" / "video-check" / "pitch5"
+    out = Path.home() / "profil" / "video-check" / "pitch6"
     frames_dir = out / "frames"
     frames_dir.mkdir(parents=True, exist_ok=True)
 

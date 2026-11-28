@@ -71,7 +71,7 @@ const demoFocus:Record<string,DemoFocus>={
  "nuvio-verdict-reasons":{center:[.88,.62],zoom:2.05,regions:[{x:.775,y:.585,w:.21,h:.075}],label:"IBAN · 22 UTILISATIONS"},
  "nuvio-callback":{center:[.87,.59],zoom:2.05,regions:[{x:.775,y:.52,w:.21,h:.135}],label:"APPELER · NUMÉRO CONNU"},
  "pdg-mail-verdict":{center:[.71,.45],zoom:1.8,regions:[{x:.48,y:.20,w:.20,h:.09},{x:.77,y:.29,w:.21,h:.43}],label:"FAUX PDG · FRAUDE PROBABLE",labelRegion:1},
- "pdg-techniques":{center:[.87,.84],zoom:2.1,regions:[{x:.775,y:.79,w:.21,h:.105}],label:"AUTORITÉ · SECRET · HIÉRARCHIE"},
+ "pdg-techniques":{center:[.70,.72],zoom:2.1,regions:[{x:.77,y:.812,w:.05,h:.03},{x:.815,y:.812,w:.045,h:.03},{x:.77,y:.84,w:.14,h:.03}],label:""},
  "daf-verdict":{center:[.88,.37],zoom:2,regions:[{x:.775,y:.325,w:.21,h:.09}],label:"AUCUNE ANOMALIE"},
  "attack-summary":{center:[.50,.287],zoom:1.8,regions:[{x:.06,y:.235,w:.85,h:.105}],label:"26/26 · 0 · 19 MS"},
  "try-lookalike-example":{center:[.75,.56],zoom:2,regions:[{x:.625,y:.52,w:.25,h:.09}],label:"ADRESSE SOSIE · REPÉRÉE"},
@@ -80,17 +80,20 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
  const frame=useCurrentFrame();
  const {fps}=useVideoConfig();
  const focus=demoFocus[scene.sceneId];
+ const techniques=scene.sceneId==="pdg-techniques";
+ const focusCenterX=techniques?interpolate(frame,[3,28,48,60,104],[.70,.735,.76,.75,.70],{extrapolateRight:"clamp"}):focus.center[0];
+ const focusCenterY=techniques?interpolate(frame,[3,28,48,60,104],[.70,.72,.74,.73,.70],{extrapolateRight:"clamp"}):focus.center[1];
  const width=1450;
  const height=906;
  const zoom=spring({frame:frame-12,fps,config:{mass:.65,damping:24,stiffness:300}});
  const scale=1.06+(focus.zoom-1.06)*zoom;
  const driftProgress=interpolate(frame,[24,scene.sceneFrames-8],[0,1],{extrapolateLeft:"clamp",extrapolateRight:"clamp"});
- const driftX=(focus.center[0]<.5?-1:1)*80*driftProgress;
- const driftY=(focus.center[1]<.5?-1:1)*50*driftProgress;
+ const driftX=(focusCenterX<.5?-1:1)*80*driftProgress;
+ const driftY=(focusCenterY<.5?-1:1)*50*driftProgress;
  const whip=interpolate(frame,[0,8,scene.sceneFrames-8,scene.sceneFrames-1],[72,0,0,-86],{extrapolateRight:"clamp"});
  const clamp=(value:number,min:number,max:number)=>Math.min(max,Math.max(min,value));
- const translateX=clamp(width/2-focus.center[0]*width*scale+driftX+whip,width*(1-scale),0);
- const translateY=clamp(height/2-focus.center[1]*height*scale+driftY,height*(1-scale),0);
+ const translateX=clamp(width/2-focusCenterX*width*scale+driftX+whip,width*(1-scale),0);
+ const translateY=clamp(height/2-focusCenterY*height*scale+driftY,height*(1-scale),0);
  const projected=focus.regions.map((region)=>({
   left:region.x*width*scale+translateX,
   top:region.y*height*scale+translateY,
@@ -107,9 +110,14 @@ const DemoScene=({scene}:{scene:(typeof DEMO_SCHEDULE)[number]})=>{
    <div style={{position:"absolute",left:278,top:84,width,height,borderRadius:22,background:"#11192B",border:`3px solid ${COLORS.yellow}`,overflow:"hidden",boxShadow:"0 28px 80px rgba(0,0,0,.48)"}}>
     <div style={{position:"absolute",inset:0,overflow:"hidden",transform:`translate(${translateX}px,${translateY}px) scale(${scale})`,transformOrigin:"0 0"}}>
      <OffthreadVideo src={staticFile(DEMO_VIDEO)} startFrom={scene.sourceStartFrame} endAt={scene.sourceEndFrame} playbackRate={scene.playbackRate} volume={0} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"fill"}}/>
-     {focus.regions.map((region,index)=><div key={index} style={{position:"absolute",left:`${region.x*100}%`,top:`${region.y*100}%`,width:`${region.w*100}%`,height:`${region.h*100}%`,border:`2px solid ${COLORS.yellow}`,boxShadow:"0 0 22px rgba(255,207,51,.58)",borderRadius:6,pointerEvents:"none"}}/>)}
+    {focus.regions.map((region,index)=>{
+      const start=[3,28,48][index]??0;
+      const end=[21,40,74][index]??scene.sceneFrames;
+      const opacity=techniques?interpolate(frame,[start,start+2,end-2,end],[0,1,1,0],{extrapolateLeft:"clamp",extrapolateRight:"clamp"}):1;
+      return <div key={index} style={{position:"absolute",left:`${region.x*100}%`,top:`${region.y*100}%`,width:`${region.w*100}%`,height:`${region.h*100}%`,opacity,border:`2px solid ${COLORS.yellow}`,background:techniques?"rgba(255,207,51,.18)":"transparent",boxShadow:"0 0 22px rgba(255,207,51,.58)",borderRadius:6,pointerEvents:"none"}}/>;
+    })}
     </div>
-    <div style={{position:"absolute",left:labelLeft,top:labelY,maxWidth:340,padding:"8px 12px",background:COLORS.yellow,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:15,fontWeight:700,letterSpacing:.3}}>{focus.label}</div>
+    {focus.label&&<div style={{position:"absolute",left:labelLeft,top:labelY,maxWidth:340,padding:"8px 12px",background:COLORS.yellow,color:COLORS.navy,fontFamily:"JetBrainsDeck, monospace",fontSize:15,fontWeight:700,letterSpacing:.3}}>{focus.label}</div>}
    </div>
    <div style={{position:"absolute",left:278,top:36,color:COLORS.yellow,fontFamily:"JetBrainsDeck, monospace",fontSize:19,letterSpacing:2}}>SOLEN · EN DIRECT</div>
   </div>
