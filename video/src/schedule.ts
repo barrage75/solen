@@ -49,14 +49,14 @@ type SourceScene = {id: string; startSeconds: number; endSeconds: number; segmen
 
 const sourceScenes: Record<PitchLang, SourceScene[]> = {
   fr: [
-    {id: "nuvio-infobar", startSeconds: .773, endSeconds: 4.171},
-    {id: "nuvio-verdict-reasons", startSeconds: 4.224, endSeconds: 7.610},
-    {id: "nuvio-callback", startSeconds: 7.962, endSeconds: 11.276},
-    {id: "pdg-mail-verdict", startSeconds: 13.843, endSeconds: 17.440},
-    {id: "pdg-techniques", startSeconds: 17.476, endSeconds: 20.905},
-    {id: "daf-verdict", startSeconds: 23.309, endSeconds: 26.819},
-    {id: "attack-summary", startSeconds: 31.417, endSeconds: 38.510, segments: [[31.417, 34.518], [35.566, 38.510]]},
-    {id: "try-lookalike-example", startSeconds: 44.382, endSeconds: 47.759},
+    {id: "nuvio-infobar", startSeconds: 4.82, endSeconds: 8.218},
+    {id: "nuvio-verdict-reasons", startSeconds: 8.271, endSeconds: 11.657},
+    {id: "nuvio-callback", startSeconds: 12.009, endSeconds: 15.323},
+    {id: "pdg-mail-verdict", startSeconds: 17.89, endSeconds: 21.487},
+    {id: "pdg-techniques", startSeconds: 21.523, endSeconds: 24.952},
+    {id: "daf-verdict", startSeconds: 27.356, endSeconds: 30.866},
+    {id: "attack-summary", startSeconds: 35.464, endSeconds: 42.557, segments: [[35.464, 38.565], [39.613, 42.557]]},
+    {id: "try-lookalike-example", startSeconds: 48.429, endSeconds: 51.806},
   ],
   en: [
     {id: "nuvio-infobar", startSeconds: 3.0, endSeconds: 5.4},

@@ -119,8 +119,12 @@ def safe_area_audit(out):
         )
 
 
+def js_round(value):
+    return math.floor(value + 0.5)
+
+
 def frames(seconds, lang="en"):
-    return math.ceil(seconds * FPS) if lang == "fr" else round(seconds * FPS)
+    return math.ceil(seconds * FPS) if lang == "fr" else js_round(seconds * FPS)
 
 
 def extract_frame(frame, path):
@@ -145,6 +149,23 @@ def extract_frame(frame, path):
         ],
         check=True,
     )
+
+
+def video_duration_seconds():
+    duration = subprocess.check_output(
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
+            str(OUTPUT_VIDEO),
+        ],
+        text=True,
+    )
+    return float(duration.strip())
 
 
 def main():
@@ -226,13 +247,27 @@ def main():
     moment("story-03-mail", 70, "fake-mail-arrives")
     moment("story-04-click", 8, "claire-click-start")
     moment("story-04-click", 40, "claire-click-desk")
-    moment("story-04-click", 66, "claire-click-before")
-    moment("story-04-click", 68, "claire-click-impact")
-    moment("story-04-click", 78, "claire-click-hold")
-    moment("story-05-loss", 50, "claire-phone-before-call")
-    moment("story-05-loss", 56, "claire-phone-call")
-    moment("story-05-loss", 62, "claire-quel-virement-punch")
-    moment("story-05-loss", 78, "claire-quel-virement-hold")
+    click_duration = frame_by_id["story-04-click"][1] - frame_by_id["story-04-click"][0]
+    click_frame = js_round(click_duration * 0.68)
+    moment("story-04-click", click_frame - 1, "claire-click-before")
+    moment("story-04-click", click_frame, "claire-click-impact")
+    moment("story-04-click", click_frame + 20, "claire-click-hold")
+    loss_duration = frame_by_id["story-05-loss"][1] - frame_by_id["story-05-loss"][0]
+    call_reveal_frame = js_round(loss_duration * (0.1 if args.lang == "en" else 0.52))
+    call_hold_frame = (
+        call_reveal_frame + 12
+        if args.lang == "en"
+        else js_round(loss_duration * 0.63)
+    )
+    call_impact_frame = call_reveal_frame + js_round(
+        (call_hold_frame - call_reveal_frame) / 2
+    )
+    question_frame = js_round(loss_duration * (0.64 if args.lang == "en" else 0.61))
+    moment("story-05-loss", call_reveal_frame - 1, "claire-phone-before-call")
+    moment("story-05-loss", call_impact_frame, "claire-phone-call")
+    moment("story-05-loss", call_hold_frame, "claire-phone-hold")
+    moment("story-05-loss", question_frame + 4, "claire-quel-virement-punch")
+    moment("story-05-loss", question_frame + 18, "claire-quel-virement-hold")
     moment("story-05-loss", frames(3.0), "loss-counter-hold")
     moment("story-06-cost", frames(3.2), "national-cost-stat")
     moment("story-07-rewind", 54, "solen-reveal")
@@ -337,6 +372,8 @@ def main():
 
     safe_area_audit(out)
 
+    video_duration = video_duration_seconds()
+    tile_rows = math.ceil(video_duration / AUDIT_FPS / 5)
     subprocess.run(
         [
             "ffmpeg",
@@ -348,7 +385,7 @@ def main():
             "-i",
             str(OUTPUT_VIDEO),
             "-vf",
-            "fps=1/2,scale=384:216,tile=5x10:padding=12:margin=12:color=0x0A0F20",
+            f"fps=1/2,scale=384:216,tile=5x{tile_rows}:padding=12:margin=12:color=0x0A0F20",
             "-frames:v",
             "1",
             str(out / "every-2s.png"),
@@ -359,6 +396,10 @@ def main():
     print(f"Contact sheet: {contact_sheet}")
     print(f"Stills: {frames_dir}")
     print(f"Timing JSON: {out / 'vo-timing.json'}")
+    print(
+        f"Every-2s strip: {video_duration:.3f}s, "
+        f"{tile_rows} rows, last sample at {math.floor((video_duration - 1e-6) / AUDIT_FPS) * AUDIT_FPS:.1f}s"
+    )
     print(f"Total: {report['durationSeconds']:.3f}s")
     for line in timings:
         print(f"{line['id']}: {line['startSeconds']:.3f}–{line['endSeconds']:.3f}s")
